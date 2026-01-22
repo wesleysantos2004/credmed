@@ -7,22 +7,25 @@
 **▶️ [Abrir Protótipo](index.html)** - Demonstração navegável dos 2 portais
 
 ### Portais Disponíveis:
+
 - **👨‍⚕️ Portal Médico** - Solicitação de adiantamentos
 - **👨‍💼 Portal Admin** - Triagem e aprovação
 
-*Login padrão: qualquer email / senha: `123456`*
+_Login padrão: qualquer email / senha: `123456`_
 
 ---
 
 ## 📋 Status do Projeto
 
 ### ✅ Concluído
+
 - **Discovery Completo** (brainstorming + research + especificações)
 - **Protótipos Funcionais** (2 portais navegáveis)
 - **Documentação Técnica** (specs + user stories + dados)
 - **Frontend Preparado** para integração com backend
 
 ### 🔄 Próximo
+
 - **Desenvolvimento Backend** (Node.js + Express + SQLite)
 
 ---
@@ -39,7 +42,7 @@
 │   └── research-market-technical.md
 └── 🎨 prototype-frontend/           # Protótipos funcionais
     ├── medico/                      # Portal do Médico (6 páginas)
-    ├── admin/                       # Portal Admin (7 páginas)  
+    ├── admin/                       # Portal Admin (7 páginas)
     ├── empresa/                     # Portal Empresa (6 páginas)*
     └── assets/                      # CSS + JS funcionais
         ├── css/custom.css
@@ -49,23 +52,26 @@
             └── api.js               # Preparado p/ backend
 ```
 
-*\*Portal Empresa removido do MVP1*
+_\*Portal Empresa removido do MVP1_
 
 ---
 
 ## 🎯 MVP1 - Escopo
 
 ### **Portais Incluídos:**
+
 - ✅ **Portal Médico** - Nova solicitação, acompanhamento, histórico
 - ✅ **Portal Admin** - Triagem, aprovação, pagamentos, relatórios
 
 ### **Funcionalidades Core:**
+
 - ✅ **Solicitação de Adiantamento** - Multi-step form com plantões
-- ✅ **Workflow de Aprovação** - Triagem → Aprovação → Pagamento  
+- ✅ **Workflow de Aprovação** - Triagem → Aprovação → Pagamento
 - ✅ **Gestão de Plantões** - Individual com validação
 - ✅ **Status Tracking** - Histórico completo de cada solicitação
 
 ### **Decisões de MVP1:**
+
 - 🔄 **Validação Manual** - Admin valida plantões (sem portal empresa)
 - 📱 **Web-Only** - Sem app mobile
 - 💾 **SQLite** - Banco simples para MVP
@@ -75,17 +81,20 @@
 
 ## 🛠️ Stack Planejada
 
-### **Frontend** ✅ 
+### **Frontend** ✅
+
 - HTML5 + Bootstrap 5 + Vanilla JS
 - Sistema híbrido (funciona offline + preparado para API)
 
 ### **Backend** 🔄
-- Node.js + Express + TypeScript  
+
+- Node.js + Express + TypeScript
 - SQLite + Sequelize ORM
 - JWT para autenticação
 - Multer para uploads
 
 ### **Deploy** 🔄
+
 - Frontend: GitHub Pages ou Netlify
 - Backend: Heroku ou Railway
 
@@ -94,11 +103,13 @@
 ## 📖 Documentação
 
 ### **Especificações Técnicas:**
+
 - 📋 [User Stories MVP1](docs/user-stories-mvp1.md) - Épicos + estimativas
 - 🏗️ [Especificação Técnica](docs/technical-specification-mvp1.md) - APIs + models
 - 🎨 [Análise Frontend](docs/analysis-prototype-frontend.md) - Fluxos implementados
 
 ### **Discovery:**
+
 - 💡 [Brainstorming Results](docs/brainstorming-session-results.md) - 35+ funcionalidades identificadas
 - 📊 [Research Técnico](docs/research-market-technical.md) - Mercado + regulamentações
 - 🎭 [Seed Data](docs/seed-data-personas.md) - Personas para testes
@@ -108,6 +119,7 @@
 ## 🚀 Como Executar
 
 ### **Protótipos (Atual):**
+
 ```bash
 # Abrir index.html no browser
 # ou usar servidor local:
@@ -116,6 +128,7 @@ npx serve .
 ```
 
 ### **Backend (Futuro):**
+
 ```bash
 # Será criado em /backend
 npm init -y
@@ -143,17 +156,18 @@ npm run dev
 **Ambiente:** Greenfield
 
 ### **Status BMAD:**
+
 - ✅ **Discovery** - Brainstorming + Research completos
-- ✅ **Especificação** - Technical spec MVP1 finalizada  
+- ✅ **Especificação** - Technical spec MVP1 finalizada
 - 🔄 **Desenvolvimento** - Iniciando backend
 
 ---
 
 **🎯 Projeto pronto para desenvolvimento backend e integração!**
-├── backend/                                 # 🔧 API (futuro)
-└── BMAD-METHOD/                            # 🤖 Framework (após instalação)
+├── backend/ # 🔧 API (futuro)
+└── BMAD-METHOD/ # 🤖 Framework (após instalação)
 
-```
+````
 
 ## 🚀 Como Visualizar os Protótipos
 
@@ -162,9 +176,10 @@ npm run dev
 # No explorador de arquivos, navegue até:
 prototype-frontend/index.html
 # Duplo clique para abrir
-```
+````
 
 ### Opção 2: Com Live Server (VS Code)
+
 ```bash
 # 1. Instale a extensão "Live Server"
 # 2. Clique com botão direito em index.html
@@ -176,6 +191,7 @@ prototype-frontend/index.html
 Veja o guia completo de testes em [`prototype-frontend/TESTE-FLUXO.md`](prototype-frontend/TESTE-FLUXO.md)
 
 **Fluxos Disponíveis:**
+
 - ✅ Aprovação Direta pela Admin
 - ✅ Validação pela Empresa → Aprovação Admin
 - ✅ Ciclo de Revisão (devolução para empresa)
@@ -185,17 +201,20 @@ Veja o guia completo de testes em [`prototype-frontend/TESTE-FLUXO.md`](prototyp
 ## 📋 Próximos Passos (Roadmap)
 
 ### ✅ Concluído
+
 - [x] Sessão de Brainstorming
 - [x] Identificação de funcionalidades (35+ conceitos)
 - [x] Protótipos HTML dos 3 portais (19 páginas)
 - [x] Fluxos de navegação e testes
 
 ### 🔄 Em Andamento
+
 - [ ] **Research** - Regulamentações, concorrentes, stack
 - [ ] **Especificação Técnica** - Arquitetura, modelo de dados
 - [ ] **Instalação BMAD-METHOD** - Framework de desenvolvimento
 
 ### 📅 Próximas Sprints
+
 - [ ] Desenvolvimento Backend (API REST)
 - [ ] Integração Frontend → Backend
 - [ ] Autenticação e Autorização
@@ -207,6 +226,7 @@ Veja o guia completo de testes em [`prototype-frontend/TESTE-FLUXO.md`](prototyp
 ## 🔒 Compliance e Regulamentações
 
 **Identificado no Discovery:**
+
 - 🏦 **LGPD** - Dados pessoais e médicos
 - 💼 **Banco Central** - Operações financeiras
 - 🔐 **KYC/AML** - Know Your Customer / Anti-Money Laundering
@@ -218,17 +238,20 @@ Veja o guia completo de testes em [`prototype-frontend/TESTE-FLUXO.md`](prototyp
 ## 🛠️ Stack Tecnológica (Proposta)
 
 ### Frontend
+
 - React ou Vue.js
 - Bootstrap 5 (já usado nos protótipos)
 - JavaScript ES6+
 
 ### Backend
+
 - Node.js + Express ou Python + FastAPI
 - PostgreSQL (banco de dados)
 - JWT (autenticação)
 - bcrypt (hash de senhas)
 
 ### Integrações
+
 - **PIX API** - Pagamentos instantâneos
 - **Assinatura Digital** - DocuSign, Clicksign, ou D4Sign
 - **Email** - SendGrid
@@ -247,6 +270,7 @@ npx bmad-method install
 ```
 
 **Agentes Disponíveis:**
+
 - 📊 **Analyst** - Research, brainstorming, análise de mercado
 - 📝 **PM** - Product Requirements Document (PRD)
 - 🏗️ **Architect** - Especificações técnicas, arquitetura
@@ -273,3 +297,4 @@ npx bmad-method install
 ---
 
 **Desenvolvido com 🤖 BMAD-METHOD**
+# credmed
