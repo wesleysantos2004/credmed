@@ -1,53 +1,155 @@
-# 🏥💰 CREDMED - Sistema de Adiantamento de Plantões Médicos
+# 🏥 CREDMED - Sistema de Adiantamento de Plantões Médicos
 
-Sistema fintech-healthcare que permite médicos solicitarem adiantamento de valores de plantões realizados, com validação de empresas de escalas médicas e processamento rápido via PIX.
+**Sistema fintech-healthcare** que permite médicos solicitarem adiantamento de valores de plantões realizados, com validação e processamento rápido via PIX.
 
-## 📊 Status do Projeto
+## 🚀 Demo
 
-- **Fase Atual:** Discovery & Prototipagem
-- **Versão:** 0.1.0 (Protótipo)
-- **Última Atualização:** Janeiro 2026
+**▶️ [Abrir Protótipo](index.html)** - Demonstração navegável dos 2 portais
 
-## 🎯 Visão Geral
+### Portais Disponíveis:
+- **👨‍⚕️ Portal Médico** - Solicitação de adiantamentos
+- **👨‍💼 Portal Admin** - Triagem e aprovação
 
-O CREDMED resolve a dor de médicos que prestam serviços em empresas de escalas médicas e precisam de adiantamento dos valores antes da data de pagamento. O sistema oferece:
+*Login padrão: qualquer email / senha: `123456`*
 
-- ⚡ **Solicitação Self-Service** - Médico solicita sem intermediários
-- 🔄 **Validação Automatizada** - Fluxo de aprovação com empresa + admin
-- 💳 **Pagamento Imediato** - PIX após aprovação
-- 📊 **Transparência Total** - Rastreamento de cada plantão individualmente
-- 🤝 **Cashback para Empresas** - Incentivo para manter parceria
+---
 
-## 🏗️ Arquitetura do Sistema
+## 📋 Status do Projeto
 
-### 3 Portais Distintos
+### ✅ Concluído
+- **Discovery Completo** (brainstorming + research + especificações)
+- **Protótipos Funcionais** (2 portais navegáveis)
+- **Documentação Técnica** (specs + user stories + dados)
+- **Frontend Preparado** para integração com backend
 
-1. **Portal do Médico** - Solicitar adiantamentos, acompanhar status
-2. **Portal da Empresa** - Validar plantões, histórico, cashback
-3. **Portal Admin** - Triagem, aprovação, pagamentos, relatórios
+### 🔄 Próximo
+- **Desenvolvimento Backend** (Node.js + Express + SQLite)
 
-### Fluxos Principais
+---
 
-```
-Médico Solicita → Admin Triagem → Empresa Valida → Admin Aprova → PIX Processado
-```
-
-## 📁 Estrutura do Projeto
+## 📁 Estrutura
 
 ```
-PROJECT-BMAD-CREDMED/
-├── docs/                                    # 📚 Documentação
-│   ├── brainstorming-session-results.md    # Discovery completo
-│   ├── bmm-workflow-status.yaml            # Status do workflow BMAD
-│   └── sprint-artifacts/                   # Stories, epics (futuro)
-├── prototype-frontend/                      # 🎨 Protótipos HTML
-│   ├── index.html                          # Seletor de portais
-│   ├── medico/                             # 6 páginas do médico
-│   ├── empresa/                            # 6 páginas da empresa
-│   ├── admin/                              # 7 páginas do admin
-│   ├── assets/                             # CSS e JS
-│   ├── README.md                           # Guia do protótipo
-│   └── TESTE-FLUXO.md                      # Guia completo de testes
+📦 CREDMED/
+├── 🏠 index.html                    # Seletor de portais (DEMO)
+├── 📚 docs/                         # Documentação técnica completa
+│   ├── technical-specification-mvp1.md
+│   ├── user-stories-mvp1.md
+│   ├── brainstorming-session-results.md
+│   └── research-market-technical.md
+└── 🎨 prototype-frontend/           # Protótipos funcionais
+    ├── medico/                      # Portal do Médico (6 páginas)
+    ├── admin/                       # Portal Admin (7 páginas)  
+    ├── empresa/                     # Portal Empresa (6 páginas)*
+    └── assets/                      # CSS + JS funcionais
+        ├── css/custom.css
+        └── js/
+            ├── storage.js           # Dados + workflow
+            ├── app.js               # Funcionalidades gerais
+            └── api.js               # Preparado p/ backend
+```
+
+*\*Portal Empresa removido do MVP1*
+
+---
+
+## 🎯 MVP1 - Escopo
+
+### **Portais Incluídos:**
+- ✅ **Portal Médico** - Nova solicitação, acompanhamento, histórico
+- ✅ **Portal Admin** - Triagem, aprovação, pagamentos, relatórios
+
+### **Funcionalidades Core:**
+- ✅ **Solicitação de Adiantamento** - Multi-step form com plantões
+- ✅ **Workflow de Aprovação** - Triagem → Aprovação → Pagamento  
+- ✅ **Gestão de Plantões** - Individual com validação
+- ✅ **Status Tracking** - Histórico completo de cada solicitação
+
+### **Decisões de MVP1:**
+- 🔄 **Validação Manual** - Admin valida plantões (sem portal empresa)
+- 📱 **Web-Only** - Sem app mobile
+- 💾 **SQLite** - Banco simples para MVP
+- 🔐 **Autenticação Básica** - JWT simples
+
+---
+
+## 🛠️ Stack Planejada
+
+### **Frontend** ✅ 
+- HTML5 + Bootstrap 5 + Vanilla JS
+- Sistema híbrido (funciona offline + preparado para API)
+
+### **Backend** 🔄
+- Node.js + Express + TypeScript  
+- SQLite + Sequelize ORM
+- JWT para autenticação
+- Multer para uploads
+
+### **Deploy** 🔄
+- Frontend: GitHub Pages ou Netlify
+- Backend: Heroku ou Railway
+
+---
+
+## 📖 Documentação
+
+### **Especificações Técnicas:**
+- 📋 [User Stories MVP1](docs/user-stories-mvp1.md) - Épicos + estimativas
+- 🏗️ [Especificação Técnica](docs/technical-specification-mvp1.md) - APIs + models
+- 🎨 [Análise Frontend](docs/analysis-prototype-frontend.md) - Fluxos implementados
+
+### **Discovery:**
+- 💡 [Brainstorming Results](docs/brainstorming-session-results.md) - 35+ funcionalidades identificadas
+- 📊 [Research Técnico](docs/research-market-technical.md) - Mercado + regulamentações
+- 🎭 [Seed Data](docs/seed-data-personas.md) - Personas para testes
+
+---
+
+## 🚀 Como Executar
+
+### **Protótipos (Atual):**
+```bash
+# Abrir index.html no browser
+# ou usar servidor local:
+npx serve .
+# → http://localhost:3000
+```
+
+### **Backend (Futuro):**
+```bash
+# Será criado em /backend
+npm init -y
+npm install express sqlite3 sequelize
+npm run dev
+```
+
+---
+
+## 📈 Próximos Passos
+
+1. **📦 Setup Backend** - Estrutura Node.js + Express
+2. **🗄️ Banco de Dados** - Models + migrations SQLite
+3. **🔌 APIs REST** - Endpoints conforme especificação
+4. **🔗 Integração** - Conectar frontend ↔ backend
+5. **🔐 Autenticação** - JWT + middleware
+6. **📤 Deploy MVP** - Heroku + GitHub Pages
+
+---
+
+## 💻 Desenvolvimento
+
+**Metodologia:** BMAD Method (AI-Driven Development)  
+**Tipo:** Fintech-Healthcare  
+**Ambiente:** Greenfield
+
+### **Status BMAD:**
+- ✅ **Discovery** - Brainstorming + Research completos
+- ✅ **Especificação** - Technical spec MVP1 finalizada  
+- 🔄 **Desenvolvimento** - Iniciando backend
+
+---
+
+**🎯 Projeto pronto para desenvolvimento backend e integração!**
 ├── backend/                                 # 🔧 API (futuro)
 └── BMAD-METHOD/                            # 🤖 Framework (após instalação)
 
