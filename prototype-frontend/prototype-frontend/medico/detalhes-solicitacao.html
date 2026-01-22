@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes da Solicitação - Portal do Médico</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../assets/css/custom.css">
+</head>
+
+<body>
+
+    <!-- Mobile Header -->
+    <div class="mobile-header">
+        <button class="menu-toggle" onclick="toggleMobileMenu()">
+            <i class="bi bi-list"></i>
+        </button>
+        <h5 class="text-primary fw-bold flex-grow-1 text-center">
+            <i class="bi bi-person-badge me-2"></i>Portal Médico
+        </h5>
+        <div style="width: 40px;"></div>
+    </div>
+
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay"></div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="px-3 mb-4">
+            <h5 class="text-primary fw-bold mb-0">
+                <i class="bi bi-person-badge me-2"></i>Portal Médico
+            </h5>
+        </div>
+        <nav class="nav flex-column">
+            <a class="nav-link" href="dashboard.html">
+                <i class="bi bi-house-door"></i>
+                Dashboard
+            </a>
+            <a class="nav-link" href="nova-solicitacao.html">
+                <i class="bi bi-plus-circle"></i>
+                Nova Solicitação
+            </a>
+            <a class="nav-link active" href="lista-solicitacoes.html">
+                <i class="bi bi-list-ul"></i>
+                Minhas Solicitações
+            </a>
+            <a class="nav-link" href="perfil.html">
+                <i class="bi bi-person"></i>
+                Meu Perfil
+            </a>
+            <hr class="my-3">
+            <a class="nav-link text-danger" href="#" onclick="logout()">
+                <i class="bi bi-box-arrow-right"></i>
+                Sair
+            </a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <div class="mb-4">
+            <a href="lista-solicitacoes.html" class="btn btn-outline-secondary btn-sm mb-3">
+                <i class="bi bi-arrow-left me-2"></i>
+                Voltar para Lista
+            </a>
+            <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+                <div>
+                    <h2 class="mb-1">Detalhes da Solicitação</h2>
+                    <p class="text-muted mb-0">Protocolo: <strong id="solicitacaoNumero">-</strong></p>
+                </div>
+                <span class="badge fs-6 py-2 px-3" id="statusBadge">
+                    <i class="bi bi-clock-history me-2"></i>
+                    Carregando...
+                </span>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Main Information -->
+            <div class="col-lg-8">
+                <!-- Status Card -->
+                <div class="card card-custom mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title mb-4">
+                            <i class="bi bi-info-circle me-2"></i>
+                            Informações Gerais
+                        </h5>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <small class="text-muted d-block">Empresa</small>
+                                <strong id="empresaNome">-</strong>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <small class="text-muted d-block">Data da Solicitação</small>
+                                <strong id="dataSolicitacao">-</strong>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <small class="text-muted d-block">Quantidade de Plantões</small>
+                                <strong id="qtdPlantoes">-</strong>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <small class="text-muted d-block">Taxa Aplicada</small>
+                                <strong id="taxaAplicada">-</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Valores Card -->
+                <div class="card card-custom mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title mb-4">
+                            <i class="bi bi-calculator me-2"></i>
+                            Valores
+                        </h5>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <tbody>
+                                    <tr>
+                                        <td>Valor Total dos Plantões</td>
+                                        <td class="text-end"><strong id="valorTotal">R$ 0,00</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Taxa (<span id="taxaPercent">0</span>%)</td>
+                                        <td class="text-end text-danger"><strong id="valorTaxa">R$ 0,00</strong></td>
+                                    </tr>
+                                    <tr class="table-active">
+                                        <td><strong>Valor Líquido a Receber</strong></td>
+                                        <td class="text-end">
+                                            <strong class="text-success fs-5" id="valorLiquido">R$ 0,00</strong>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Plantões Card -->
+                <div class="card card-custom mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title mb-4">
+                            <i class="bi bi-calendar-check me-2"></i>
+                            Plantões
+                        </h5>
+                        <div class="table-responsive">
+                            <table class="table table-hover" id="plantoesTable">
+                                <thead>
+                                    <tr>
+                                        <th>Data</th>
+                                        <th>Descrição</th>
+                                        <th class="text-end">Valor</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="4" class="text-center text-muted">
+                                            Carregando plantões...
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Documentos Card -->
+                <div class="card card-custom mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title mb-3">
+                            <i class="bi bi-paperclip me-2"></i>
+                            Documentos
+                        </h5>
+                        <div id="documentosList">
+                            <div class="d-flex align-items-center justify-content-between border-bottom pb-3 mb-3">
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-file-earmark-pdf text-danger fs-3 me-3"></i>
+                                    <div>
+                                        <div class="fw-bold">Contrato de Adiantamento</div>
+                                        <small class="text-muted">PDF • 245 KB</small>
+                                    </div>
+                                </div>
+                                <button class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-download"></i>
+                                </button>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-file-earmark-text text-primary fs-3 me-3"></i>
+                                    <div>
+                                        <div class="fw-bold">Comprovantes de Plantão</div>
+                                        <small class="text-muted">PDF • 1.2 MB</small>
+                                    </div>
+                                </div>
+                                <button class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-download"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar Timeline -->
+            <div class="col-lg-4">
+                <!-- Timeline Card -->
+                <div class="card card-custom">
+                    <div class="card-body">
+                        <h5 class="card-title mb-4">
+                            <i class="bi bi-clock-history me-2"></i>
+                            Histórico
+                        </h5>
+                        <div class="timeline" id="timelineContainer">
+                            <div class="timeline-item">
+                                <div class="timeline-marker"></div>
+                                <div class="timeline-content">
+                                    <strong>Solicitação Criada</strong>
+                                    <div class="small text-muted mt-1">26/12/2025 14:30</div>
+                                    <p class="small mb-0 mt-2">Solicitação registrada no sistema</p>
+                                </div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-marker" style="background-color: var(--gray-300);"></div>
+                                <div class="timeline-content">
+                                    <strong class="text-muted">Aguardando Validação</strong>
+                                    <div class="small text-muted mt-1">Pendente</div>
+                                    <p class="small mb-0 mt-2">Empresa precisa validar os plantões</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Actions Card -->
+                <div class="card card-custom mt-4" id="actionsCard">
+                    <div class="card-body">
+                        <h6 class="card-title mb-3">Ações</h6>
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-outline-primary" onclick="window.print()">
+                                <i class="bi bi-printer me-2"></i>
+                                Imprimir
+                            </button>
+                            <button class="btn btn-outline-danger" id="btnCancelar">
+                                <i class="bi bi-x-circle me-2"></i>
+                                Cancelar Solicitação
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="../assets/js/app.js"></script>
+
+    <script>
+        checkAuth('medico');
+
+        const statusConfig = {
+            'AGUARDANDO_VALIDACAO_EMPRESA': {
+                label: 'Aguardando Validação da Empresa',
+                badge: 'bg-warning text-dark',
+                icon: 'clock-history'
+            },
+            'EM_APROVACAO_ADMIN': {
+                label: 'Em Aprovação Administrativa',
+                badge: 'bg-info',
+                icon: 'hourglass-split'
+            },
+            'APROVADO': {
+                label: 'Aprovado - Aguardando Pagamento',
+                badge: 'bg-success',
+                icon: 'check-circle'
+            },
+            'PAGO': {
+                label: 'Pago',
+                badge: 'bg-success',
+                icon: 'cash-coin'
+            },
+            'REJEITADO': {
+                label: 'Rejeitado',
+                badge: 'bg-danger',
+                icon: 'x-circle'
+            }
+        };
+
+        // Get ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const solicitacaoId = urlParams.get('id') || 'SOL-2025-00042';
+
+        // Mock data para a solicitação
+        const solicitacao = {
+            id: 'SOL-2025-00042',
+            numero: 'SOL-2025-00042',
+            status: 'AGUARDANDO_VALIDACAO_EMPRESA',
+            valorTotal: 3500.00,
+            valorLiquido: 3377.50,
+            taxaPercentual: 3.5,
+            valorTaxa: 122.50,
+            dataSolicitacao: '2025-12-26T14:30:00',
+            empresa: 'MedPlus',
+            plantoes: [
+                {
+                    data: '2025-12-28',
+                    descricao: 'Plantão 12h - Emergência',
+                    valor: 1800.00,
+                    status: 'Aguardando Validação'
+                },
+                {
+                    data: '2025-12-30',
+                    descricao: 'Plantão 24h - UTI',
+                    valor: 1700.00,
+                    status: 'Aguardando Validação'
+                }
+            ],
+            historico: [
+                {
+                    data: '2025-12-26T14:30:00',
+                    titulo: 'Solicitação Criada',
+                    descricao: 'Solicitação registrada no sistema',
+                    status: 'completed'
+                },
+                {
+                    data: null,
+                    titulo: 'Validação da Empresa',
+                    descricao: 'Empresa precisa validar os plantões informados',
+                    status: 'pending'
+                },
+                {
+                    data: null,
+                    titulo: 'Aprovação Administrativa',
+                    descricao: 'Análise e aprovação pela equipe administrativa',
+                    status: 'pending'
+                },
+                {
+                    data: null,
+                    titulo: 'Pagamento',
+                    descricao: 'Processamento do pagamento via PIX',
+                    status: 'pending'
+                }
+            ]
+        };
+
+        function loadSolicitacao() {
+            const status = statusConfig[solicitacao.status];
+
+            // Header
+            document.getElementById('solicitacaoNumero').textContent = solicitacao.numero;
+            document.getElementById('statusBadge').className = `badge fs-6 py-2 px-3 ${status.badge}`;
+            document.getElementById('statusBadge').innerHTML = `
+                <i class="bi bi-${status.icon} me-2"></i>
+                ${status.label}
+            `;
+
+            // Informações Gerais
+            document.getElementById('empresaNome').textContent = solicitacao.empresa;
+            document.getElementById('dataSolicitacao').textContent = formatDateTime(solicitacao.dataSolicitacao);
+            document.getElementById('qtdPlantoes').textContent = solicitacao.plantoes.length + ' plantões';
+            document.getElementById('taxaAplicada').textContent = solicitacao.taxaPercentual.toFixed(1) + '%';
+
+            // Valores
+            document.getElementById('valorTotal').textContent = formatCurrency(solicitacao.valorTotal);
+            document.getElementById('taxaPercent').textContent = solicitacao.taxaPercentual.toFixed(1);
+            document.getElementById('valorTaxa').textContent = formatCurrency(solicitacao.valorTaxa);
+            document.getElementById('valorLiquido').textContent = formatCurrency(solicitacao.valorLiquido);
+
+            // Plantões
+            const plantoesTable = document.querySelector('#plantoesTable tbody');
+            plantoesTable.innerHTML = solicitacao.plantoes.map(p => `
+                <tr>
+                    <td>${formatDate(p.data)}</td>
+                    <td>${p.descricao}</td>
+                    <td class="text-end"><strong>${formatCurrency(p.valor)}</strong></td>
+                    <td><span class="badge bg-warning text-dark">${p.status}</span></td>
+                </tr>
+            `).join('');
+
+            // Timeline
+            const timelineContainer = document.getElementById('timelineContainer');
+            timelineContainer.innerHTML = solicitacao.historico.map((h, index) => {
+                const markerColor = h.status === 'completed' ? 'var(--primary)' :
+                    h.status === 'pending' ? 'var(--gray-300)' : 'var(--danger)';
+                const textClass = h.status === 'pending' ? 'text-muted' : '';
+
+                return `
+                    <div class="timeline-item">
+                        <div class="timeline-marker" style="background-color: ${markerColor};"></div>
+                        <div class="timeline-content">
+                            <strong class="${textClass}">${h.titulo}</strong>
+                            ${h.data ? `<div class="small text-muted mt-1">${formatDateTime(h.data)}</div>` :
+                        '<div class="small text-muted mt-1">Pendente</div>'}
+                            <p class="small mb-0 mt-2">${h.descricao}</p>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // Hide cancel button if not allowed
+            if (solicitacao.status !== 'AGUARDANDO_VALIDACAO_EMPRESA') {
+                document.getElementById('btnCancelar').style.display = 'none';
+            }
+        }
+
+        // Cancel button
+        document.getElementById('btnCancelar')?.addEventListener('click', function () {
+            if (confirm('Tem certeza que deseja cancelar esta solicitação?')) {
+                alert('Solicitação cancelada com sucesso!');
+                window.location.href = 'lista-solicitacoes.html';
+            }
+        });
+
+        // Initialize
+        loadSolicitacao();
+    </script>
+</body>
+
+</html>

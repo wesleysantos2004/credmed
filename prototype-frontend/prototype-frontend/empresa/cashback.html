@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cashback - Portal da Empresa</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../assets/css/custom.css">
+</head>
+
+<body>
+
+    <!-- Mobile Header -->
+    <div class="mobile-header">
+        <button class="menu-toggle" onclick="toggleMobileMenu()">
+            <i class="bi bi-list"></i>
+        </button>
+        <h5 class="text-success fw-bold flex-grow-1 text-center">
+            <i class="bi bi-building me-2"></i>Portal Empresa
+        </h5>
+        <div style="width: 40px;"></div>
+    </div>
+
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay"></div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="px-3 mb-4">
+            <h5 class="text-success fw-bold mb-0">
+                <i class="bi bi-building me-2"></i>Portal Empresa
+            </h5>
+        </div>
+        <nav class="nav flex-column">
+            <a class="nav-link" href="dashboard.html">
+                <i class="bi bi-house-door"></i>
+                Dashboard
+            </a>
+            <a class="nav-link" href="validacoes.html">
+                <i class="bi bi-clipboard-check"></i>
+                Validações
+            </a>
+            <a class="nav-link active" href="cashback.html">
+                <i class="bi bi-piggy-bank"></i>
+                Cashback
+            </a>
+            <a class="nav-link" href="historico.html">
+                <i class="bi bi-clock-history"></i>
+                Histórico
+            </a>
+            <hr class="my-3">
+            <a class="nav-link text-danger" href="#" onclick="logout()">
+                <i class="bi bi-box-arrow-right"></i>
+                Sair
+            </a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <div class="mb-4">
+            <h2 class="mb-1">Cashback</h2>
+            <p class="text-muted mb-0">Acompanhe seus créditos e histórico de cashback</p>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-4">
+                <div class="card card-custom border-success">
+                    <div class="card-body text-center">
+                        <i class="bi bi-piggy-bank text-success" style="font-size: 3rem;"></i>
+                        <div class="mt-3">
+                            <small class="text-muted d-block">Saldo Acumulado</small>
+                            <h2 class="text-success mb-0">R$ 8.900,00</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card card-custom border-primary">
+                    <div class="card-body text-center">
+                        <i class="bi bi-calendar-month text-primary" style="font-size: 3rem;"></i>
+                        <div class="mt-3">
+                            <small class="text-muted d-block">Cashback Dezembro</small>
+                            <h2 class="text-primary mb-0">R$ 850,00</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card card-custom border-info">
+                    <div class="card-body text-center">
+                        <i class="bi bi-graph-up-arrow text-info" style="font-size: 3rem;"></i>
+                        <div class="mt-3">
+                            <small class="text-muted d-block">Validações no Mês</small>
+                            <h2 class="text-info mb-0">65</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Period Filter -->
+        <div class="card card-custom mb-4">
+            <div class="card-body">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-3">
+                        <label for="periodoInicio" class="form-label small">Período - Início</label>
+                        <input type="date" class="form-control" id="periodoInicio" value="2025-12-01">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="periodoFim" class="form-label small">Período - Fim</label>
+                        <input type="date" class="form-control" id="periodoFim" value="2025-12-27">
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-success w-100">
+                            <i class="bi bi-search me-2"></i>
+                            Aplicar Filtro
+                        </button>
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-outline-success w-100" onclick="exportarExtrato()">
+                            <i class="bi bi-file-earmark-excel me-2"></i>
+                            Exportar Excel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Main Column -->
+            <div class="col-lg-8">
+                <!-- Detailed Extract -->
+                <div class="card card-custom mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title mb-4">
+                            <i class="bi bi-receipt me-2"></i>
+                            Extrato Detalhado
+                        </h5>
+
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Data</th>
+                                        <th>Protocolo</th>
+                                        <th>Médico</th>
+                                        <th>Valor Validado</th>
+                                        <th>Cashback (1%)</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>27/12/2025</td>
+                                        <td><strong>SOL-2025-00038</strong></td>
+                                        <td>Dr. Roberto Lima</td>
+                                        <td>R$ 4.500,00</td>
+                                        <td><strong class="text-success">+R$ 45,00</strong></td>
+                                        <td><span class="badge bg-success">Creditado</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>26/12/2025</td>
+                                        <td><strong>SOL-2025-00037</strong></td>
+                                        <td>Dra. Juliana Costa</td>
+                                        <td>R$ 3.200,00</td>
+                                        <td><strong class="text-success">+R$ 32,00</strong></td>
+                                        <td><span class="badge bg-success">Creditado</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>26/12/2025</td>
+                                        <td><strong>SOL-2025-00036</strong></td>
+                                        <td>Dr. Paulo Souza</td>
+                                        <td>R$ 5.800,00</td>
+                                        <td><strong class="text-info">+R$ 58,00</strong></td>
+                                        <td><span class="badge bg-info">Em Aprovação</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>25/12/2025</td>
+                                        <td><strong>SOL-2025-00035</strong></td>
+                                        <td>Dr. Fernando Silva</td>
+                                        <td>R$ 3.500,00</td>
+                                        <td><strong class="text-success">+R$ 35,00</strong></td>
+                                        <td><span class="badge bg-success">Creditado</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>25/12/2025</td>
+                                        <td><strong>SOL-2025-00034</strong></td>
+                                        <td>Dra. Maria Santos</td>
+                                        <td>R$ 4.200,00</td>
+                                        <td><strong class="text-success">+R$ 42,00</strong></td>
+                                        <td><span class="badge bg-success">Creditado</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>24/12/2025</td>
+                                        <td><strong>SOL-2025-00033</strong></td>
+                                        <td>Dr. Carlos Mendes</td>
+                                        <td>R$ 6.200,00</td>
+                                        <td><strong class="text-success">+R$ 62,00</strong></td>
+                                        <td><span class="badge bg-success">Creditado</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>23/12/2025</td>
+                                        <td><strong>SOL-2025-00032</strong></td>
+                                        <td>Dra. Ana Paula</td>
+                                        <td>R$ 3.800,00</td>
+                                        <td><strong class="text-success">+R$ 38,00</strong></td>
+                                        <td><span class="badge bg-success">Creditado</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>22/12/2025</td>
+                                        <td><strong>SOL-2025-00031</strong></td>
+                                        <td>Dr. José Oliveira</td>
+                                        <td>R$ 5.500,00</td>
+                                        <td><strong class="text-success">+R$ 55,00</strong></td>
+                                        <td><span class="badge bg-success">Creditado</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>21/12/2025</td>
+                                        <td><strong>SOL-2025-00030</strong></td>
+                                        <td>Dr. Lucas Almeida</td>
+                                        <td>R$ 4.900,00</td>
+                                        <td><strong class="text-success">+R$ 49,00</strong></td>
+                                        <td><span class="badge bg-success">Creditado</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>20/12/2025</td>
+                                        <td><strong>SOL-2025-00029</strong></td>
+                                        <td>Dra. Paula Ferreira</td>
+                                        <td>R$ 3.300,00</td>
+                                        <td><strong class="text-success">+R$ 33,00</strong></td>
+                                        <td><span class="badge bg-success">Creditado</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <small class="text-muted">Mostrando 10 de 65 registros</small>
+                            <nav>
+                                <ul class="pagination pagination-sm mb-0">
+                                    <li class="page-item disabled">
+                                        <a class="page-link" href="#">Anterior</a>
+                                    </li>
+                                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">4</a></li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="#">Próximo</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <!-- Monthly Evolution -->
+                <div class="card card-custom mb-4">
+                    <div class="card-body">
+                        <h6 class="card-title mb-3">
+                            <i class="bi bi-calendar3 me-2"></i>
+                            Evolução Mensal (2025)
+                        </h6>
+                        <div class="mb-3 pb-3 border-bottom">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="small">Dezembro</span>
+                                <strong class="text-success">R$ 850,00</strong>
+                            </div>
+                            <div class="progress" style="height: 8px;">
+                                <div class="progress-bar bg-success" style="width: 95%"></div>
+                            </div>
+                        </div>
+                        <div class="mb-3 pb-3 border-bottom">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="small">Novembro</span>
+                                <strong class="text-success">R$ 920,00</strong>
+                            </div>
+                            <div class="progress" style="height: 8px;">
+                                <div class="progress-bar bg-success" style="width: 100%"></div>
+                            </div>
+                        </div>
+                        <div class="mb-3 pb-3 border-bottom">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="small">Outubro</span>
+                                <strong class="text-success">R$ 780,00</strong>
+                            </div>
+                            <div class="progress" style="height: 8px;">
+                                <div class="progress-bar bg-success" style="width: 85%"></div>
+                            </div>
+                        </div>
+                        <div class="mb-3 pb-3 border-bottom">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="small">Setembro</span>
+                                <strong class="text-success">R$ 690,00</strong>
+                            </div>
+                            <div class="progress" style="height: 8px;">
+                                <div class="progress-bar bg-success" style="width: 75%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="d-flex justify-content-between">
+                                <strong>Total Ano</strong>
+                                <strong class="text-success">R$ 8.900,00</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Top Doctors -->
+                <div class="card card-custom mb-4">
+                    <div class="card-body">
+                        <h6 class="card-title mb-3">
+                            <i class="bi bi-star me-2"></i>
+                            Top Médicos (Cashback)
+                        </h6>
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <div>
+                                    <span class="badge bg-warning text-dark me-2">1º</span>
+                                    <small>Dr. Fernando Silva</small>
+                                </div>
+                                <strong class="text-success">R$ 420</strong>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <div>
+                                    <span class="badge bg-secondary me-2">2º</span>
+                                    <small>Dra. Maria Santos</small>
+                                </div>
+                                <strong class="text-success">R$ 385</strong>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <div>
+                                    <span class="badge bg-secondary me-2">3º</span>
+                                    <small>Dr. Carlos Mendes</small>
+                                </div>
+                                <strong class="text-success">R$ 352</strong>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <div>
+                                    <span class="badge bg-light text-dark me-2">4º</span>
+                                    <small>Dra. Ana Paula</small>
+                                </div>
+                                <strong class="text-success">R$ 328</strong>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <div>
+                                    <span class="badge bg-light text-dark me-2">5º</span>
+                                    <small>Dr. Roberto Lima</small>
+                                </div>
+                                <strong class="text-success">R$ 289</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Info Card -->
+                <div class="card card-custom border-info">
+                    <div class="card-body">
+                        <h6 class="card-title text-info mb-3">
+                            <i class="bi bi-info-circle me-2"></i>
+                            Sobre o Cashback
+                        </h6>
+                        <p class="small mb-2">
+                            <i class="bi bi-check-circle text-success me-2"></i>
+                            Você recebe <strong>1%</strong> do valor de cada solicitação validada.
+                        </p>
+                        <p class="small mb-2">
+                            <i class="bi bi-check-circle text-success me-2"></i>
+                            O crédito é realizado após a aprovação administrativa.
+                        </p>
+                        <p class="small mb-2">
+                            <i class="bi bi-check-circle text-success me-2"></i>
+                            Sem prazo de validade para utilização.
+                        </p>
+                        <p class="small mb-0">
+                            <i class="bi bi-check-circle text-success me-2"></i>
+                            Pode ser usado para abater nas próximas validações.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="../assets/js/app.js"></script>
+
+    <script>
+        checkAuth('empresa');
+
+        function exportarExtrato() {
+            alert('Extrato exportado para Excel com sucesso!');
+        }
+    </script>
+</body>
+
+</html>

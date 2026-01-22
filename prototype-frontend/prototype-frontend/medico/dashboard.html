@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Portal do Médico</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../assets/css/custom.css">
+</head>
+
+<body>
+
+    <!-- Mobile Header -->
+    <div class="mobile-header">
+        <button class="menu-toggle" onclick="toggleMobileMenu()">
+            <i class="bi bi-list"></i>
+        </button>
+        <h5 class="text-primary fw-bold flex-grow-1 text-center">
+            <i class="bi bi-person-badge me-2"></i>Portal Médico
+        </h5>
+        <div style="width: 40px;"></div>
+    </div>
+
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay"></div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="px-3 mb-4">
+            <h5 class="text-primary fw-bold mb-0">
+                <i class="bi bi-person-badge me-2"></i>Portal Médico
+            </h5>
+        </div>
+        <nav class="nav flex-column">
+            <a class="nav-link active" href="dashboard.html">
+                <i class="bi bi-house-door"></i>
+                Dashboard
+            </a>
+            <a class="nav-link" href="nova-solicitacao.html">
+                <i class="bi bi-plus-circle"></i>
+                Nova Solicitação
+            </a>
+            <a class="nav-link" href="lista-solicitacoes.html">
+                <i class="bi bi-list-ul"></i>
+                Minhas Solicitações
+            </a>
+            <a class="nav-link" href="perfil.html">
+                <i class="bi bi-person"></i>
+                Meu Perfil
+            </a>
+            <hr class="my-3">
+            <a class="nav-link text-danger" href="#" onclick="logout()">
+                <i class="bi bi-box-arrow-right"></i>
+                Sair
+            </a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="mb-1">Bem-vindo, <span id="userName">Médico</span>!</h2>
+                <p class="text-muted mb-0">CRM: <span id="userCrm">-</span></p>
+            </div>
+            <button class="btn btn-primary" onclick="window.location.href='nova-solicitacao.html'">
+                <i class="bi bi-plus-circle me-2"></i>
+                Nova Solicitação
+            </button>
+        </div>
+
+        <!-- Metrics Cards -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-3">
+                <div class="card card-metric card-metric-primary">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="flex-grow-1">
+                                <div class="metric-label">Limite Disponível</div>
+                                <div class="metric-value" id="limiteDisponivel">R$ 0,00</div>
+                            </div>
+                            <div class="metric-icon">
+                                <i class="bi bi-wallet2"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-metric card-metric-warning">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="flex-grow-1">
+                                <div class="metric-label">Aguardando Validação</div>
+                                <div class="metric-value" id="aguardandoValidacao">0</div>
+                            </div>
+                            <div class="metric-icon">
+                                <i class="bi bi-clock-history"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-metric card-metric-info">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="flex-grow-1">
+                                <div class="metric-label">Em Aprovação</div>
+                                <div class="metric-value" id="emAprovacao">0</div>
+                            </div>
+                            <div class="metric-icon">
+                                <i class="bi bi-hourglass-split"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-metric card-metric-success">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="flex-grow-1">
+                                <div class="metric-label">Aprovadas</div>
+                                <div class="metric-value" id="aprovadas">0</div>
+                            </div>
+                            <div class="metric-icon">
+                                <i class="bi bi-check-circle"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Requests -->
+        <div class="card card-custom">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-clock-history me-2"></i>
+                        Solicitações Recentes
+                    </h5>
+                    <a href="lista-solicitacoes.html" class="btn btn-sm btn-outline-primary">Ver Todas</a>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Protocolo</th>
+                                <th>Empresa</th>
+                                <th>Valor</th>
+                                <th>Data</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="solicitacoesTable">
+                            <tr>
+                                <td colspan="6" class="text-center text-muted py-4">
+                                    <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                                    Carregando solicitações...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="row g-3 mt-4">
+            <div class="col-md-4">
+                <div class="card card-custom h-100 cursor-pointer"
+                    onclick="window.location.href='nova-solicitacao.html'">
+                    <div class="card-body text-center p-4">
+                        <i class="bi bi-plus-circle-dotted display-4 text-primary mb-3"></i>
+                        <h5 class="card-title">Solicitar Adiantamento</h5>
+                        <p class="card-text text-muted">Crie uma nova solicitação de adiantamento de plantões</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card card-custom h-100 cursor-pointer"
+                    onclick="window.location.href='lista-solicitacoes.html'">
+                    <div class="card-body text-center p-4">
+                        <i class="bi bi-list-check display-4 text-info mb-3"></i>
+                        <h5 class="card-title">Minhas Solicitações</h5>
+                        <p class="card-text text-muted">Acompanhe o status de todas as suas solicitações</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card card-custom h-100 cursor-pointer" onclick="window.location.href='perfil.html'">
+                    <div class="card-body text-center p-4">
+                        <i class="bi bi-person-gear display-4 text-success mb-3"></i>
+                        <h5 class="card-title">Meu Perfil</h5>
+                        <p class="card-text text-muted">Atualize seus dados pessoais e bancários</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="../assets/js/app.js"></script>
+
+    <script>
+        // Check authentication
+        checkAuth('medico');
+
+        // Load user data
+        function loadUserData() {
+            const medico = mockData.medico;
+            document.getElementById('userName').textContent = medico.nome;
+            document.getElementById('userCrm').textContent = medico.crm;
+            document.getElementById('limiteDisponivel').textContent = formatCurrency(medico.limiteDisponivel);
+        }
+
+        // Load metrics
+        function loadMetrics() {
+            const solicitacoes = mockData.solicitacoes;
+
+            const aguardando = solicitacoes.filter(s => s.status === 'aguardando_validacao').length;
+            const aprovacao = solicitacoes.filter(s => s.status === 'em_aprovacao').length;
+            const aprovadas = solicitacoes.filter(s => s.status === 'aprovado' || s.status === 'pago').length;
+
+            document.getElementById('aguardandoValidacao').textContent = aguardando;
+            document.getElementById('emAprovacao').textContent = aprovacao;
+            document.getElementById('aprovadas').textContent = aprovadas;
+        }
+
+        // Load recent requests
+        function loadRecentRequests() {
+            const solicitacoes = mockData.solicitacoes.slice(0, 5); // Get 5 most recent
+            const tbody = document.getElementById('solicitacoesTable');
+
+            if (solicitacoes.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-4">
+                            <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                            Nenhuma solicitação encontrada
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = solicitacoes.map(sol => {
+                const statusBadges = {
+                    'aguardando_validacao': 'badge-aguardando',
+                    'em_aprovacao': 'badge-em-aprovacao',
+                    'aprovado': 'badge-aprovado',
+                    'rejeitado': 'badge-rejeitado',
+                    'pago': 'badge-pago'
+                };
+
+                const statusLabels = {
+                    'aguardando_validacao': 'Aguardando Validação',
+                    'em_aprovacao': 'Em Aprovação',
+                    'aprovado': 'Aprovado',
+                    'rejeitado': 'Rejeitado',
+                    'pago': 'Pago'
+                };
+
+                return `
+                    <tr>
+                        <td><strong>${sol.protocolo}</strong></td>
+                        <td>${sol.empresa}</td>
+                        <td><strong>${formatCurrency(sol.valorTotal)}</strong></td>
+                        <td>${formatDate(sol.dataSolicitacao)}</td>
+                        <td><span class="badge ${statusBadges[sol.status]}">${statusLabels[sol.status]}</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary" onclick="window.location.href='detalhes-solicitacao.html?id=${sol.id}'">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Initialize
+        loadUserData();
+        loadMetrics();
+        loadRecentRequests();
+    </script>
+</body>
+
+</html>

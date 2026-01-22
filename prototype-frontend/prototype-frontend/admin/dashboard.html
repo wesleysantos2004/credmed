@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Portal Administrativo</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../assets/css/custom.css">
+</head>
+
+<body>
+
+    <!-- Mobile Header -->
+    <div class="mobile-header">
+        <button class="menu-toggle" onclick="toggleMobileMenu()">
+            <i class="bi bi-list"></i>
+        </button>
+        <h5 class="text-danger fw-bold flex-grow-1 text-center">
+            <i class="bi bi-shield-lock me-2"></i>Portal Admin
+        </h5>
+        <div style="width: 40px;"></div>
+    </div>
+
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay"></div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="px-3 mb-4">
+            <h5 class="text-danger fw-bold mb-0">
+                <i class="bi bi-shield-lock me-2"></i>Portal Admin
+            </h5>
+        </div>
+        <nav class="nav flex-column">
+            <a class="nav-link active" href="dashboard.html">
+                <i class="bi bi-house-door"></i>
+                Dashboard
+            </a>
+            <a class="nav-link" href="aprovacoes.html">
+                <i class="bi bi-clipboard-check"></i>
+                Aprovações
+            </a>
+            <a class="nav-link" href="pagamentos.html">
+                <i class="bi bi-cash-coin"></i>
+                Pagamentos
+            </a>
+            <a class="nav-link" href="relatorios.html">
+                <i class="bi bi-graph-up"></i>
+                Relatórios
+            </a>
+            <hr class="my-3">
+            <a class="nav-link text-danger" href="#" onclick="logout()">
+                <i class="bi bi-box-arrow-right"></i>
+                Sair
+            </a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <div class="mb-4">
+            <h2 class="mb-1">Dashboard Administrativo</h2>
+            <p class="text-muted mb-0">Visão geral do sistema</p>
+        </div>
+
+        <!-- Metrics Cards -->
+        <div class="row g-3 mb-4">
+            <div class="col-6 col-md-3">
+                <div class="card card-metric card-metric-warning">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="flex-grow-1">
+                                <div class="metric-label">Pendente Aprovação</div>
+                                <div class="metric-value" id="pendentesAprovacao">8</div>
+                            </div>
+                            <div class="metric-icon">
+                                <i class="bi bi-clock-history"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="card card-metric card-metric-info">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="flex-grow-1">
+                                <div class="metric-label">Pagamentos Hoje</div>
+                                <div class="metric-value" id="pagamentosHoje">R$ 45k</div>
+                            </div>
+                            <div class="metric-icon">
+                                <i class="bi bi-cash-coin"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="card card-metric card-metric-success">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="flex-grow-1">
+                                <div class="metric-label">Aprovadas Mês</div>
+                                <div class="metric-value" id="aprovadasMes">156</div>
+                            </div>
+                            <div class="metric-icon">
+                                <i class="bi bi-check-circle"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="card card-metric card-metric-primary">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="flex-grow-1">
+                                <div class="metric-label">Volume Total</div>
+                                <div class="metric-value" id="volumeTotal">R$ 2.1M</div>
+                            </div>
+                            <div class="metric-icon">
+                                <i class="bi bi-currency-dollar"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alerts -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="alert alert-warning d-flex align-items-center" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill fs-4 me-3"></i>
+                    <div class="flex-grow-1">
+                        <strong>Atenção!</strong> Você tem 8 solicitações aguardando aprovação há mais de 24 horas.
+                    </div>
+                    <button class="btn btn-sm btn-warning" onclick="window.location.href='aprovacoes.html'">
+                        Ver Pendências
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Solicitações Pendentes -->
+            <div class="col-lg-8">
+                <div class="card card-custom mb-4">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h5 class="card-title mb-0">
+                                <i class="bi bi-clipboard-check me-2"></i>
+                                Solicitações Pendentes de Aprovação
+                            </h5>
+                            <a href="aprovacoes.html" class="btn btn-sm btn-outline-primary">Ver Todas</a>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Protocolo</th>
+                                        <th>Médico</th>
+                                        <th>Empresa</th>
+                                        <th>Valor</th>
+                                        <th>Aguardando</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="pendentesTable">
+                                    <tr>
+                                        <td><strong>SOL-2025-00043</strong></td>
+                                        <td>Dr. Fernando Silva</td>
+                                        <td>MedPlus</td>
+                                        <td><strong>R$ 3.377,50</strong></td>
+                                        <td><span class="badge bg-warning text-dark">2h</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-success"
+                                                onclick="window.location.href='aprovar.html?id=SOL-2025-00043'">
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>SOL-2025-00041</strong></td>
+                                        <td>Dra. Maria Santos</td>
+                                        <td>Hospital Vida</td>
+                                        <td><strong>R$ 4.053,00</strong></td>
+                                        <td><span class="badge bg-warning text-dark">5h</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-success"
+                                                onclick="window.location.href='aprovar.html?id=SOL-2025-00041'">
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>SOL-2025-00040</strong></td>
+                                        <td>Dr. Carlos Mendes</td>
+                                        <td>Clínica Saúde</td>
+                                        <td><strong>R$ 2.702,00</strong></td>
+                                        <td><span class="badge bg-danger">26h</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-success"
+                                                onclick="window.location.href='aprovar.html?id=SOL-2025-00040'">
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pagamentos Recentes -->
+                <div class="card card-custom">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h5 class="card-title mb-0">
+                                <i class="bi bi-cash-stack me-2"></i>
+                                Pagamentos Recentes
+                            </h5>
+                            <a href="pagamentos.html" class="btn btn-sm btn-outline-primary">Ver Todos</a>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Protocolo</th>
+                                        <th>Médico</th>
+                                        <th>Valor</th>
+                                        <th>Data/Hora</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>SOL-2025-00038</strong></td>
+                                        <td>Dr. Fernando Silva</td>
+                                        <td><strong class="text-success">R$ 5.018,00</strong></td>
+                                        <td>27/12/2025 10:30</td>
+                                        <td><span class="badge bg-success">Pago</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>SOL-2025-00037</strong></td>
+                                        <td>Dra. Ana Paula</td>
+                                        <td><strong class="text-success">R$ 3.200,00</strong></td>
+                                        <td>27/12/2025 09:15</td>
+                                        <td><span class="badge bg-success">Pago</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>SOL-2025-00036</strong></td>
+                                        <td>Dr. Roberto Lima</td>
+                                        <td><strong class="text-success">R$ 4.500,00</strong></td>
+                                        <td>27/12/2025 08:45</td>
+                                        <td><span class="badge bg-success">Pago</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Sidebar -->
+            <div class="col-lg-4">
+                <!-- Quick Stats -->
+                <div class="card card-custom mb-4">
+                    <div class="card-body">
+                        <h6 class="card-title mb-3">
+                            <i class="bi bi-bar-chart me-2"></i>
+                            Estatísticas Rápidas
+                        </h6>
+                        <div class="mb-3 pb-3 border-bottom">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="text-muted small">Médicos Ativos</span>
+                                <strong>87</strong>
+                            </div>
+                            <div class="progress" style="height: 6px;">
+                                <div class="progress-bar bg-primary" style="width: 87%"></div>
+                            </div>
+                        </div>
+                        <div class="mb-3 pb-3 border-bottom">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="text-muted small">Empresas Ativas</span>
+                                <strong>12</strong>
+                            </div>
+                            <div class="progress" style="height: 6px;">
+                                <div class="progress-bar bg-success" style="width: 60%"></div>
+                            </div>
+                        </div>
+                        <div class="mb-3 pb-3 border-bottom">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="text-muted small">Taxa de Aprovação</span>
+                                <strong>94.2%</strong>
+                            </div>
+                            <div class="progress" style="height: 6px;">
+                                <div class="progress-bar bg-success" style="width: 94%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="text-muted small">Tempo Médio Aprovação</span>
+                                <strong>4.2h</strong>
+                            </div>
+                            <div class="progress" style="height: 6px;">
+                                <div class="progress-bar bg-info" style="width: 70%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Atividades Recentes -->
+                <div class="card card-custom">
+                    <div class="card-body">
+                        <h6 class="card-title mb-3">
+                            <i class="bi bi-activity me-2"></i>
+                            Atividades Recentes
+                        </h6>
+                        <div class="timeline">
+                            <div class="timeline-item">
+                                <div class="timeline-marker" style="background-color: var(--success);"></div>
+                                <div class="timeline-content">
+                                    <strong>Pagamento Processado</strong>
+                                    <div class="small text-muted mt-1">Há 15 minutos</div>
+                                    <p class="small mb-0 mt-1">SOL-2025-00038 - R$ 5.018,00</p>
+                                </div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-marker" style="background-color: var(--success);"></div>
+                                <div class="timeline-content">
+                                    <strong>Solicitação Aprovada</strong>
+                                    <div class="small text-muted mt-1">Há 1 hora</div>
+                                    <p class="small mb-0 mt-1">SOL-2025-00039 por Charlene</p>
+                                </div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-marker" style="background-color: var(--info);"></div>
+                                <div class="timeline-content">
+                                    <strong>Nova Solicitação</strong>
+                                    <div class="small text-muted mt-1">Há 2 horas</div>
+                                    <p class="small mb-0 mt-1">SOL-2025-00043 - Validada</p>
+                                </div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-marker" style="background-color: var(--danger);"></div>
+                                <div class="timeline-content">
+                                    <strong>Solicitação Rejeitada</strong>
+                                    <div class="small text-muted mt-1">Há 3 horas</div>
+                                    <p class="small mb-0 mt-1">SOL-2025-00034 - Doc. incompleta</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="../assets/js/app.js"></script>
+
+    <script>
+        checkAuth('admin');
+
+        // Load data
+        document.addEventListener('DOMContentLoaded', function () {
+            // Simular dados carregados
+        });
+    </script>
+</body>
+
+</html>

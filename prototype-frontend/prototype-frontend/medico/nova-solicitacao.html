@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nova Solicitação - Portal do Médico</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../assets/css/custom.css">
+</head>
+
+<body>
+
+    <!-- Mobile Header -->
+    <div class="mobile-header">
+        <button class="menu-toggle" onclick="toggleMobileMenu()">
+            <i class="bi bi-list"></i>
+        </button>
+        <h5 class="text-primary fw-bold flex-grow-1 text-center">
+            <i class="bi bi-person-badge me-2"></i>Portal Médico
+        </h5>
+        <div style="width: 40px;"></div>
+    </div>
+
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay"></div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="px-3 mb-4">
+            <h5 class="text-primary fw-bold mb-0">
+                <i class="bi bi-person-badge me-2"></i>Portal Médico
+            </h5>
+        </div>
+        <nav class="nav flex-column">
+            <a class="nav-link" href="dashboard.html">
+                <i class="bi bi-house-door"></i>
+                Dashboard
+            </a>
+            <a class="nav-link active" href="nova-solicitacao.html">
+                <i class="bi bi-plus-circle"></i>
+                Nova Solicitação
+            </a>
+            <a class="nav-link" href="lista-solicitacoes.html">
+                <i class="bi bi-list-ul"></i>
+                Minhas Solicitações
+            </a>
+            <a class="nav-link" href="perfil.html">
+                <i class="bi bi-person"></i>
+                Meu Perfil
+            </a>
+            <hr class="my-3">
+            <a class="nav-link text-danger" href="#" onclick="logout()">
+                <i class="bi bi-box-arrow-right"></i>
+                Sair
+            </a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <div class="mb-4">
+            <h2 class="mb-1">Nova Solicitação de Adiantamento</h2>
+            <p class="text-muted mb-0">Preencha os dados para solicitar o adiantamento de seus plantões</p>
+        </div>
+
+        <!-- Progress Steps -->
+        <div class="progress-steps mb-5">
+            <div class="progress-step active" id="step1Indicator">
+                <div class="progress-step-circle">1</div>
+                <div class="progress-step-label">Empresa e Taxa</div>
+            </div>
+            <div class="progress-step" id="step2Indicator">
+                <div class="progress-step-circle">2</div>
+                <div class="progress-step-label">Plantões</div>
+            </div>
+            <div class="progress-step" id="step3Indicator">
+                <div class="progress-step-circle">3</div>
+                <div class="progress-step-label">Revisão</div>
+            </div>
+            <div class="progress-step" id="step4Indicator">
+                <div class="progress-step-circle">4</div>
+                <div class="progress-step-label">Confirmação</div>
+            </div>
+        </div>
+
+        <!-- Form Container -->
+        <div class="card card-custom">
+            <div class="card-body p-4">
+                <!-- Step 1: Empresa e Taxa -->
+                <div id="step1" class="form-step">
+                    <h4 class="mb-4">Selecione a Empresa e a Taxa</h4>
+
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="mb-4">
+                                <label for="empresa" class="form-label">Empresa</label>
+                                <select class="form-select form-select-lg" id="empresa" required>
+                                    <option value="">Selecione a empresa...</option>
+                                    <option value="medplus">MedPlus - Taxa 3.5%</option>
+                                    <option value="hospitalvida">Hospital Vida - Taxa 4.0%</option>
+                                    <option value="clinicasaude">Clínica Saúde - Taxa 3.2%</option>
+                                </select>
+                            </div>
+
+                            <div class="alert alert-info">
+                                <i class="bi bi-info-circle me-2"></i>
+                                <strong>Limite disponível:</strong> <span id="limiteDisponivelInfo">R$ 4.500,00</span>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="valorSolicitado" class="form-label">Valor Total dos Plantões</label>
+                                <div class="input-group input-group-lg">
+                                    <span class="input-group-text">R$</span>
+                                    <input type="text" class="form-control" id="valorSolicitado" placeholder="0,00"
+                                        required>
+                                </div>
+                                <div class="form-text">Valor mínimo: R$ 2.000,00 | Valor máximo: R$ 20.000,00</div>
+                            </div>
+
+                            <div id="calculoPreview" class="card bg-light border-0 d-none">
+                                <div class="card-body">
+                                    <h6 class="mb-3">Resumo Financeiro</h6>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Valor Total dos Plantões:</span>
+                                        <strong id="previewValorTotal">R$ 0,00</strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2 text-danger">
+                                        <span>Taxa (<span id="previewTaxaPercent">0</span>%):</span>
+                                        <strong id="previewTaxa">R$ 0,00</strong>
+                                    </div>
+                                    <hr>
+                                    <div class="d-flex justify-content-between">
+                                        <span class="fw-bold">Valor Líquido a Receber:</span>
+                                        <strong class="text-success fs-5" id="previewValorLiquido">R$ 0,00</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <button type="button" class="btn btn-primary btn-lg" onclick="nextStep(2)">
+                            Próximo: Adicionar Plantões
+                            <i class="bi bi-arrow-right ms-2"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Step 2: Plantões -->
+                <div id="step2" class="form-step d-none">
+                    <h4 class="mb-4">Adicione os Plantões</h4>
+
+                    <div class="row mb-4">
+                        <div class="col-md-4">
+                            <label for="plantaoData" class="form-label">Data do Plantão</label>
+                            <input type="date" class="form-control" id="plantaoData">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="plantaoValor" class="form-label">Valor</label>
+                            <div class="input-group">
+                                <span class="input-group-text">R$</span>
+                                <input type="text" class="form-control" id="plantaoValor" placeholder="0,00">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="plantaoDescricao" class="form-label">Descrição</label>
+                            <input type="text" class="form-control" id="plantaoDescricao" placeholder="Ex: Plantão 12h">
+                        </div>
+                        <div class="col-md-1 d-flex align-items-end">
+                            <button type="button" class="btn btn-success w-100" onclick="adicionarPlantao()">
+                                <i class="bi bi-plus-lg"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="plantoesList" class="mb-4">
+                        <div class="alert alert-secondary text-center">
+                            <i class="bi bi-calendar-plus fs-1 d-block mb-2"></i>
+                            Nenhum plantão adicionado ainda
+                        </div>
+                    </div>
+
+                    <div id="plantaoTotalCard" class="card bg-light border-0 d-none mb-4">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fw-bold">Total de Plantões:</span>
+                                <span class="badge bg-primary fs-6" id="plantaoCount">0</span>
+                                <span class="fw-bold">Valor Total:</span>
+                                <strong class="text-primary fs-5" id="plantaoTotalValor">R$ 0,00</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-outline-secondary btn-lg" onclick="previousStep(1)">
+                            <i class="bi bi-arrow-left me-2"></i>
+                            Voltar
+                        </button>
+                        <button type="button" class="btn btn-primary btn-lg" onclick="nextStep(3)">
+                            Próximo: Revisar
+                            <i class="bi bi-arrow-right ms-2"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Step 3: Revisão -->
+                <div id="step3" class="form-step d-none">
+                    <h4 class="mb-4">Revisão da Solicitação</h4>
+
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="card border-primary mb-3">
+                                <div class="card-header bg-primary text-white">
+                                    <h6 class="mb-0"><i class="bi bi-building me-2"></i>Dados da Solicitação</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row mb-2">
+                                        <div class="col-4 text-muted">Empresa:</div>
+                                        <div class="col-8"><strong id="reviewEmpresa">-</strong></div>
+                                    </div>
+                                    <div class="row mb-2">
+                                        <div class="col-4 text-muted">Quantidade de Plantões:</div>
+                                        <div class="col-8"><strong id="reviewQtdPlantoes">-</strong></div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-4 text-muted">Valor Total:</div>
+                                        <div class="col-8"><strong class="text-primary" id="reviewValorTotal">-</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card border-success mb-3">
+                                <div class="card-header bg-success text-white">
+                                    <h6 class="mb-0"><i class="bi bi-calculator me-2"></i>Cálculo Financeiro</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Valor Total dos Plantões:</span>
+                                        <strong id="reviewValorBruto">R$ 0,00</strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2 text-danger">
+                                        <span>Taxa (<span id="reviewTaxaPercent">0</span>%):</span>
+                                        <strong id="reviewTaxa">R$ 0,00</strong>
+                                    </div>
+                                    <hr>
+                                    <div class="d-flex justify-content-between">
+                                        <span class="fw-bold fs-5">Valor Líquido a Receber:</span>
+                                        <strong class="text-success fs-4" id="reviewValorLiquido">R$ 0,00</strong>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card mb-3">
+                                <div class="card-header">
+                                    <h6 class="mb-0"><i class="bi bi-calendar-check me-2"></i>Plantões</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-sm" id="reviewPlantoesTable">
+                                            <thead>
+                                                <tr>
+                                                    <th>Data</th>
+                                                    <th>Descrição</th>
+                                                    <th class="text-end">Valor</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-check mb-4">
+                                <input class="form-check-input" type="checkbox" id="concordoTermos" required>
+                                <label class="form-check-label" for="concordoTermos">
+                                    Concordo com os <a href="#" class="text-decoration-none">termos e condições</a>
+                                    e confirmo que as informações fornecidas são verdadeiras.
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-outline-secondary btn-lg" onclick="previousStep(2)">
+                            <i class="bi bi-arrow-left me-2"></i>
+                            Voltar
+                        </button>
+                        <button type="button" class="btn btn-success btn-lg" onclick="submitSolicitacao()">
+                            <i class="bi bi-check-circle me-2"></i>
+                            Confirmar e Enviar Solicitação
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Step 4: Confirmação -->
+                <div id="step4" class="form-step d-none">
+                    <div class="text-center py-5">
+                        <div class="mb-4">
+                            <i class="bi bi-check-circle-fill text-success" style="font-size: 5rem;"></i>
+                        </div>
+                        <h3 class="text-success mb-3">Solicitação Enviada com Sucesso!</h3>
+                        <p class="text-muted mb-4">
+                            Sua solicitação foi registrada e enviada para validação da empresa.<br>
+                            Protocolo: <strong id="protocoloGerado">-</strong>
+                        </p>
+
+                        <div class="alert alert-info d-inline-block text-start">
+                            <h6 class="mb-2"><i class="bi bi-info-circle me-2"></i>Próximos Passos:</h6>
+                            <ol class="mb-0 ps-3">
+                                <li>A empresa validará os plantões informados</li>
+                                <li>Após validação, será enviado para aprovação administrativa</li>
+                                <li>Você será notificado quando o pagamento for processado</li>
+                            </ol>
+                        </div>
+
+                        <div class="mt-4">
+                            <button type="button" class="btn btn-primary btn-lg me-2"
+                                onclick="window.location.href='dashboard.html'">
+                                <i class="bi bi-house-door me-2"></i>
+                                Ir para Dashboard
+                            </button>
+                            <button type="button" class="btn btn-outline-primary btn-lg"
+                                onclick="window.location.href='lista-solicitacoes.html'">
+                                <i class="bi bi-list-ul me-2"></i>
+                                Ver Minhas Solicitações
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="../assets/js/app.js"></script>
+    <script src="../assets/js/storage.js"></script>
+
+    <script>
+        checkAuth('medico');
+
+        let plantoes = [];
+        let empresaSelecionada = null;
+        let taxaSelecionada = 0;
+
+        // Carregar limite disponível
+        document.getElementById('limiteDisponivelInfo').textContent =
+            formatCurrency(mockData.medico.limiteDisponivel);
+
+        // Atualizar cálculo ao mudar empresa ou valor
+        document.getElementById('empresa').addEventListener('change', function () {
+            const taxas = {
+                'medplus': 3.5,
+                'hospitalvida': 4.0,
+                'clinicasaude': 3.2
+            };
+            empresaSelecionada = this.value;
+            taxaSelecionada = taxas[this.value] || 0;
+            atualizarCalculo();
+        });
+
+        document.getElementById('valorSolicitado').addEventListener('input', function () {
+            let valor = this.value.replace(/[^\d,]/g, '');
+            atualizarCalculo();
+        });
+
+        function atualizarCalculo() {
+            const valorInput = document.getElementById('valorSolicitado').value;
+            const valor = parseFloat(valorInput.replace(/\./g, '').replace(',', '.')) || 0;
+
+            if (valor > 0 && taxaSelecionada > 0) {
+                const taxa = valor * (taxaSelecionada / 100);
+                const liquido = valor - taxa;
+
+                document.getElementById('previewValorTotal').textContent = formatCurrency(valor);
+                document.getElementById('previewTaxaPercent').textContent = taxaSelecionada.toFixed(1);
+                document.getElementById('previewTaxa').textContent = formatCurrency(taxa);
+                document.getElementById('previewValorLiquido').textContent = formatCurrency(liquido);
+                document.getElementById('calculoPreview').classList.remove('d-none');
+            } else {
+                document.getElementById('calculoPreview').classList.add('d-none');
+            }
+        }
+
+        function adicionarPlantao() {
+            const data = document.getElementById('plantaoData').value;
+            const valorInput = document.getElementById('plantaoValor').value;
+            const descricao = document.getElementById('plantaoDescricao').value;
+
+            if (!data || !valorInput) {
+                alert('Preencha a data e o valor do plantão');
+                return;
+            }
+
+            const valor = parseFloat(valorInput.replace(/\./g, '').replace(',', '.'));
+
+            plantoes.push({ data, valor, descricao: descricao || 'Plantão' });
+
+            // Limpar campos
+            document.getElementById('plantaoData').value = '';
+            document.getElementById('plantaoValor').value = '';
+            document.getElementById('plantaoDescricao').value = '';
+
+            renderPlantoes();
+        }
+
+        function renderPlantoes() {
+            const container = document.getElementById('plantoesList');
+
+            if (plantoes.length === 0) {
+                container.innerHTML = `
+                    <div class="alert alert-secondary text-center">
+                        <i class="bi bi-calendar-plus fs-1 d-block mb-2"></i>
+                        Nenhum plantão adicionado ainda
+                    </div>
+                `;
+                document.getElementById('plantaoTotalCard').classList.add('d-none');
+                return;
+            }
+
+            container.innerHTML = plantoes.map((p, index) => `
+                <div class="card mb-2">
+                    <div class="card-body py-2">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>${formatDate(p.data)}</strong> - ${p.descricao}
+                            </div>
+                            <div class="d-flex align-items-center gap-3">
+                                <strong class="text-primary">${formatCurrency(p.valor)}</strong>
+                                <button class="btn btn-sm btn-outline-danger" onclick="removerPlantao(${index})">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            const total = plantoes.reduce((sum, p) => sum + p.valor, 0);
+            document.getElementById('plantaoCount').textContent = plantoes.length;
+            document.getElementById('plantaoTotalValor').textContent = formatCurrency(total);
+            document.getElementById('plantaoTotalCard').classList.remove('d-none');
+        }
+
+        function removerPlantao(index) {
+            plantoes.splice(index, 1);
+            renderPlantoes();
+        }
+
+        function nextStep(step) {
+            // Validações
+            if (step === 2) {
+                if (!empresaSelecionada) {
+                    alert('Selecione uma empresa');
+                    return;
+                }
+                const valor = parseFloat(document.getElementById('valorSolicitado').value.replace(/\./g, '').replace(',', '.')) || 0;
+                if (valor < 2000 || valor > 20000) {
+                    alert('O valor deve estar entre R$ 2.000,00 e R$ 20.000,00');
+                    return;
+                }
+            }
+
+            if (step === 3) {
+                if (plantoes.length === 0) {
+                    alert('Adicione pelo menos um plantão');
+                    return;
+                }
+                preencherRevisao();
+            }
+
+            // Ocultar todos os steps
+            document.querySelectorAll('.form-step').forEach(s => s.classList.add('d-none'));
+            document.querySelectorAll('.progress-step').forEach(s => s.classList.remove('active', 'completed'));
+
+            // Mostrar step atual
+            document.getElementById('step' + step).classList.remove('d-none');
+
+            // Atualizar indicadores
+            for (let i = 1; i <= 4; i++) {
+                const indicator = document.getElementById('step' + i + 'Indicator');
+                if (i < step) {
+                    indicator.classList.add('completed');
+                } else if (i === step) {
+                    indicator.classList.add('active');
+                }
+            }
+        }
+
+        function previousStep(step) {
+            nextStep(step);
+        }
+
+        function preencherRevisao() {
+            const empresaNomes = {
+                'medplus': 'MedPlus',
+                'hospitalvida': 'Hospital Vida',
+                'clinicasaude': 'Clínica Saúde'
+            };
+
+            const total = plantoes.reduce((sum, p) => sum + p.valor, 0);
+            const taxa = total * (taxaSelecionada / 100);
+            const liquido = total - taxa;
+
+            document.getElementById('reviewEmpresa').textContent = empresaNomes[empresaSelecionada];
+            document.getElementById('reviewQtdPlantoes').textContent = plantoes.length + ' plantões';
+            document.getElementById('reviewValorTotal').textContent = formatCurrency(total);
+            document.getElementById('reviewValorBruto').textContent = formatCurrency(total);
+            document.getElementById('reviewTaxaPercent').textContent = taxaSelecionada.toFixed(1);
+            document.getElementById('reviewTaxa').textContent = formatCurrency(taxa);
+            document.getElementById('reviewValorLiquido').textContent = formatCurrency(liquido);
+
+            const tbody = document.querySelector('#reviewPlantoesTable tbody');
+            tbody.innerHTML = plantoes.map(p => `
+                <tr>
+                    <td>${formatDate(p.data)}</td>
+                    <td>${p.descricao}</td>
+                    <td class="text-end">${formatCurrency(p.valor)}</td>
+                </tr>
+            `).join('');
+        }
+
+        function submitSolicitacao() {
+            const concordo = document.getElementById('concordoTermos').checked;
+            if (!concordo) {
+                alert('Você precisa concordar com os termos e condições');
+                return;
+            }
+
+            // Preparar dados da solicitação
+            const empresaNomes = {
+                'medplus': 'MedPlus',
+                'hospitalvida': 'Hospital Vida',
+                'clinicasaude': 'Clínica Saúde'
+            };
+
+            const empresaCNPJs = {
+                'medplus': '12.345.678/0001-00',
+                'hospitalvida': '98.765.432/0001-00',
+                'clinicasaude': '11.222.333/0001-00'
+            };
+
+            const total = plantoes.reduce((sum, p) => sum + p.valor, 0);
+            const taxa = total * (taxaSelecionada / 100);
+            const liquido = total - taxa;
+            const cashback = total * 0.01; // 1% para empresa
+
+            // Dados do médico (mock)
+            const medicoData = {
+                medicoId: 'medico1',
+                medicoNome: 'Dr. Fernando Silva',
+                medicoCRM: 'CRM-SP 123456',
+                medicoCPF: '123.456.789-00',
+                medicoEmail: 'fernando.silva@email.com',
+                medicoTelefone: '(11) 98765-4321',
+                empresaId: empresaSelecionada,
+                empresaNome: empresaNomes[empresaSelecionada],
+                empresaCNPJ: empresaCNPJs[empresaSelecionada],
+                valorTotal: total,
+                taxa: taxa,
+                taxaPercentual: taxaSelecionada,
+                valorLiquido: liquido,
+                cashback: cashback,
+                plantoes: plantoes.map((p, index) => ({
+                    id: index + 1,
+                    data: p.data,
+                    horarioInicio: '19:00',
+                    horarioFim: '07:00',
+                    duracao: 12,
+                    local: p.descricao,
+                    valor: p.valor,
+                    validado: false
+                })),
+                dadosBancarios: {
+                    banco: 'Banco do Brasil',
+                    codigoBanco: '001',
+                    agencia: '1234-5',
+                    conta: '12345678-9',
+                    tipoConta: 'Corrente',
+                    chavePix: 'fernando.silva@email.com',
+                    tipoChavePix: 'EMAIL'
+                },
+                documentos: [
+                    {
+                        nome: 'Contrato Assinado.pdf',
+                        tamanho: '245 KB',
+                        tipo: 'application/pdf',
+                        dataUpload: new Date().toISOString()
+                    },
+                    {
+                        nome: 'Comprovantes Plantões.pdf',
+                        tamanho: '1.2 MB',
+                        tipo: 'application/pdf',
+                        dataUpload: new Date().toISOString()
+                    }
+                ]
+            };
+
+            // Criar solicitação no storage
+            console.log('Criando solicitação com dados:', medicoData);
+            const novaSolicitacao = AppStorage.criarSolicitacao(medicoData);
+            console.log('Solicitação criada:', novaSolicitacao);
+            console.log('Todas solicitações após criar:', AppStorage.getSolicitacoes());
+            console.log('Solicitações do médico:', AppStorage.getSolicitacoesMedico('medico1'));
+
+            // Mostrar protocolo gerado
+            document.getElementById('protocoloGerado').textContent = novaSolicitacao.numero;
+
+            // Ir para step 4
+            nextStep(4);
+        }
+    </script>
+</body>
+
+</html>

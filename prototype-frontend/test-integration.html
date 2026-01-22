@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste de Integração Backend</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+</head>
+
+<body>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-8 mx-auto">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0"><i class="bi bi-bug"></i> Teste de Integração Backend</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-info">
+                            <strong>Status do Backend:</strong>
+                            <span id="backend-status" class="badge bg-secondary">Verificando...</span>
+                        </div>
+
+                        <div class="mb-4">
+                            <h5>Teste de Endpoints</h5>
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-outline-primary" onclick="testHealthCheck()">
+                                    <i class="bi bi-heart-pulse"></i> Health Check
+                                </button>
+                                <button class="btn btn-outline-success" onclick="testGetRequests()">
+                                    <i class="bi bi-list-ul"></i> Listar Solicitações
+                                </button>
+                                <button class="btn btn-outline-info" onclick="testGetDoctors()">
+                                    <i class="bi bi-person"></i> Listar Médicos
+                                </button>
+                                <button class="btn btn-outline-warning" onclick="testGetCompanies()">
+                                    <i class="bi bi-building"></i> Listar Empresas
+                                </button>
+                                <button class="btn btn-outline-danger" onclick="testStorage()">
+                                    <i class="bi bi-database"></i> Testar Storage API
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label"><strong>Console de Resultados:</strong></label>
+                            <div id="result-console" class="border rounded p-3 bg-light"
+                                style="height: 400px; overflow-y: auto; font-family: monospace; font-size: 12px;">
+                                <div class="text-muted">Aguardando testes...</div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-secondary" onclick="clearConsole()">
+                                <i class="bi bi-trash"></i> Limpar Console
+                            </button>
+                            <button class="btn btn-success" onclick="runAllTests()">
+                                <i class="bi bi-play-circle"></i> Executar Todos os Testes
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/api.js"></script>
+    <script src="assets/js/storage-api.js"></script>
+
+    <script>
+        const console_element = document.getElementById('result-console');
+        const status_element = document.getElementById('backend-status');
+
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const colors = {
+                info: 'text-primary',
+                success: 'text-success',
+                error: 'text-danger',
+                warning: 'text-warning'
+            };
+            const color = colors[type] || 'text-dark';
+
+            const logEntry = document.createElement('div');
+            logEntry.className = color;
+            logEntry.innerHTML = `<strong>[${timestamp}]</strong> ${message}`;
+            console_element.appendChild(logEntry);
+            console_element.scrollTop = console_element.scrollHeight;
+        }
+
+        function clearConsole() {
+            console_element.innerHTML = '<div class="text-muted">Console limpo...</div>';
+        }
+
+        async function testHealthCheck() {
+            log('🔍 Testando health check...', 'info');
+            try {
+                const response = await fetch('http://localhost:3002/health');
+                const data = await response.json();
+                log(`✅ Health Check: ${JSON.stringify(data)}`, 'success');
+                status_element.className = 'badge bg-success';
+                status_element.textContent = 'Online';
+            } catch (error) {
+                log(`❌ Erro no health check: ${error.message}`, 'error');
+                status_element.className = 'badge bg-danger';
+                status_element.textContent = 'Offline';
+            }
+        }
+
+        async function testGetRequests() {
+            log('🔍 Buscando solicitações...', 'info');
+            try {
+                const requests = await window.API.getRequests();
+                log(`✅ Encontradas ${requests.length} solicitações`, 'success');
+                requests.forEach((req, idx) => {
+                    log(`  ${idx + 1}. ${req.numero} - ${req.medicoNome} - ${req.status} - R$ ${req.valorTotal.toFixed(2)}`);
+                });
+            } catch (error) {
+                log(`❌ Erro ao buscar solicitações: ${error.message}`, 'error');
+            }
+        }
+
+        async function testGetDoctors() {
+            log('🔍 Buscando médicos...', 'info');
+            try {
+                const doctors = await window.API.getDoctors();
+                log(`✅ Encontrados ${doctors.length} médicos`, 'success');
+                doctors.forEach((doc, idx) => {
+                    log(`  ${idx + 1}. ${doc.full_name || doc.name || 'N/A'} - CRM-${doc.crm_state || ''} ${doc.crm || 'N/A'} - ${doc.email || 'N/A'}`);
+                });
+            } catch (error) {
+                log(`❌ Erro ao buscar médicos: ${error.message}`, 'error');
+            }
+        }
+
+        async function testGetCompanies() {
+            log('🔍 Buscando empresas...', 'info');
+            try {
+                const companies = await window.API.getCompanies();
+                log(`✅ Encontradas ${companies.length} empresas`, 'success');
+                companies.forEach((comp, idx) => {
+                    log(`  ${idx + 1}. ${comp.name || 'N/A'} - ${comp.cnpj || 'N/A'} - ${comp.contact_email || comp.email || 'N/A'}`);
+                });
+            } catch (error) {
+                log(`❌ Erro ao buscar empresas: ${error.message}`, 'error');
+            }
+        }
+
+        async function testStorage() {
+            log('🔍 Testando Storage API (camada de compatibilidade)...', 'info');
+            try {
+                log('  Inicializando AppStorage...', 'info');
+                await AppStorage.init();
+                log('  ✅ AppStorage inicializado', 'success');
+
+                log('  Buscando solicitações via AppStorage...', 'info');
+                const solicitacoes = await AppStorage.getSolicitacoes();
+                log(`  ✅ AppStorage.getSolicitacoes(): ${solicitacoes.length} registros`, 'success');
+
+                if (solicitacoes.length > 0) {
+                    const primeira = solicitacoes[0];
+                    log(`  Primeira solicitação: ${primeira.numero}`, 'info');
+
+                    log('  Testando labels e classes de status...', 'info');
+                    const label = AppStorage.getStatusLabel(primeira.status);
+                    const classe = AppStorage.getStatusClass(primeira.status);
+                    log(`  Status: ${primeira.status} -> "${label}" (classe: ${classe})`, 'success');
+                }
+
+                log('✅ Todos os testes do Storage API passaram!', 'success');
+            } catch (error) {
+                log(`❌ Erro no teste do Storage: ${error.message}`, 'error');
+                console.error(error);
+            }
+        }
+
+        async function runAllTests() {
+            clearConsole();
+            log('🚀 Iniciando bateria completa de testes...', 'info');
+            log('═'.repeat(60), 'info');
+
+            await testHealthCheck();
+            await new Promise(resolve => setTimeout(resolve, 500));
+
+            await testGetRequests();
+            await new Promise(resolve => setTimeout(resolve, 500));
+
+            await testGetDoctors();
+            await new Promise(resolve => setTimeout(resolve, 500));
+
+            await testGetCompanies();
+            await new Promise(resolve => setTimeout(resolve, 500));
+
+            await testStorage();
+
+            log('═'.repeat(60), 'info');
+            log('✅ Todos os testes concluídos!', 'success');
+        }
+
+        // Auto-check on load
+        window.addEventListener('load', () => {
+            testHealthCheck();
+        });
+    </script>
+</body>
+
+</html>

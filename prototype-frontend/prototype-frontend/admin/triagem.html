@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Triagem - Portal Administrativo</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../assets/css/custom.css">
+</head>
+
+<body>
+
+    <!-- Mobile Header -->
+    <div class="mobile-header">
+        <button class="menu-toggle" onclick="toggleMobileMenu()">
+            <i class="bi bi-list"></i>
+        </button>
+        <h5 class="text-danger fw-bold flex-grow-1 text-center">
+            <i class="bi bi-shield-lock me-2"></i>Portal Admin
+        </h5>
+        <div style="width: 40px;"></div>
+    </div>
+
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay"></div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="px-3 mb-4">
+            <h5 class="text-danger fw-bold mb-0">
+                <i class="bi bi-shield-lock me-2"></i>Portal Admin
+            </h5>
+        </div>
+        <nav class="nav flex-column">
+            <a class="nav-link" href="dashboard.html">
+                <i class="bi bi-house-door"></i>
+                Dashboard
+            </a>
+            <a class="nav-link active" href="triagem.html">
+                <i class="bi bi-funnel"></i>
+                Triagem
+            </a>
+            <a class="nav-link" href="aprovacoes.html">
+                <i class="bi bi-clipboard-check"></i>
+                Aprovações
+            </a>
+            <a class="nav-link" href="pagamentos.html">
+                <i class="bi bi-cash-coin"></i>
+                Pagamentos
+            </a>
+            <a class="nav-link" href="relatorios.html">
+                <i class="bi bi-graph-up"></i>
+                Relatórios
+            </a>
+            <hr class="my-3">
+            <a class="nav-link text-danger" href="#" onclick="logout()">
+                <i class="bi bi-box-arrow-right"></i>
+                Sair
+            </a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <div class="mb-4">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="dashboard.html">Dashboard</a></li>
+                    <li class="breadcrumb-item active">Triagem</li>
+                </ol>
+            </nav>
+            <h2 class="mb-1">Triagem de Solicitação</h2>
+            <p class="text-muted mb-0">Protocolo: <strong id="protocoloTitle">-</strong></p>
+        </div>
+
+        <div class="row">
+            <!-- Main Column -->
+            <div class="col-lg-8">
+                <!-- Doctor Information -->
+                <div class="card card-custom mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title mb-4">
+                            <i class="bi bi-person-badge me-2"></i>
+                            Informações do Médico
+                        </h5>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <small class="text-muted d-block">Nome Completo</small>
+                                <strong id="medicoNome">-</strong>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <small class="text-muted d-block">CRM</small>
+                                <strong id="medicoCRM">-</strong>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <small class="text-muted d-block">CPF</small>
+                                <strong id="medicoCPF">-</strong>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <small class="text-muted d-block">E-mail</small>
+                                <strong id="medicoEmail">-</strong>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <small class="text-muted d-block">Telefone</small>
+                                <strong id="medicoTelefone">-</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Request Information -->
+                <div class="card card-custom mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title mb-4">
+                            <i class="bi bi-file-text me-2"></i>
+                            Informações da Solicitação
+                        </h5>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <small class="text-muted d-block">Empresa</small>
+                                <strong id="empresaNome">-</strong>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <small class="text-muted d-block">Data da Solicitação</small>
+                                <strong id="dataCriacao">-</strong>
+                            </div>
+                        </div>
+
+                        <table class="table table-sm mt-3">
+                            <tbody>
+                                <tr>
+                                    <td>Valor Total Solicitado</td>
+                                    <td class="text-end">
+                                        <h5 class="text-primary mb-0" id="valorTotal">-</h5>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Taxa Plataforma (<span id="taxaPerc">3.5</span>%)</td>
+                                    <td class="text-end"><span class="text-danger" id="taxa">-</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Valor Líquido (Médico)</strong></td>
+                                    <td class="text-end"><strong class="text-success" id="valorLiquido">-</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Cashback Empresa (1%)</td>
+                                    <td class="text-end"><span class="text-info" id="cashback">-</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Plantões -->
+                <div class="card card-custom mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title mb-4">
+                            <i class="bi bi-calendar-check me-2"></i>
+                            Plantões Declarados
+                        </h5>
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Data</th>
+                                        <th>Horário</th>
+                                        <th>Local</th>
+                                        <th class="text-end">Valor</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="plantoesTable">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dados Bancários -->
+                <div class="card card-custom mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title mb-4">
+                            <i class="bi bi-bank me-2"></i>
+                            Dados Bancários
+                        </h5>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <small class="text-muted d-block">Banco</small>
+                                <strong id="banco">-</strong>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <small class="text-muted d-block">Agência</small>
+                                <strong id="agencia">-</strong>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <small class="text-muted d-block">Conta</small>
+                                <strong id="conta">-</strong>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <small class="text-muted d-block">Chave PIX</small>
+                                <strong id="chavePix">-</strong>
+                                <span class="badge bg-secondary ms-2" id="tipoChavePix">-</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Decision -->
+                <div class="card card-custom border-danger mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title mb-4 text-danger">
+                            <i class="bi bi-funnel me-2"></i>
+                            Decisão de Triagem
+                        </h5>
+
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle me-2"></i>
+                            <strong>Atenção Charlene:</strong> Você pode aprovar esta solicitação diretamente
+                            ou encaminhá-la para validação da empresa MedPlus.
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label">Observações (Opcional)</label>
+                            <textarea class="form-control" id="observacoesTriagem" rows="3"
+                                placeholder="Adicione observações sobre esta triagem..."></textarea>
+                        </div>
+
+                        <div class="d-flex gap-2 flex-wrap">
+                            <button type="button" class="btn btn-success btn-lg" onclick="aprovarDireto()">
+                                <i class="bi bi-check-circle me-2"></i>
+                                Aprovar Diretamente
+                            </button>
+                            <button type="button" class="btn btn-primary btn-lg" onclick="encaminharParaEmpresa()">
+                                <i class="bi bi-building me-2"></i>
+                                Encaminhar para MedPlus
+                            </button>
+                            <button type="button" class="btn btn-warning btn-lg" onclick="solicitarInformacoes()">
+                                <i class="bi bi-question-circle me-2"></i>
+                                Solicitar Mais Informações
+                            </button>
+                            <button type="button" class="btn btn-danger btn-lg" onclick="mostrarModalRejeicao()">
+                                <i class="bi bi-x-circle me-2"></i>
+                                Rejeitar
+                            </button>
+                            <a href="dashboard.html" class="btn btn-secondary btn-lg">
+                                <i class="bi bi-arrow-left me-2"></i>
+                                Voltar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <!-- Timeline -->
+                <div class="card card-custom mb-4">
+                    <div class="card-body">
+                        <h6 class="card-title mb-3">
+                            <i class="bi bi-clock-history me-2"></i>
+                            Histórico
+                        </h6>
+                        <div id="historicoContainer" class="activity-timeline">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Documents -->
+                <div class="card card-custom">
+                    <div class="card-body">
+                        <h6 class="card-title mb-3">
+                            <i class="bi bi-file-earmark-text me-2"></i>
+                            Documentos Anexados
+                        </h6>
+                        <div id="documentosContainer" class="list-group list-group-flush">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Rejeição -->
+    <div class="modal fade" id="modalRejeicao" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title">
+                        <i class="bi bi-x-circle me-2"></i>
+                        Rejeitar Solicitação
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="motivoRejeicao" class="form-label">Motivo da Rejeição</label>
+                        <select class="form-select" id="motivoRejeicao" required>
+                            <option value="">Selecione o motivo...</option>
+                            <option value="documentacao_incompleta">Documentação Incompleta</option>
+                            <option value="dados_incorretos">Dados Incorretos</option>
+                            <option value="valor_fora_limite">Valor fora do limite</option>
+                            <option value="plantoes_invalidos">Plantões inválidos</option>
+                            <option value="outro">Outro</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="detalhesRejeicao" class="form-label">Detalhes</label>
+                        <textarea class="form-control" id="detalhesRejeicao" rows="4" required
+                            placeholder="Descreva o motivo da rejeição..."></textarea>
+                    </div>
+                    <div class="alert alert-warning">
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+                        <small>O médico será notificado sobre a rejeição.</small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" onclick="confirmarRejeicao()">
+                        <i class="bi bi-x-circle me-2"></i>
+                        Confirmar Rejeição
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Solicitar Informações -->
+    <div class="modal fade" id="modalInformacoes" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-warning">
+                    <h5 class="modal-title">
+                        <i class="bi bi-question-circle me-2"></i>
+                        Solicitar Mais Informações
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="mensagemInformacoes" class="form-label">Mensagem para o Médico</label>
+                        <textarea class="form-control" id="mensagemInformacoes" rows="5" required
+                            placeholder="Descreva quais informações adicionais são necessárias..."></textarea>
+                    </div>
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle me-2"></i>
+                        <small>O médico receberá uma notificação para complementar as informações.</small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-warning" onclick="confirmarSolicitacaoInformacoes()">
+                        <i class="bi bi-send me-2"></i>
+                        Enviar Solicitação
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="../assets/js/app.js"></script>
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/storage-api.js"></script>
+
+    <script>
+        checkAuth('admin');
+
+        let modalRejeicao, modalInformacoes;
+        let solicitacaoAtual;
+
+        document.addEventListener('DOMContentLoaded', function () {
+            modalRejeicao = new bootstrap.Modal(document.getElementById('modalRejeicao'));
+            modalInformacoes = new bootstrap.Modal(document.getElementById('modalInformacoes'));
+
+            carregarSolicitacao();
+        });
+
+        function carregarSolicitacao() {
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get('id');
+
+            if (!id) {
+                alert('Solicitação não encontrada');
+                window.location.href = 'dashboard.html';
+                return;
+            }
+
+            solicitacaoAtual = AppStorage.getSolicitacao(id);
+
+            if (!solicitacaoAtual) {
+                alert('Solicitação não encontrada');
+                window.location.href = 'dashboard.html';
+                return;
+            }
+
+            preencherDados();
+        }
+
+        function preencherDados() {
+            const s = solicitacaoAtual;
+
+            document.getElementById('protocoloTitle').textContent = s.numero;
+            document.getElementById('medicoNome').textContent = s.medicoNome;
+            document.getElementById('medicoCRM').textContent = s.medicoCRM;
+            document.getElementById('medicoCPF').textContent = mascaraCPF(s.medicoCPF);
+            document.getElementById('medicoEmail').textContent = s.medicoEmail;
+            document.getElementById('medicoTelefone').textContent = s.medicoTelefone;
+
+            document.getElementById('empresaNome').textContent = s.empresaNome;
+            document.getElementById('dataCriacao').textContent = formatDateTime(s.dataCriacao);
+
+            document.getElementById('valorTotal').textContent = formatCurrency(s.valorTotal);
+            document.getElementById('taxaPerc').textContent = s.taxaPercentual;
+            document.getElementById('taxa').textContent = '-' + formatCurrency(s.taxa);
+            document.getElementById('valorLiquido').textContent = formatCurrency(s.valorLiquido);
+            document.getElementById('cashback').textContent = '+' + formatCurrency(s.cashback);
+
+            // Plantões
+            const plantoesHtml = s.plantoes.map(p => `
+                <tr>
+                    <td>${formatDate(p.data)}</td>
+                    <td>${p.horarioInicio} - ${p.horarioFim} (${p.duracao}h)</td>
+                    <td>${p.local}</td>
+                    <td class="text-end"><strong>${formatCurrency(p.valor)}</strong></td>
+                </tr>
+            `).join('');
+            document.getElementById('plantoesTable').innerHTML = plantoesHtml;
+
+            // Dados bancários
+            if (s.dadosBancarios) {
+                document.getElementById('banco').textContent = `${s.dadosBancarios.banco} (${s.dadosBancarios.codigoBanco})`;
+                document.getElementById('agencia').textContent = s.dadosBancarios.agencia;
+                document.getElementById('conta').textContent = s.dadosBancarios.conta;
+                document.getElementById('chavePix').textContent = s.dadosBancarios.chavePix;
+                document.getElementById('tipoChavePix').textContent = s.dadosBancarios.tipoChavePix;
+            }
+
+            // Histórico
+            const historicoHtml = s.historico.map(h => `
+                <div class="activity-item">
+                    <div class="activity-marker bg-${getHistoricoColor(h.acao)}"></div>
+                    <div class="activity-content">
+                        <div class="fw-bold small">${h.descricao}</div>
+                        <div class="text-muted small">${h.usuario} - ${formatDateTime(h.data)}</div>
+                        ${h.observacao ? `<div class="small text-muted mt-1">${h.observacao}</div>` : ''}
+                    </div>
+                </div>
+            `).join('');
+            document.getElementById('historicoContainer').innerHTML = historicoHtml;
+
+            // Documentos
+            const documentosHtml = s.documentos.map(d => `
+                <div class="list-group-item px-0 d-flex justify-content-between align-items-center">
+                    <div>
+                        <i class="bi bi-file-earmark-pdf text-danger me-2"></i>
+                        <span class="small">${d.nome}</span>
+                        <div class="text-muted" style="font-size: 0.75rem;">${d.tamanho}</div>
+                    </div>
+                    <button class="btn btn-sm btn-outline-primary">
+                        <i class="bi bi-download"></i>
+                    </button>
+                </div>
+            `).join('');
+            document.getElementById('documentosContainer').innerHTML = documentosHtml;
+        }
+
+        function getHistoricoColor(acao) {
+            const colors = {
+                'CRIACAO': 'primary',
+                'APROVACAO_DIRETA_ADMIN': 'success',
+                'ENCAMINHADO_PARA_EMPRESA': 'info',
+                'REJEICAO_FINAL_ADMIN': 'danger',
+                'INFORMACOES_SOLICITADAS': 'warning'
+            };
+            return colors[acao] || 'secondary';
+        }
+
+        function mascaraCPF(cpf) {
+            return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '***.$2.***-**');
+        }
+
+        function aprovarDireto() {
+            const observacao = document.getElementById('observacoesTriagem').value;
+
+            if (confirm('Confirma a aprovação direta desta solicitação? O pagamento será processado automaticamente.')) {
+                AppStorage.adminAprovarDireto(solicitacaoAtual.id, observacao);
+                alert('Solicitação aprovada com sucesso!');
+                window.location.href = 'dashboard.html';
+            }
+        }
+
+        function encaminharParaEmpresa() {
+            const observacao = document.getElementById('observacoesTriagem').value;
+
+            if (confirm(`Confirma o encaminhamento desta solicitação para ${solicitacaoAtual.empresaNome}?`)) {
+                AppStorage.adminEncaminharParaEmpresa(solicitacaoAtual.id, observacao);
+                alert(`Solicitação encaminhada para ${solicitacaoAtual.empresaNome} com sucesso!`);
+                window.location.href = 'dashboard.html';
+            }
+        }
+
+        function solicitarInformacoes() {
+            modalInformacoes.show();
+        }
+
+        function confirmarSolicitacaoInformacoes() {
+            const mensagem = document.getElementById('mensagemInformacoes').value;
+
+            if (!mensagem.trim()) {
+                alert('Por favor, descreva quais informações são necessárias.');
+                return;
+            }
+
+            AppStorage.adminSolicitarInformacoes(solicitacaoAtual.id, mensagem);
+            alert('Solicitação de informações enviada ao médico!');
+            modalInformacoes.hide();
+            window.location.href = 'dashboard.html';
+        }
+
+        function mostrarModalRejeicao() {
+            modalRejeicao.show();
+        }
+
+        function confirmarRejeicao() {
+            const motivo = document.getElementById('motivoRejeicao').value;
+            const detalhes = document.getElementById('detalhesRejeicao').value;
+
+            if (!motivo || !detalhes.trim()) {
+                alert('Por favor, preencha todos os campos obrigatórios.');
+                return;
+            }
+
+            if (confirm('Confirma a rejeição definitiva desta solicitação?')) {
+                AppStorage.adminRejeitar(solicitacaoAtual.id, motivo, detalhes);
+                alert('Solicitação rejeitada. O médico foi notificado.');
+                modalRejeicao.hide();
+                window.location.href = 'dashboard.html';
+            }
+        }
+    </script>
+</body>
+
+</html>

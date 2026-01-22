@@ -1,0 +1,90 @@
+# Workflow Status - Quick Flow com Discovery
+# Projeto: Negócio de adiantamento de valores de plantões médicos
+
+generated: "2025-12-10"
+project: "Negócio de adiantamento de valores de plantões médicos"
+project_type: "fintech-healthcare"
+selected_track: "quick-flow"
+field_type: "greenfield"
+workflow_path: "custom-quick-flow-with-discovery"
+
+workflow_status:
+  # Fase 0: Discovery (Opcional mas recomendado)
+  - phase: "0-discovery"
+    name: "Discovery e Planejamento Inicial"
+    workflows:
+      - id: "brainstorming"
+        name: "Sessão de Brainstorming"
+        description: "Exploração criativa de funcionalidades e abordagens"
+        status: "required"
+        agent: "analyst"
+        workflow: "/bmad:bmm:tasks:facilitate-brainstorming-session"
+
+      - id: "research"
+        name: "Pesquisa de Mercado e Técnica"
+        description: "Pesquisa sobre regulamentações, concorrentes, tecnologias"
+        status: "required"
+        agent: "analyst"
+        workflow: "/bmad:bmm:tasks:create-deep-research-prompt"
+
+      - id: "tech-spec"
+        name: "Especificação Técnica Rápida"
+        description: "Documento técnico simplificado para guiar desenvolvimento"
+        status: "completed"
+        agent: "quick-flow-solo-dev"
+        workflow: "/bmad:bmm:workflows:bmad-quick-flow:create-tech-spec"
+        completion_date: "2026-01-15"
+        notes: "MVP1 com SQLite, 2 portais (Médico e Admin)"
+
+  # Fase 1: Desenvolvimento Quick Flow
+  - phase: "1-quick-development"
+    name: "Desenvolvimento Rápido"
+    workflows:
+      - id: "quick-dev"
+        name: "Desenvolvimento Quick Flow"
+        description: "Desenvolvimento iterativo rápido com o agente quick-flow-solo-dev"
+        status: "required"
+        agent: "quick-flow-solo-dev"
+        workflow: "/bmad:bmm:workflows:bmad-quick-flow:quick-dev"
+
+# Próximos passos recomendados
+next_steps:
+  current_phase: "1-quick-development"
+  current_step: "ready-to-start"
+  recommendation: |
+    ✅ Discovery completo:
+       - Brainstorming ✓
+       - Research ✓
+       - Especificação Técnica ✓
+
+    🚀 PRONTO PARA DESENVOLVER!
+
+    Stack definida:
+    - Backend: Node.js + TypeScript + Express + SQLite + Sequelize
+    - Frontend: HTML5 + Bootstrap + Vanilla JS
+    - 2 Portais: Médico + Administrador
+
+    Próximas ações:
+    1. Criar estrutura do projeto backend
+    2. Configurar Sequelize com SQLite
+    3. Implementar autenticação (JWT)
+    4. Criar modelos de dados
+    5. Desenvolver APIs REST
+    6. Integrar frontend com backend
+
+# Comandos úteis
+commands:
+  check_status: "*workflow-status"
+  brainstorm: "Load analyst agent and run: /bmad:bmm:tasks:facilitate-brainstorming-session"
+  research: "Load analyst agent and run: /bmad:bmm:tasks:create-deep-research-prompt"
+  quick_dev: "Load quick-flow-solo-dev agent and start coding"
+# Notas importantes
+notes:
+  - "Sistema envolve transações financeiras - considere PCI-DSS"
+  - "Dados de saúde envolvidos - atenção à LGPD e HIPAA (se aplicável)"
+  - "Considere KYC/AML para compliance financeiro"
+  - "Quick Flow é rápido mas pode necessitar refatorações para produção"
+  - "CRÍTICO: Médico deve informar datas específicas dos plantões na solicitação"
+  - "MVP1: Apenas 2 portais (Médico e Administrador) - Portal da Empresa fica para versão futura"
+  - "MVP1: Validação de plantões será 100% manual pelo administrador (sem portal empresa)"
+  - "Sistema precisa rastrear cada plantão individualmente para auditoria e conciliação"

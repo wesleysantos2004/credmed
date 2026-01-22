@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protótipo - Sistema de Adiantamento de Plantões</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="assets/css/custom.css">
+</head>
+
+<body>
+
+    <div class="container-fluid vh-100 d-flex align-items-center justify-content-center bg-light">
+        <div class="text-center">
+            <h1 class="display-4 mb-5">
+                <i class="bi bi-heart-pulse text-primary"></i>
+                Plantões Adiantamento
+            </h1>
+            <p class="lead mb-5">Protótipo Navegável - Selecione um portal</p>
+
+            <div class="row g-4 justify-content-center">
+                <!-- Portal Médico -->
+                <div class="col-md-4">
+                    <div class="card card-custom h-100" onclick="window.location.href='medico/login.html'"
+                        style="cursor: pointer;">
+                        <div class="card-body text-center p-5">
+                            <i class="bi bi-person-badge display-1 text-primary mb-3"></i>
+                            <h3 class="card-title">Portal do Médico</h3>
+                            <p class="card-text text-muted">
+                                Solicitar adiantamentos<br>
+                                Acompanhar status<br>
+                                Gerenciar perfil
+                            </p>
+                            <button class="btn btn-primary btn-lg mt-3">
+                                Acessar <i class="bi bi-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Portal Empresa -->
+                <div class="col-md-4">
+                    <div class="card card-custom h-100" onclick="window.location.href='empresa/login.html'"
+                        style="cursor: pointer;">
+                        <div class="card-body text-center p-5">
+                            <i class="bi bi-building display-1 text-success mb-3"></i>
+                            <h3 class="card-title">Portal da Empresa</h3>
+                            <p class="card-text text-muted">
+                                Validar plantões<br>
+                                Acompanhar cashback<br>
+                                Relatórios
+                            </p>
+                            <button class="btn btn-success btn-lg mt-3">
+                                Acessar <i class="bi bi-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Portal Admin -->
+                <div class="col-md-4">
+                    <div class="card card-custom h-100" onclick="window.location.href='admin/login.html'"
+                        style="cursor: pointer;">
+                        <div class="card-body text-center p-5">
+                            <i class="bi bi-gear-fill display-1 text-danger mb-3"></i>
+                            <h3 class="card-title">Portal Admin</h3>
+                            <p class="card-text text-muted">
+                                Aprovar solicitações<br>
+                                Processar pagamentos<br>
+                                Dashboard geral
+                            </p>
+                            <button class="btn btn-danger btn-lg mt-3">
+                                Acessar <i class="bi bi-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-5">
+                <small class="text-muted">
+                    <i class="bi bi-info-circle"></i>
+                    Protótipo HTML navegável - Todos os dados são simulados
+                </small>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>

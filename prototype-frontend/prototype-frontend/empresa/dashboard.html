@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Portal da Empresa</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../assets/css/custom.css">
+</head>
+
+<body>
+
+    <!-- Mobile Header -->
+    <div class="mobile-header">
+        <button class="menu-toggle" onclick="toggleMobileMenu()">
+            <i class="bi bi-list"></i>
+        </button>
+        <h5 class="text-success fw-bold flex-grow-1 text-center">
+            <i class="bi bi-building me-2"></i>Portal Empresa
+        </h5>
+        <div style="width: 40px;"></div>
+    </div>
+
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay"></div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="px-3 mb-4">
+            <h5 class="text-success fw-bold mb-0">
+                <i class="bi bi-building me-2"></i>Portal Empresa
+            </h5>
+        </div>
+        <nav class="nav flex-column">
+            <a class="nav-link active" href="dashboard.html">
+                <i class="bi bi-house-door"></i>
+                Dashboard
+            </a>
+            <a class="nav-link" href="validacoes.html">
+                <i class="bi bi-clipboard-check"></i>
+                Validações
+            </a>
+            <a class="nav-link" href="cashback.html">
+                <i class="bi bi-piggy-bank"></i>
+                Cashback
+            </a>
+            <a class="nav-link" href="historico.html">
+                <i class="bi bi-clock-history"></i>
+                Histórico
+            </a>
+            <hr class="my-3">
+            <a class="nav-link text-danger" href="#" onclick="logout()">
+                <i class="bi bi-box-arrow-right"></i>
+                Sair
+            </a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <div class="mb-4">
+            <h2 class="mb-1">Bem-vindo, <span id="nomeEmpresa">MedPlus</span>!</h2>
+            <p class="text-muted mb-0">Gerencie as validações de plantões médicos</p>
+        </div>
+
+        <!-- Metrics Cards -->
+        <div class="row g-3 mb-4">
+            <div class="col-6 col-md-3">
+                <div class="card card-metric card-metric-warning">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="flex-grow-1">
+                                <div class="metric-label">Pendentes</div>
+                                <div class="metric-value">8</div>
+                            </div>
+                            <div class="metric-icon">
+                                <i class="bi bi-hourglass-split"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="card card-metric card-metric-success">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="flex-grow-1">
+                                <div class="metric-label">Cashback</div>
+                                <div class="metric-value">R$ 8.9k</div>
+                            </div>
+                            <div class="metric-icon">
+                                <i class="bi bi-piggy-bank"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="card card-metric card-metric-info">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="flex-grow-1">
+                                <div class="metric-label">Validadas (Mês)</div>
+                                <div class="metric-value">65</div>
+                            </div>
+                            <div class="metric-icon">
+                                <i class="bi bi-check-circle"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="card card-metric card-metric-primary">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="flex-grow-1">
+                                <div class="metric-label">Volume (Mês)</div>
+                                <div class="metric-value">R$ 890k</div>
+                            </div>
+                            <div class="metric-icon">
+                                <i class="bi bi-currency-dollar"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alert for Urgent Validations -->
+        <div class="alert alert-warning d-flex align-items-center mb-4" role="alert">
+            <i class="bi bi-exclamation-triangle-fill fs-4 me-3"></i>
+            <div class="flex-grow-1">
+                <strong>Atenção!</strong> Você tem <strong>3 solicitações</strong> aguardando validação há mais de 24
+                horas.
+            </div>
+            <a href="validacoes.html" class="btn btn-warning btn-sm">Ver Pendências</a>
+        </div>
+
+        <div class="row">
+            <!-- Main Column -->
+            <div class="col-lg-8">
+                <!-- Pending Validations -->
+                <div class="card card-custom mb-4">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h5 class="card-title mb-0">
+                                <i class="bi bi-clipboard-check me-2"></i>
+                                Validações Pendentes
+                            </h5>
+                            <a href="validacoes.html" class="btn btn-sm btn-outline-primary">Ver Todas</a>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Protocolo</th>
+                                        <th>Médico</th>
+                                        <th>Valor</th>
+                                        <th>Plantões</th>
+                                        <th>Tempo</th>
+                                        <th>Ação</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="table-warning">
+                                        <td><strong>SOL-2025-00042</strong></td>
+                                        <td>Dr. Fernando Silva</td>
+                                        <td><strong>R$ 5.200,00</strong></td>
+                                        <td>3 plantões</td>
+                                        <td>
+                                            <span class="badge bg-danger">
+                                                <i class="bi bi-clock me-1"></i>26h
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <a href="validar.html?id=SOL-2025-00042" class="btn btn-sm btn-success">
+                                                <i class="bi bi-check-lg"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr class="table-warning">
+                                        <td><strong>SOL-2025-00041</strong></td>
+                                        <td>Dra. Maria Santos</td>
+                                        <td><strong>R$ 4.200,00</strong></td>
+                                        <td>2 plantões</td>
+                                        <td>
+                                            <span class="badge bg-danger">
+                                                <i class="bi bi-clock me-1"></i>30h
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <a href="validar.html?id=SOL-2025-00041" class="btn btn-sm btn-success">
+                                                <i class="bi bi-check-lg"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>SOL-2025-00043</strong></td>
+                                        <td>Dr. Carlos Mendes</td>
+                                        <td><strong>R$ 3.800,00</strong></td>
+                                        <td>2 plantões</td>
+                                        <td>
+                                            <span class="badge bg-warning">
+                                                <i class="bi bi-clock me-1"></i>18h
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <a href="validar.html?id=SOL-2025-00043" class="btn btn-sm btn-success">
+                                                <i class="bi bi-check-lg"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>SOL-2025-00044</strong></td>
+                                        <td>Dra. Ana Paula</td>
+                                        <td><strong>R$ 3.200,00</strong></td>
+                                        <td>2 plantões</td>
+                                        <td>
+                                            <span class="badge bg-success">
+                                                <i class="bi bi-clock me-1"></i>5h
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <a href="validar.html?id=SOL-2025-00044" class="btn btn-sm btn-success">
+                                                <i class="bi bi-check-lg"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Validations -->
+                <div class="card card-custom">
+                    <div class="card-body">
+                        <h5 class="card-title mb-4">
+                            <i class="bi bi-check-all me-2"></i>
+                            Validações Recentes
+                        </h5>
+
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Protocolo</th>
+                                        <th>Médico</th>
+                                        <th>Valor</th>
+                                        <th>Cashback</th>
+                                        <th>Data</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>SOL-2025-00038</strong></td>
+                                        <td>Dr. Roberto Lima</td>
+                                        <td>R$ 4.500,00</td>
+                                        <td class="text-success">+R$ 45,00</td>
+                                        <td>26/12/2025</td>
+                                        <td><span class="badge bg-success">Aprovado</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>SOL-2025-00037</strong></td>
+                                        <td>Dra. Juliana Costa</td>
+                                        <td>R$ 3.200,00</td>
+                                        <td class="text-success">+R$ 32,00</td>
+                                        <td>26/12/2025</td>
+                                        <td><span class="badge bg-success">Aprovado</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>SOL-2025-00036</strong></td>
+                                        <td>Dr. Paulo Souza</td>
+                                        <td>R$ 5.800,00</td>
+                                        <td class="text-success">+R$ 58,00</td>
+                                        <td>25/12/2025</td>
+                                        <td><span class="badge bg-info">Em Aprovação</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <!-- Quick Actions -->
+                <div class="card card-custom mb-4">
+                    <div class="card-body">
+                        <h6 class="card-title mb-3">
+                            <i class="bi bi-lightning-charge me-2"></i>
+                            Ações Rápidas
+                        </h6>
+                        <div class="d-grid gap-2">
+                            <a href="validacoes.html" class="btn btn-success">
+                                <i class="bi bi-clipboard-check me-2"></i>
+                                Ver Todas Validações
+                            </a>
+                            <a href="cashback.html" class="btn btn-outline-success">
+                                <i class="bi bi-piggy-bank me-2"></i>
+                                Extrato Cashback
+                            </a>
+                            <a href="historico.html" class="btn btn-outline-secondary">
+                                <i class="bi bi-clock-history me-2"></i>
+                                Ver Histórico
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats -->
+                <div class="card card-custom mb-4">
+                    <div class="card-body">
+                        <h6 class="card-title mb-3">
+                            <i class="bi bi-graph-up me-2"></i>
+                            Estatísticas
+                        </h6>
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="small">Tempo Médio de Validação</span>
+                                <strong class="text-success">4.2h</strong>
+                            </div>
+                            <div class="progress" style="height: 8px;">
+                                <div class="progress-bar bg-success" style="width: 70%"></div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="small">Taxa de Aprovação</span>
+                                <strong class="text-success">96.8%</strong>
+                            </div>
+                            <div class="progress" style="height: 8px;">
+                                <div class="progress-bar bg-success" style="width: 96.8%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="small">Médicos Ativos</span>
+                                <strong class="text-primary">42</strong>
+                            </div>
+                            <div class="progress" style="height: 8px;">
+                                <div class="progress-bar bg-primary" style="width: 85%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Activity Timeline -->
+                <div class="card card-custom">
+                    <div class="card-body">
+                        <h6 class="card-title mb-3">
+                            <i class="bi bi-activity me-2"></i>
+                            Atividades Recentes
+                        </h6>
+                        <div class="activity-timeline">
+                            <div class="activity-item">
+                                <div class="activity-marker bg-success"></div>
+                                <div class="activity-content">
+                                    <div class="fw-bold small">Validação Aprovada</div>
+                                    <div class="text-muted small">SOL-2025-00038</div>
+                                    <div class="text-muted small">Há 2 horas</div>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-marker bg-success"></div>
+                                <div class="activity-content">
+                                    <div class="fw-bold small">Validação Aprovada</div>
+                                    <div class="text-muted small">SOL-2025-00037</div>
+                                    <div class="text-muted small">Há 3 horas</div>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-marker bg-info"></div>
+                                <div class="activity-content">
+                                    <div class="fw-bold small">Nova Solicitação</div>
+                                    <div class="text-muted small">SOL-2025-00044</div>
+                                    <div class="text-muted small">Há 5 horas</div>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-marker bg-primary"></div>
+                                <div class="activity-content">
+                                    <div class="fw-bold small">Cashback Creditado</div>
+                                    <div class="text-muted small">R$ 135,00</div>
+                                    <div class="text-muted small">Ontem</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="../assets/js/app.js"></script>
+
+    <script>
+        checkAuth('empresa');
+
+        // Load empresa data
+        if (mockData && mockData.empresa) {
+            document.getElementById('nomeEmpresa').textContent = mockData.empresa.nome;
+        }
+    </script>
+</body>
+
+</html>

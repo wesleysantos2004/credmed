@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Histórico - Portal da Empresa</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../assets/css/custom.css">
+</head>
+
+<body>
+
+    <!-- Mobile Header -->
+    <div class="mobile-header">
+        <button class="menu-toggle" onclick="toggleMobileMenu()">
+            <i class="bi bi-list"></i>
+        </button>
+        <h5 class="text-success fw-bold flex-grow-1 text-center">
+            <i class="bi bi-building me-2"></i>Portal Empresa
+        </h5>
+        <div style="width: 40px;"></div>
+    </div>
+
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay"></div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="px-3 mb-4">
+            <h5 class="text-success fw-bold mb-0">
+                <i class="bi bi-building me-2"></i>Portal Empresa
+            </h5>
+        </div>
+        <nav class="nav flex-column">
+            <a class="nav-link" href="dashboard.html">
+                <i class="bi bi-house-door"></i>
+                Dashboard
+            </a>
+            <a class="nav-link" href="validacoes.html">
+                <i class="bi bi-clipboard-check"></i>
+                Validações
+            </a>
+            <a class="nav-link" href="cashback.html">
+                <i class="bi bi-piggy-bank"></i>
+                Cashback
+            </a>
+            <a class="nav-link active" href="historico.html">
+                <i class="bi bi-clock-history"></i>
+                Histórico
+            </a>
+            <hr class="my-3">
+            <a class="nav-link text-danger" href="#" onclick="logout()">
+                <i class="bi bi-box-arrow-right"></i>
+                Sair
+            </a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <div class="mb-4">
+            <h2 class="mb-1">Histórico de Validações</h2>
+            <p class="text-muted mb-0">Consulte todas as solicitações validadas pela sua empresa</p>
+        </div>
+
+        <!-- Filters -->
+        <div class="card card-custom mb-4">
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-2">
+                        <label for="filtroStatus" class="form-label small">Status</label>
+                        <select class="form-select" id="filtroStatus">
+                            <option value="">Todos</option>
+                            <option value="aprovado">Aprovado</option>
+                            <option value="pago">Pago</option>
+                            <option value="em_aprovacao">Em Aprovação</option>
+                            <option value="rejeitado">Rejeitado Admin</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="filtroMedico" class="form-label small">Médico</label>
+                        <select class="form-select" id="filtroMedico">
+                            <option value="">Todos</option>
+                            <option value="fernando">Dr. Fernando Silva</option>
+                            <option value="maria">Dra. Maria Santos</option>
+                            <option value="carlos">Dr. Carlos Mendes</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="filtroDataInicio" class="form-label small">Data Inicial</label>
+                        <input type="date" class="form-control" id="filtroDataInicio">
+                    </div>
+                    <div class="col-md-2">
+                        <label for="filtroDataFim" class="form-label small">Data Final</label>
+                        <input type="date" class="form-control" id="filtroDataFim">
+                    </div>
+                    <div class="col-md-2">
+                        <label for="filtroBusca" class="form-label small">Buscar</label>
+                        <input type="text" class="form-control" id="filtroBusca" placeholder="Protocolo...">
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button class="btn btn-success w-100">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="row g-3 mb-4">
+            <div class="col-6 col-md-3">
+                <div class="card card-metric card-metric-success">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="flex-grow-1">
+                                <div class="metric-label">Total Validadas</div>
+                                <div class="metric-value">156</div>
+                            </div>
+                            <div class="metric-icon">
+                                <i class="bi bi-check-circle"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="card card-metric card-metric-primary">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="flex-grow-1">
+                                <div class="metric-label">Valor Total</div>
+                                <div class="metric-value">R$ 890k</div>
+                            </div>
+                            <div class="metric-icon">
+                                <i class="bi bi-currency-dollar"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="card card-metric card-metric-info">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="flex-grow-1">
+                                <div class="metric-label">Em Aprovação</div>
+                                <div class="metric-value">12</div>
+                            </div>
+                            <div class="metric-icon">
+                                <i class="bi bi-hourglass-split"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="card card-metric card-metric-danger">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="flex-grow-1">
+                                <div class="metric-label">Rejeitadas</div>
+                                <div class="metric-value">3</div>
+                            </div>
+                            <div class="metric-icon">
+                                <i class="bi bi-x-circle"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- History Table -->
+        <div class="card card-custom">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-list-ul me-2"></i>
+                        Todas as Solicitações
+                    </h5>
+                    <button class="btn btn-sm btn-outline-success" onclick="exportarHistorico()">
+                        <i class="bi bi-file-earmark-excel me-2"></i>
+                        Exportar
+                    </button>
+                </div>
+
+                <!-- Desktop Table -->
+                <div class="table-responsive d-none d-md-block">
+                    <table class="table table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>Protocolo</th>
+                                <th>Médico</th>
+                                <th>Plantões</th>
+                                <th>Valor</th>
+                                <th>Cashback</th>
+                                <th>Data Validação</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>SOL-2025-00038</strong></td>
+                                <td>Dr. Roberto Lima</td>
+                                <td>2 plantões</td>
+                                <td><strong>R$ 4.500,00</strong></td>
+                                <td class="text-success">+R$ 45,00</td>
+                                <td>26/12/2025</td>
+                                <td><span class="badge bg-success">Pago</span></td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary"
+                                        onclick="verDetalhes('SOL-2025-00038')">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>SOL-2025-00037</strong></td>
+                                <td>Dra. Juliana Costa</td>
+                                <td>2 plantões</td>
+                                <td><strong>R$ 3.200,00</strong></td>
+                                <td class="text-success">+R$ 32,00</td>
+                                <td>26/12/2025</td>
+                                <td><span class="badge bg-success">Pago</span></td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary"
+                                        onclick="verDetalhes('SOL-2025-00037')">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>SOL-2025-00036</strong></td>
+                                <td>Dr. Paulo Souza</td>
+                                <td>3 plantões</td>
+                                <td><strong>R$ 5.800,00</strong></td>
+                                <td class="text-info">+R$ 58,00</td>
+                                <td>26/12/2025</td>
+                                <td><span class="badge bg-info">Em Aprovação</span></td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary"
+                                        onclick="verDetalhes('SOL-2025-00036')">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>SOL-2025-00035</strong></td>
+                                <td>Dr. Fernando Silva</td>
+                                <td>2 plantões</td>
+                                <td><strong>R$ 3.500,00</strong></td>
+                                <td class="text-success">+R$ 35,00</td>
+                                <td>25/12/2025</td>
+                                <td><span class="badge bg-success">Pago</span></td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary"
+                                        onclick="verDetalhes('SOL-2025-00035')">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>SOL-2025-00034</strong></td>
+                                <td>Dra. Maria Santos</td>
+                                <td>2 plantões</td>
+                                <td><strong>R$ 4.200,00</strong></td>
+                                <td class="text-success">+R$ 42,00</td>
+                                <td>25/12/2025</td>
+                                <td><span class="badge bg-success">Aprovado</span></td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary"
+                                        onclick="verDetalhes('SOL-2025-00034')">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>SOL-2025-00033</strong></td>
+                                <td>Dr. Carlos Mendes</td>
+                                <td>3 plantões</td>
+                                <td><strong>R$ 6.200,00</strong></td>
+                                <td class="text-success">+R$ 62,00</td>
+                                <td>24/12/2025</td>
+                                <td><span class="badge bg-success">Pago</span></td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary"
+                                        onclick="verDetalhes('SOL-2025-00033')">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>SOL-2025-00032</strong></td>
+                                <td>Dra. Ana Paula</td>
+                                <td>2 plantões</td>
+                                <td><strong>R$ 3.800,00</strong></td>
+                                <td class="text-success">+R$ 38,00</td>
+                                <td>23/12/2025</td>
+                                <td><span class="badge bg-success">Pago</span></td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary"
+                                        onclick="verDetalhes('SOL-2025-00032')">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>SOL-2025-00031</strong></td>
+                                <td>Dr. José Oliveira</td>
+                                <td>3 plantões</td>
+                                <td><strong>R$ 5.500,00</strong></td>
+                                <td class="text-success">+R$ 55,00</td>
+                                <td>22/12/2025</td>
+                                <td><span class="badge bg-success">Aprovado</span></td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary"
+                                        onclick="verDetalhes('SOL-2025-00031')">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>SOL-2025-00030</strong></td>
+                                <td>Dr. Lucas Almeida</td>
+                                <td>2 plantões</td>
+                                <td><strong>R$ 4.900,00</strong></td>
+                                <td class="text-success">+R$ 49,00</td>
+                                <td>21/12/2025</td>
+                                <td><span class="badge bg-info">Em Aprovação</span></td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary"
+                                        onclick="verDetalhes('SOL-2025-00030')">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>SOL-2025-00029</strong></td>
+                                <td>Dra. Paula Ferreira</td>
+                                <td>2 plantões</td>
+                                <td><strong>R$ 3.300,00</strong></td>
+                                <td class="text-success">+R$ 33,00</td>
+                                <td>20/12/2025</td>
+                                <td><span class="badge bg-success">Pago</span></td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary"
+                                        onclick="verDetalhes('SOL-2025-00029')">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>SOL-2025-00028</strong></td>
+                                <td>Dr. Fernando Silva</td>
+                                <td>1 plantão</td>
+                                <td><strong>R$ 2.100,00</strong></td>
+                                <td class="text-danger">R$ 0,00</td>
+                                <td>19/12/2025</td>
+                                <td><span class="badge bg-danger">Rejeitado</span></td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary"
+                                        onclick="verDetalhes('SOL-2025-00028')">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>SOL-2025-00027</strong></td>
+                                <td>Dr. Roberto Lima</td>
+                                <td>3 plantões</td>
+                                <td><strong>R$ 6.500,00</strong></td>
+                                <td class="text-success">+R$ 65,00</td>
+                                <td>18/12/2025</td>
+                                <td><span class="badge bg-success">Pago</span></td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary"
+                                        onclick="verDetalhes('SOL-2025-00027')">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Mobile Cards -->
+                <div class="d-md-none">
+                    <div class="card mb-3 border-success">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <strong class="text-primary">SOL-2025-00038</strong>
+                                <span class="badge bg-success">Pago</span>
+                            </div>
+                            <div class="mb-2">
+                                <small class="text-muted d-block">Dr. Roberto Lima</small>
+                                <small class="text-muted d-block">2 plantões</small>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <div>
+                                    <strong class="text-success">R$ 4.500,00</strong>
+                                    <small class="text-success d-block">+R$ 45,00 cashback</small>
+                                </div>
+                                <small class="text-muted">26/12/2025</small>
+                            </div>
+                            <button class="btn btn-sm btn-outline-primary w-100"
+                                onclick="verDetalhes('SOL-2025-00038')">
+                                <i class="bi bi-eye me-1"></i>Ver Detalhes
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="card mb-3 border-success">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <strong class="text-primary">SOL-2025-00037</strong>
+                                <span class="badge bg-success">Pago</span>
+                            </div>
+                            <div class="mb-2">
+                                <small class="text-muted d-block">Dra. Juliana Costa</small>
+                                <small class="text-muted d-block">2 plantões</small>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <div>
+                                    <strong class="text-success">R$ 3.200,00</strong>
+                                    <small class="text-success d-block">+R$ 32,00 cashback</small>
+                                </div>
+                                <small class="text-muted">26/12/2025</small>
+                            </div>
+                            <button class="btn btn-sm btn-outline-primary w-100"
+                                onclick="verDetalhes('SOL-2025-00037')">
+                                <i class="bi bi-eye me-1"></i>Ver Detalhes
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pagination -->
+                <div class="d-flex justify-content-between align-items-center mt-4">
+                    <small class="text-muted">Mostrando 12 de 156 registros</small>
+                    <nav>
+                        <ul class="pagination pagination-sm mb-0">
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#">Anterior</a>
+                            </li>
+                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item"><a class="page-link" href="#">...</a></li>
+                            <li class="page-item"><a class="page-link" href="#">13</a></li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">Próximo</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Details -->
+    <div class="modal fade" id="modalDetalhes" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title">
+                        <i class="bi bi-file-text me-2"></i>
+                        Detalhes da Solicitação
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <small class="text-muted">Protocolo</small>
+                            <div><strong id="detalheProtocolo">-</strong></div>
+                        </div>
+                        <div class="col-6">
+                            <small class="text-muted">Status</small>
+                            <div><span id="detalheStatus" class="badge bg-success">-</span></div>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <small class="text-muted">Médico</small>
+                            <div><strong id="detalheMedico">-</strong></div>
+                        </div>
+                        <div class="col-6">
+                            <small class="text-muted">Data Validação</small>
+                            <div><strong id="detalheData">-</strong></div>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-4">
+                            <small class="text-muted">Valor Total</small>
+                            <div>
+                                <h5 class="text-primary mb-0" id="detalheValor">-</h5>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <small class="text-muted">Plantões</small>
+                            <div>
+                                <h5 class="mb-0" id="detalhePlantoes">-</h5>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <small class="text-muted">Cashback</small>
+                            <div>
+                                <h5 class="text-success mb-0" id="detalheCashback">-</h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle me-2"></i>
+                        Para mais detalhes, acesse a página de validações.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="../assets/js/app.js"></script>
+
+    <script>
+        checkAuth('empresa');
+
+        let modalDetalhes;
+
+        document.addEventListener('DOMContentLoaded', function () {
+            modalDetalhes = new bootstrap.Modal(document.getElementById('modalDetalhes'));
+        });
+
+        function verDetalhes(protocolo) {
+            // Mock data
+            const dados = {
+                'SOL-2025-00038': {
+                    medico: 'Dr. Roberto Lima',
+                    valor: 'R$ 4.500,00',
+                    plantoes: '2',
+                    cashback: '+R$ 45,00',
+                    status: 'Pago',
+                    statusClass: 'bg-success',
+                    data: '26/12/2025'
+                }
+            };
+
+            const info = dados[protocolo] || dados['SOL-2025-00038'];
+
+            document.getElementById('detalheProtocolo').textContent = protocolo;
+            document.getElementById('detalheMedico').textContent = info.medico;
+            document.getElementById('detalheValor').textContent = info.valor;
+            document.getElementById('detalhePlantoes').textContent = info.plantoes;
+            document.getElementById('detalheCashback').textContent = info.cashback;
+            document.getElementById('detalheData').textContent = info.data;
+
+            const statusBadge = document.getElementById('detalheStatus');
+            statusBadge.textContent = info.status;
+            statusBadge.className = 'badge ' + info.statusClass;
+
+            modalDetalhes.show();
+        }
+
+        function exportarHistorico() {
+            alert('Histórico exportado para Excel com sucesso!');
+        }
+    </script>
+</body>
+
+</html>

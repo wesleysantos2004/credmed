@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validar Solicitação - Portal da Empresa</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../assets/css/custom.css">
+</head>
+
+<body>
+
+    <!-- Mobile Header -->
+    <div class="mobile-header">
+        <button class="menu-toggle" onclick="toggleMobileMenu()">
+            <i class="bi bi-list"></i>
+        </button>
+        <h5 class="text-success fw-bold flex-grow-1 text-center">
+            <i class="bi bi-building me-2"></i>Portal Empresa
+        </h5>
+        <div style="width: 40px;"></div>
+    </div>
+
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay"></div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="px-3 mb-4">
+            <h5 class="text-success fw-bold mb-0">
+                <i class="bi bi-building me-2"></i>Portal Empresa
+            </h5>
+        </div>
+        <nav class="nav flex-column">
+            <a class="nav-link" href="dashboard.html">
+                <i class="bi bi-house-door"></i>
+                Dashboard
+            </a>
+            <a class="nav-link active" href="validacoes.html">
+                <i class="bi bi-clipboard-check"></i>
+                Validações
+            </a>
+            <a class="nav-link" href="cashback.html">
+                <i class="bi bi-piggy-bank"></i>
+                Cashback
+            </a>
+            <a class="nav-link" href="historico.html">
+                <i class="bi bi-clock-history"></i>
+                Histórico
+            </a>
+            <hr class="my-3">
+            <a class="nav-link text-danger" href="#" onclick="logout()">
+                <i class="bi bi-box-arrow-right"></i>
+                Sair
+            </a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <div class="mb-4">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="dashboard.html">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="validacoes.html">Validações</a></li>
+                    <li class="breadcrumb-item active">Validar Solicitação</li>
+                </ol>
+            </nav>
+            <h2 class="mb-1">Validar Solicitação</h2>
+            <p class="text-muted mb-0">Protocolo: <strong>SOL-2025-00042</strong></p>
+        </div>
+
+        <div class="row">
+            <!-- Main Column -->
+            <div class="col-lg-8">
+                <!-- Doctor Information -->
+                <div class="card card-custom mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title mb-4">
+                            <i class="bi bi-person-badge me-2"></i>
+                            Informações do Médico
+                        </h5>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <small class="text-muted d-block">Nome Completo</small>
+                                <strong>Dr. Fernando Silva</strong>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <small class="text-muted d-block">CRM</small>
+                                <strong>CRM-SP 123456</strong>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <small class="text-muted d-block">CPF</small>
+                                <strong>***.***.456-**</strong>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <small class="text-muted d-block">E-mail</small>
+                                <strong>fernando.silva@email.com</strong>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <small class="text-muted d-block">Telefone</small>
+                                <strong>(11) 98765-4321</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Request Information -->
+                <div class="card card-custom mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title mb-4">
+                            <i class="bi bi-file-text me-2"></i>
+                            Informações da Solicitação
+                        </h5>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <small class="text-muted d-block">Valor Total Solicitado</small>
+                                <h4 class="text-primary mb-0">R$ 5.200,00</h4>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <small class="text-muted d-block">Taxa (3.5%)</small>
+                                <h5 class="text-danger mb-0">R$ 182,00</h5>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <small class="text-muted d-block">Cashback Empresa (1%)</small>
+                                <h5 class="text-success mb-0">+R$ 52,00</h5>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <small class="text-muted d-block">Data da Solicitação</small>
+                                <strong>25/12/2025 14:30</strong>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <small class="text-muted d-block">Tempo Decorrido</small>
+                                <span class="badge bg-danger">
+                                    <i class="bi bi-clock me-1"></i>26 horas
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Plantões for Validation -->
+                <div class="card card-custom mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title mb-4">
+                            <i class="bi bi-calendar-check me-2"></i>
+                            Plantões para Validação
+                        </h5>
+
+                        <!-- Plantão 1 -->
+                        <div class="card mb-3 border-success" id="plantao1">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <h6 class="mb-0">Plantão #1</h6>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="validar1" checked
+                                            onchange="togglePlantao(1)">
+                                        <label class="form-check-label text-success fw-bold" for="validar1">
+                                            Validar
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 mb-2">
+                                        <small class="text-muted d-block">Data</small>
+                                        <strong>28/12/2025</strong>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <small class="text-muted d-block">Horário</small>
+                                        <strong>19:00 - 07:00 (12h)</strong>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <small class="text-muted d-block">Valor</small>
+                                        <strong class="text-success">R$ 1.800,00</strong>
+                                    </div>
+                                    <div class="col-12 mb-2">
+                                        <small class="text-muted d-block">Local</small>
+                                        <strong>Hospital São Lucas - Unidade Centro</strong>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label small mb-1">Observações (opcional)</label>
+                                        <textarea class="form-control form-control-sm" id="obs1" rows="2"
+                                            placeholder="Adicione observações sobre este plantão..."></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Plantão 2 -->
+                        <div class="card mb-3 border-success" id="plantao2">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <h6 class="mb-0">Plantão #2</h6>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="validar2" checked
+                                            onchange="togglePlantao(2)">
+                                        <label class="form-check-label text-success fw-bold" for="validar2">
+                                            Validar
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 mb-2">
+                                        <small class="text-muted d-block">Data</small>
+                                        <strong>30/12/2025</strong>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <small class="text-muted d-block">Horário</small>
+                                        <strong>19:00 - 07:00 (12h)</strong>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <small class="text-muted d-block">Valor</small>
+                                        <strong class="text-success">R$ 1.700,00</strong>
+                                    </div>
+                                    <div class="col-12 mb-2">
+                                        <small class="text-muted d-block">Local</small>
+                                        <strong>Hospital São Lucas - Unidade Zona Sul</strong>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label small mb-1">Observações (opcional)</label>
+                                        <textarea class="form-control form-control-sm" id="obs2" rows="2"
+                                            placeholder="Adicione observações sobre este plantão..."></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Plantão 3 -->
+                        <div class="card mb-3 border-success" id="plantao3">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <h6 class="mb-0">Plantão #3</h6>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="validar3" checked
+                                            onchange="togglePlantao(3)">
+                                        <label class="form-check-label text-success fw-bold" for="validar3">
+                                            Validar
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 mb-2">
+                                        <small class="text-muted d-block">Data</small>
+                                        <strong>01/01/2026</strong>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <small class="text-muted d-block">Horário</small>
+                                        <strong>07:00 - 19:00 (12h)</strong>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <small class="text-muted d-block">Valor</small>
+                                        <strong class="text-success">R$ 1.700,00</strong>
+                                    </div>
+                                    <div class="col-12 mb-2">
+                                        <small class="text-muted d-block">Local</small>
+                                        <strong>Hospital São Lucas - Unidade Centro</strong>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label small mb-1">Observações (opcional)</label>
+                                        <textarea class="form-control form-control-sm" id="obs3" rows="2"
+                                            placeholder="Adicione observações sobre este plantão..."></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Decision -->
+                <div class="card card-custom border-success mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title mb-4 text-success">
+                            <i class="bi bi-check-circle me-2"></i>
+                            Decisão de Validação
+                        </h5>
+
+                        <div class="mb-4">
+                            <label class="form-label">Observações Gerais (Opcional)</label>
+                            <textarea class="form-control" id="observacoesGerais" rows="3"
+                                placeholder="Adicione observações gerais sobre esta validação..."></textarea>
+                        </div>
+
+                        <div class="alert alert-success">
+                            <i class="bi bi-info-circle me-2"></i>
+                            <strong>Atenção:</strong> Ao validar, a solicitação será enviada para aprovação
+                            administrativa.
+                            Sua empresa receberá R$ 52,00 de cashback após a aprovação final.
+                        </div>
+
+                        <div class="d-flex gap-2 flex-wrap">
+                            <button type="button" class="btn btn-success btn-lg" onclick="validarSolicitacao()">
+                                <i class="bi bi-check-circle me-2"></i>
+                                Validar e Enviar para Aprovação
+                            </button>
+                            <button type="button" class="btn btn-danger btn-lg" onclick="mostrarModalRejeicao()">
+                                <i class="bi bi-x-circle me-2"></i>
+                                Rejeitar Solicitação
+                            </button>
+                            <a href="validacoes.html" class="btn btn-secondary btn-lg">
+                                <i class="bi bi-arrow-left me-2"></i>
+                                Voltar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <!-- Summary -->
+                <div class="card card-custom mb-4">
+                    <div class="card-body">
+                        <h6 class="card-title mb-3">
+                            <i class="bi bi-calculator me-2"></i>
+                            Resumo da Validação
+                        </h6>
+                        <div class="mb-3 pb-3 border-bottom">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Plantões Selecionados</span>
+                                <strong id="plantoesCount">3</strong>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <span>Valor Total</span>
+                                <strong class="text-success" id="valorTotal">R$ 5.200,00</strong>
+                            </div>
+                        </div>
+                        <div class="mb-3 pb-3 border-bottom">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="small">Taxa Plataforma (3.5%)</span>
+                                <span class="text-danger">-R$ 182,00</span>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <span class="small">Cashback Empresa (1%)</span>
+                                <span class="text-success">+R$ 52,00</span>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="d-flex justify-content-between">
+                                <strong>Valor Líquido (Médico)</strong>
+                                <strong class="text-primary">R$ 5.018,00</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Timeline -->
+                <div class="card card-custom mb-4">
+                    <div class="card-body">
+                        <h6 class="card-title mb-3">
+                            <i class="bi bi-clock-history me-2"></i>
+                            Linha do Tempo
+                        </h6>
+                        <div class="activity-timeline">
+                            <div class="activity-item">
+                                <div class="activity-marker bg-primary"></div>
+                                <div class="activity-content">
+                                    <div class="fw-bold small">Solicitação Criada</div>
+                                    <div class="text-muted small">25/12/2025 14:30</div>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-marker bg-info"></div>
+                                <div class="activity-content">
+                                    <div class="fw-bold small">Enviado para MedPlus</div>
+                                    <div class="text-muted small">25/12/2025 14:31</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Documents -->
+                <div class="card card-custom">
+                    <div class="card-body">
+                        <h6 class="card-title mb-3">
+                            <i class="bi bi-file-earmark-text me-2"></i>
+                            Documentos Anexados
+                        </h6>
+                        <div class="list-group list-group-flush">
+                            <div class="list-group-item px-0 d-flex justify-content-between align-items-center">
+                                <div>
+                                    <i class="bi bi-file-earmark-pdf text-danger me-2"></i>
+                                    <span class="small">Contrato Assinado</span>
+                                    <div class="text-muted" style="font-size: 0.75rem;">245 KB</div>
+                                </div>
+                                <button class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-download"></i>
+                                </button>
+                            </div>
+                            <div class="list-group-item px-0 d-flex justify-content-between align-items-center">
+                                <div>
+                                    <i class="bi bi-file-earmark-pdf text-danger me-2"></i>
+                                    <span class="small">Comprovantes</span>
+                                    <div class="text-muted" style="font-size: 0.75rem;">1.2 MB</div>
+                                </div>
+                                <button class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-download"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Rejeição -->
+    <div class="modal fade" id="modalRejeicao" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title">
+                        <i class="bi bi-x-circle me-2"></i>
+                        Rejeitar Solicitação
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="motivoRejeicao" class="form-label">Motivo da Rejeição</label>
+                        <select class="form-select" id="motivoRejeicao" required>
+                            <option value="">Selecione o motivo...</option>
+                            <option value="plantao_invalido">Plantão não realizado</option>
+                            <option value="dados_incorretos">Dados incorretos</option>
+                            <option value="documentacao_invalida">Documentação inválida</option>
+                            <option value="valor_incorreto">Valor incorreto</option>
+                            <option value="outro">Outro</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="detalhesRejeicao" class="form-label">Detalhes</label>
+                        <textarea class="form-control" id="detalhesRejeicao" rows="4" required
+                            placeholder="Descreva o motivo da rejeição..."></textarea>
+                    </div>
+                    <div class="alert alert-warning">
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+                        <small>O médico será notificado sobre a rejeição e poderá fazer uma nova solicitação.</small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" onclick="confirmarRejeicao()">
+                        <i class="bi bi-x-circle me-2"></i>
+                        Confirmar Rejeição
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="../assets/js/app.js"></script>
+
+    <script>
+        checkAuth('empresa');
+
+        let modalRejeicao;
+
+        document.addEventListener('DOMContentLoaded', function () {
+            modalRejeicao = new bootstrap.Modal(document.getElementById('modalRejeicao'));
+            atualizarResumo();
+        });
+
+        function togglePlantao(numero) {
+            const checkbox = document.getElementById('validar' + numero);
+            const card = document.getElementById('plantao' + numero);
+
+            if (checkbox.checked) {
+                card.classList.remove('border-danger');
+                card.classList.add('border-success');
+            } else {
+                card.classList.remove('border-success');
+                card.classList.add('border-danger');
+            }
+
+            atualizarResumo();
+        }
+
+        function atualizarResumo() {
+            const valores = [1800, 1700, 1700];
+            let count = 0;
+            let total = 0;
+
+            for (let i = 1; i <= 3; i++) {
+                if (document.getElementById('validar' + i).checked) {
+                    count++;
+                    total += valores[i - 1];
+                }
+            }
+
+            document.getElementById('plantoesCount').textContent = count;
+            document.getElementById('valorTotal').textContent = formatCurrency(total);
+        }
+
+        function validarSolicitacao() {
+            const count = document.getElementById('plantoesCount').textContent;
+
+            if (count === '0') {
+                alert('Selecione pelo menos um plantão para validar.');
+                return;
+            }
+
+            if (confirm('Confirma a validação dos plantões selecionados? A solicitação será enviada para aprovação administrativa.')) {
+                alert('Solicitação validada com sucesso! O médico foi notificado.');
+                window.location.href = 'validacoes.html';
+            }
+        }
+
+        function mostrarModalRejeicao() {
+            modalRejeicao.show();
+        }
+
+        function confirmarRejeicao() {
+            const motivo = document.getElementById('motivoRejeicao').value;
+            const detalhes = document.getElementById('detalhesRejeicao').value;
+
+            if (!motivo || !detalhes.trim()) {
+                alert('Por favor, preencha todos os campos obrigatórios.');
+                return;
+            }
+
+            if (confirm('Confirma a rejeição desta solicitação?')) {
+                alert('Solicitação rejeitada. O médico foi notificado.');
+                modalRejeicao.hide();
+                window.location.href = 'validacoes.html';
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatórios - Portal Administrativo</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../assets/css/custom.css">
+</head>
+
+<body>
+
+    <!-- Mobile Header -->
+    <div class="mobile-header">
+        <button class="menu-toggle" onclick="toggleMobileMenu()">
+            <i class="bi bi-list"></i>
+        </button>
+        <h5 class="text-danger fw-bold flex-grow-1 text-center">
+            <i class="bi bi-shield-lock me-2"></i>Portal Admin
+        </h5>
+        <div style="width: 40px;"></div>
+    </div>
+
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay"></div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="px-3 mb-4">
+            <h5 class="text-danger fw-bold mb-0">
+                <i class="bi bi-shield-lock me-2"></i>Portal Admin
+            </h5>
+        </div>
+        <nav class="nav flex-column">
+            <a class="nav-link" href="dashboard.html">
+                <i class="bi bi-house-door"></i>
+                Dashboard
+            </a>
+            <a class="nav-link" href="aprovacoes.html">
+                <i class="bi bi-clipboard-check"></i>
+                Aprovações
+            </a>
+            <a class="nav-link" href="pagamentos.html">
+                <i class="bi bi-cash-coin"></i>
+                Pagamentos
+            </a>
+            <a class="nav-link active" href="relatorios.html">
+                <i class="bi bi-graph-up"></i>
+                Relatórios
+            </a>
+            <hr class="my-3">
+            <a class="nav-link text-danger" href="#" onclick="logout()">
+                <i class="bi bi-box-arrow-right"></i>
+                Sair
+            </a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <div class="mb-4">
+            <h2 class="mb-1">Relatórios e Análises</h2>
+            <p class="text-muted mb-0">Análise de desempenho e métricas do sistema</p>
+        </div>
+
+        <!-- Period Filter -->
+        <div class="card card-custom mb-4">
+            <div class="card-body">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-3">
+                        <label for="periodoInicio" class="form-label small">Período - Início</label>
+                        <input type="date" class="form-control" id="periodoInicio" value="2025-12-01">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="periodoFim" class="form-label small">Período - Fim</label>
+                        <input type="date" class="form-control" id="periodoFim" value="2025-12-27">
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-primary w-100">
+                            <i class="bi bi-search me-2"></i>
+                            Aplicar Filtro
+                        </button>
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-outline-success w-100" onclick="exportarRelatorio()">
+                            <i class="bi bi-file-earmark-excel me-2"></i>
+                            Exportar Excel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- KPIs -->
+        <div class="row g-3 mb-4">
+            <div class="col-6 col-md-3">
+                <div class="card card-metric card-metric-primary">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="flex-grow-1">
+                                <div class="metric-label">Volume Total</div>
+                                <div class="metric-value">R$ 2.1M</div>
+                                <small class="text-success">+15% vs mês anterior</small>
+                            </div>
+                            <div class="metric-icon">
+                                <i class="bi bi-currency-dollar"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="card card-metric card-metric-success">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="flex-grow-1">
+                                <div class="metric-label">Solicitações</div>
+                                <div class="metric-value">156</div>
+                                <small class="text-success">+8% vs mês anterior</small>
+                            </div>
+                            <div class="metric-icon">
+                                <i class="bi bi-file-text"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="card card-metric card-metric-info">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="flex-grow-1">
+                                <div class="metric-label">Ticket Médio</div>
+                                <div class="metric-value">R$ 13.5k</div>
+                                <small class="text-success">+6% vs mês anterior</small>
+                            </div>
+                            <div class="metric-icon">
+                                <i class="bi bi-calculator"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="card card-metric card-metric-warning">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="flex-grow-1">
+                                <div class="metric-label">Taxa Aprovação</div>
+                                <div class="metric-value">94.2%</div>
+                                <small class="text-success">+2% vs mês anterior</small>
+                            </div>
+                            <div class="metric-icon">
+                                <i class="bi bi-check-circle"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Left Column -->
+            <div class="col-lg-8">
+                <!-- Volume por Dia -->
+                <div class="card card-custom mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title mb-4">
+                            <i class="bi bi-bar-chart-line me-2"></i>
+                            Volume de Pagamentos por Dia
+                        </h5>
+                        <div class="text-center py-5 bg-light rounded">
+                            <i class="bi bi-bar-chart fs-1 text-muted mb-3 d-block"></i>
+                            <p class="text-muted">Gráfico de volume diário</p>
+                            <small class="text-muted">Visualização de R$ 2.1M distribuídos ao longo do mês</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Top Médicos -->
+                <div class="card card-custom mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title mb-4">
+                            <i class="bi bi-trophy me-2"></i>
+                            Top 10 Médicos por Volume
+                        </h5>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Médico</th>
+                                        <th>Solicitações</th>
+                                        <th>Volume Total</th>
+                                        <th>Ticket Médio</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><span class="badge bg-warning text-dark">1º</span></td>
+                                        <td><strong>Dr. Fernando Silva</strong></td>
+                                        <td>12</td>
+                                        <td><strong>R$ 42.300,00</strong></td>
+                                        <td>R$ 3.525,00</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge bg-secondary">2º</span></td>
+                                        <td><strong>Dra. Maria Santos</strong></td>
+                                        <td>10</td>
+                                        <td><strong>R$ 38.500,00</strong></td>
+                                        <td>R$ 3.850,00</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge bg-secondary">3º</span></td>
+                                        <td><strong>Dr. Carlos Mendes</strong></td>
+                                        <td>11</td>
+                                        <td><strong>R$ 35.200,00</strong></td>
+                                        <td>R$ 3.200,00</td>
+                                    </tr>
+                                    <tr>
+                                        <td>4º</td>
+                                        <td>Dra. Ana Paula</td>
+                                        <td>9</td>
+                                        <td>R$ 32.800,00</td>
+                                        <td>R$ 3.644,44</td>
+                                    </tr>
+                                    <tr>
+                                        <td>5º</td>
+                                        <td>Dr. Roberto Lima</td>
+                                        <td>8</td>
+                                        <td>R$ 28.900,00</td>
+                                        <td>R$ 3.612,50</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Top Empresas -->
+                <div class="card card-custom mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title mb-4">
+                            <i class="bi bi-building me-2"></i>
+                            Empresas por Volume de Validações
+                        </h5>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Empresa</th>
+                                        <th>Validações</th>
+                                        <th>Volume</th>
+                                        <th>Cashback Acumulado</th>
+                                        <th>Tempo Médio</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>MedPlus</strong></td>
+                                        <td>65</td>
+                                        <td><strong>R$ 890.000,00</strong></td>
+                                        <td class="text-success">R$ 8.900,00</td>
+                                        <td>3.2h</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Hospital Vida</strong></td>
+                                        <td>52</td>
+                                        <td><strong>R$ 720.000,00</strong></td>
+                                        <td class="text-success">R$ 7.200,00</td>
+                                        <td>4.1h</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Clínica Saúde</strong></td>
+                                        <td>39</td>
+                                        <td><strong>R$ 490.000,00</strong></td>
+                                        <td class="text-success">R$ 4.900,00</td>
+                                        <td>5.5h</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="col-lg-4">
+                <!-- Status Distribution -->
+                <div class="card card-custom mb-4">
+                    <div class="card-body">
+                        <h6 class="card-title mb-3">
+                            <i class="bi bi-pie-chart me-2"></i>
+                            Distribuição por Status
+                        </h6>
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Aprovadas</span>
+                                <strong class="text-success">147 (94.2%)</strong>
+                            </div>
+                            <div class="progress mb-3" style="height: 10px;">
+                                <div class="progress-bar bg-success" style="width: 94.2%"></div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Rejeitadas</span>
+                                <strong class="text-danger">9 (5.8%)</strong>
+                            </div>
+                            <div class="progress mb-3" style="height: 10px;">
+                                <div class="progress-bar bg-danger" style="width: 5.8%"></div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between">
+                            <strong>Total</strong>
+                            <strong>156</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tempo Médio -->
+                <div class="card card-custom mb-4">
+                    <div class="card-body">
+                        <h6 class="card-title mb-3">
+                            <i class="bi bi-clock-history me-2"></i>
+                            Tempos Médios (horas)
+                        </h6>
+                        <div class="mb-3 pb-3 border-bottom">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="small">Validação Empresa</span>
+                                <strong class="text-success">4.2h</strong>
+                            </div>
+                            <div class="progress" style="height: 6px;">
+                                <div class="progress-bar bg-success" style="width: 70%"></div>
+                            </div>
+                        </div>
+                        <div class="mb-3 pb-3 border-bottom">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="small">Aprovação Admin</span>
+                                <strong class="text-info">3.8h</strong>
+                            </div>
+                            <div class="progress" style="height: 6px;">
+                                <div class="progress-bar bg-info" style="width: 65%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="small">Tempo Total</span>
+                                <strong class="text-primary">8.0h</strong>
+                            </div>
+                            <div class="progress" style="height: 6px;">
+                                <div class="progress-bar bg-primary" style="width: 80%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Receita -->
+                <div class="card card-custom mb-4">
+                    <div class="card-body">
+                        <h6 class="card-title mb-3">
+                            <i class="bi bi-cash-stack me-2"></i>
+                            Receita da Plataforma
+                        </h6>
+                        <div class="mb-3">
+                            <small class="text-muted d-block">Taxa Total (3.5%)</small>
+                            <h4 class="text-primary mb-0">R$ 73.500,00</h4>
+                        </div>
+                        <div class="mb-3">
+                            <small class="text-muted d-block">Cashback Pago (1%)</small>
+                            <h5 class="text-danger mb-0">R$ 21.000,00</h5>
+                        </div>
+                        <hr>
+                        <div>
+                            <small class="text-muted d-block">Receita Líquida</small>
+                            <h4 class="text-success mb-0">R$ 52.500,00</h4>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Motivos Rejeição -->
+                <div class="card card-custom">
+                    <div class="card-body">
+                        <h6 class="card-title mb-3">
+                            <i class="bi bi-x-circle me-2"></i>
+                            Motivos de Rejeição
+                        </h6>
+                        <div class="mb-2">
+                            <div class="d-flex justify-content-between">
+                                <small>Documentação Incompleta</small>
+                                <strong>4</strong>
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <div class="d-flex justify-content-between">
+                                <small>Dados Incorretos</small>
+                                <strong>3</strong>
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <div class="d-flex justify-content-between">
+                                <small>Plantões Inválidos</small>
+                                <strong>2</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="../assets/js/app.js"></script>
+
+    <script>
+        checkAuth('admin');
+
+        function exportarRelatorio() {
+            alert('Relatório exportado para Excel com sucesso!');
+        }
+    </script>
+</body>
+
+</html>
