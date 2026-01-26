@@ -119,12 +119,12 @@ mkdir -p backend/tests
 
 **Critérios de Aceite:**
 
-- [ ] Arquivo `src/config/database.ts` criado
-- [ ] Conexão com SQLite estabelecida
+- [x] Arquivo `src/config/database.ts` criado
+- [x] Conexão com SQLite estabelecida
 - [ ] Logging configurado (desabilitado em produção)
 - [ ] Pool de conexões configurado
 - [ ] Script de teste de conexão funcionando
-- [ ] Arquivo `credmed.sqlite` criado automaticamente
+- [x] Arquivo `credmed.sqlite` criado automaticamente
 
 **Configuração:**
 
