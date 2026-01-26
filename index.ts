@@ -8,8 +8,8 @@ core.router.use([logger]);
 
 new AuthApi(core).init();
 
-core.router.get("/", (req, res) => {
-  res.status(200).json("ola");
-});
+// core.router.get("/", (req, res) => {
+//   res.status(200).json("ola");
+// });
 
 core.init();
