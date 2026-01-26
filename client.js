@@ -40,6 +40,37 @@ const functions = {
     const body = await response.json();
     console.table(body);
   },
+
+  async postCompanies() {
+    const response = await fetch(base + "/companies", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: "Clínica Saúde",
+        cnpj: "12.345.678/0001-95",
+        contact_name: "Roberto Souza",
+        contact_phone: "(21) 98876-5435",
+        contact_email: "roberto.souza@example.com",
+        status: "active",
+        cashback_rate: 5.0,
+      }),
+    });
+    const body = await response.json();
+    console.table(body);
+  },
+
+  async getCompanies() {
+    const response = await fetch(base + "/companies", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const body = await response.json();
+    console.log(body);
+  },
 };
 
 functions[process.argv[2]]();
