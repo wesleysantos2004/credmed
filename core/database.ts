@@ -1,6 +1,9 @@
 import { DatabaseSync, type StatementSync } from 'node:sqlite';
 
 export class Database extends DatabaseSync {
+  prepare(arg0: string): StatementSync {
+    return super.prepare(arg0);
+  }
   queries: Record<string, StatementSync>;
   constructor(path: string) {
     super(path);

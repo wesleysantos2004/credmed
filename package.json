@@ -1,5 +1,13 @@
 {
+  "type": "module",
+  "scripts": {
+    "dev": "tsx --watch index.ts",
+    "start": "tsx index.ts"
+  },
   "dependencies": {
     "@types/node": "^25.0.10"
+  },
+  "devDependencies": {
+    "tsx": "^4.21.0"
   }
 }

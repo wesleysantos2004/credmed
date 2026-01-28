@@ -68,7 +68,7 @@ export class AuthApi extends Api {
       }
 
       console.log("Usuário criado com ID:", writeResult.lastInsertRowid);
-      res.status(201).json({ message: "usuário criado com sucesso" });
+      res.status(201).json({ message: "Doutor criado com sucesso" });
     },
   } satisfies Api["handlers"];
 

@@ -719,7 +719,6 @@ Permitir que médicos criem e gerenciem solicitações de adiantamento de plant�
 - [ ] Validação de cada plantão (date, start_time, end_time, hours, location, amount)
 - [ ] Cálculo automático de `total_amount` (soma dos shifts)
 - [ ] Cálculo automático de `net_amount` (total - taxa)
-- [ ] Geração de `request_number` sequencial (ex: ADV-2026-0001)
 - [ ] Status inicial: `draft`
 - [ ] Criação de registros em `adv_requests` e `shifts`
 - [ ] Response 201 com solicitação criada

@@ -1,5 +1,6 @@
 import { AuthApi } from "./api/auth/index.ts";
 import { CompaniesApi } from "./api/companies/index.ts";
+import { RequestsApi } from "./api/requests/index.ts";
 import { Core } from "./core/core.ts";
 import { logger } from "./core/middleware/logger.ts";
 
@@ -9,5 +10,6 @@ core.router.use([logger]);
 
 new AuthApi(core).init();
 new CompaniesApi(core).init();
+new RequestsApi(core).init();
 
 core.init();

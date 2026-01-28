@@ -82,7 +82,6 @@ CREATE TABLE IF NOT EXISTS requests (
     "id" INTEGER PRIMARY KEY AUTOINCREMENT,
     "doctor_id" INTEGER NOT NULL,
     "company_id" INTEGER NOT NULL,
-    "request_number" TEXT NOT NULL UNIQUE,
     "total_amount" REAL NOT NULL,
     "fee_rate" REAL NOT NULL,
     "net_amount" REAL NOT NULL,
