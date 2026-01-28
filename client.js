@@ -71,6 +71,26 @@ const functions = {
     const body = await response.json();
     console.log(body);
   },
+
+  async postRequest(){
+    const response = await fetch(base + "/requests", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        user_id: 1,
+        doctor_id: 1,
+        company_id: 1,
+        total_amount: 2500.00,
+        fee_rate: 5.0,
+        net_amount: 2437.50,
+        notes: "Patient requires follow-up in 2 weeks."
+      }),
+    });
+    const body = await response.json();
+    console.table(body);
+  }
 };
 
 functions[process.argv[2]]();

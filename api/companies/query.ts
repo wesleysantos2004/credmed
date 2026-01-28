@@ -48,7 +48,7 @@ export class CompaniesQuery extends Query {
 
   getAllCompanies() {
     return this.db
-      .prepare(
+      .query(
         /*sql*/
         `
             SELECT * FROM "companies";

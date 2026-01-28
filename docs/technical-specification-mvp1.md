@@ -144,7 +144,6 @@ Este documento especifica a arquitetura técnica, modelos de dados, APIs e stack
 │ id (PK)         │   │              │
 │ doctor_id (FK)──┘   │              │
 │ company_id (FK)─────┘              │
-│ request_number  │                  │
 │ total_amount    │                  │
 │ fee_rate        │                  │
 │ net_amount      │                  │
@@ -327,7 +326,6 @@ Solicitação completa de adiantamento feita pelo médico.
 | id             | UUID          | PK, NOT NULL     | Identificador único                   |
 | doctor_id      | UUID          | FK, NOT NULL     | Referência a DOCTORS                  |
 | company_id     | UUID          | FK, NOT NULL     | Referência a COMPANIES                |
-| request_number | VARCHAR(20)   | UNIQUE, NOT NULL | Número sequencial (ex: ADV-2026-0001) |
 | total_amount   | DECIMAL(10,2) | NOT NULL         | Valor total bruto                     |
 | fee_rate       | DECIMAL(5,2)  | NOT NULL         | Taxa acordada (%)                     |
 | net_amount     | DECIMAL(10,2) | NOT NULL         | Valor líquido a receber               |
@@ -993,7 +991,6 @@ Criar nova solicitação.
   "success": true,
   "data": {
     "id": "uuid",
-    "request_number": "ADV-2026-0001",
     "total_amount": 3700.00,
     "fee_rate": 3.5,
     "net_amount": 3570.50,
@@ -1031,7 +1028,6 @@ Listar solicitações.
     "requests": [
       {
         "id": "uuid",
-        "request_number": "ADV-2026-0001",
         "doctor_name": "Dr. João Silva",
         "company_name": "Plantões SP",
         "total_amount": 3700.00,
@@ -1062,7 +1058,6 @@ Obter detalhes de uma solicitação.
   "success": true,
   "data": {
     "id": "uuid",
-    "request_number": "ADV-2026-0001",
     "doctor": {
       "id": "uuid",
       "full_name": "Dr. João Silva",
