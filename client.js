@@ -103,4 +103,4 @@ export const functionsBackend = {
   },
 };
 
-//functions[process.argv[2]]();
+functions[process.argv[2]]();
