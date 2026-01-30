@@ -70,6 +70,17 @@ export class AuthApi extends Api {
       console.log("Usuário criado com ID:", writeResult.lastInsertRowid);
       res.status(201).json({ message: "Doutor criado com sucesso" });
     },
+
+    getDoctor: (req, res) => {
+      const { id } = req.params;
+      console.log("ID recebido:", id);
+      const doctor = this.query.getDoctorById(Number(id));
+      if (!doctor) {
+        throw new RouteError(404, "Doutor não encontrado");
+      }
+      console.log("Doutor encontrado:", doctor);
+      res.status(200).json(doctor);
+    },
   } satisfies Api["handlers"];
 
   tables(): void {
@@ -78,5 +89,6 @@ export class AuthApi extends Api {
   routes(): void {
     this.router.post("/auth/user", this.handlers.postUser);
     this.router.post("/auth/doctor", this.handlers.postDoctor);
+    this.router.get("/auth/doctor/:id", this.handlers.getDoctor);
   }
 }

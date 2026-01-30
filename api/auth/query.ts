@@ -115,4 +115,18 @@ export class UserQuery extends Query {
         selfie_with_document,
       );
   }
+
+  getDoctorById(id: number) {
+    return this.db
+      .query(
+        /*sql*/
+        `
+            SELECT d.*, u.email, u.status AS user_status, u.created_at AS user_created_at
+            FROM doctors d
+            JOIN users u ON d.user_id = u.id
+            WHERE d.id = ?;
+            `,
+      )
+      .get(id);
+  }
 }
