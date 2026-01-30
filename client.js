@@ -1,7 +1,7 @@
 console.clear();
 const base = "http://localhost:3000";
 
-const functions = {
+export const functionsBackend = {
   async postUser() {
     const response = await fetch(base + "/auth/user", {
       method: "POST",
@@ -24,21 +24,31 @@ const functions = {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        full_name: "Carlos Silva",
-        cpf: "123.456.789-01",
-        email: "carlos_silva@example.com",
+        full_name: "Eduardo Pereira",
+        cpf: "055.666.789-01",
+        email: "eduardo_pereira@example.com",
         crm: "123456",
         phone: "(11) 91234-5678",
-        pix_key: "carlos_silva@example.com",
+        pix_key: "eduardo_pereira@example.com",
         pix_key_type: "email",
         birth_date: "1980-01-01",
-        specialty: "Cardiology",
         password: "securepassword",
         bank_name: "Bank Example",
       }),
     });
     const body = await response.json();
     console.table(body);
+  },
+
+  async getDoctor(id) {
+    const response = await fetch(base + `/auth/doctor/${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const body = await response.json();
+    console.log(body);
   },
 
   async postCompanies() {
@@ -72,25 +82,25 @@ const functions = {
     console.log(body);
   },
 
-  async postRequest(){
+  async postRequest() {
     const response = await fetch(base + "/requests", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        user_id: 1,
-        doctor_id: 1,
+        user_id: 14,
+        doctor_id: 6,
         company_id: 1,
-        total_amount: 2500.00,
+        total_amount: 2500.0,
         fee_rate: 5.0,
-        net_amount: 2437.50,
-        notes: "Patient requires follow-up in 2 weeks."
+        net_amount: 2437.5,
+        notes: "Patient requires follow-up in 2 weeks.",
       }),
     });
     const body = await response.json();
     console.table(body);
-  }
+  },
 };
 
-functions[process.argv[2]]();
+//functions[process.argv[2]]();
