@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Médico Modern - Dashboard</title>
+  <link rel="stylesheet" href="../assets/css/modern.css" />
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">CREDMED • Médico (Modern)</div>
+      <a class="nav-link active" href="dashboard.html">Dashboard</a>
+      <a class="nav-link" href="../../medico/lista-solicitacoes.html">Solicitações (Atual)</a>
+      <a class="nav-link" href="../../medico/nova-solicitacao.html">Nova Solicitação (Atual)</a>
+      <a class="nav-link" href="../../medico/perfil.html">Perfil (Atual)</a>
+      <a class="nav-link" href="../admin/dashboard.html">Visão Admin Modern</a>
+    </aside>
+
+    <main class="main">
+      <header class="header">
+        <h1>Dashboard Médico • Quick Win Visual</h1>
+        <p>Protótipo dark fintech enterprise, preservando páginas atuais.</p>
+      </header>
+
+      <section class="grid grid-4 mt-6">
+        <article class="card"><div class="card-body"><div class="metric-label">Aguardando Triagem</div><div class="metric-value" id="kpiPending">0</div></div></article>
+        <article class="card"><div class="card-body"><div class="metric-label">Aguardando Assinatura</div><div class="metric-value" id="kpiSignature">0</div></div></article>
+        <article class="card"><div class="card-body"><div class="metric-label">Aprovadas</div><div class="metric-value" id="kpiApproved">0</div></div></article>
+        <article class="card"><div class="card-body"><div class="metric-label">Total Recebido</div><div class="metric-value" id="kpiPaid">R$ 0,00</div></div></article>
+      </section>
+
+      <section class="card mt-6">
+        <div class="card-body">
+          <h3 class="section-title">Minhas Solicitações Recentes</h3>
+          <p class="section-sub">Acompanhamento rápido do seu fluxo.</p>
+          <div class="table-wrap mt-4">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Protocolo</th>
+                  <th>Empresa</th>
+                  <th>Valor</th>
+                  <th>Status</th>
+                  <th>Ação</th>
+                </tr>
+              </thead>
+              <tbody id="tableRequests"><tr><td colspan="5">Carregando...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="../../assets/js/app.js"></script>
+  <script src="../../assets/js/api.js"></script>
+  <script>
+    checkAuth('medico');
+
+    const DOCTOR_ID = 1;
+
+    function protocol(id) {
+      return `SOL-2026-${String(id).padStart(5, '0')}`;
+    }
+
+    function mapStatus(row) {
+      if (row.contract_file_path === 'released' && !row.contract_signed_at) {
+        return { label: 'Aguardando Assinatura', cls: 'warning' };
+      }
+      if (row.status === 'pending') return { label: 'Aguardando Triagem', cls: 'warning' };
+      if (row.status === 'in_review') return { label: 'Em Análise', cls: 'info' };
+      if (row.status === 'approved') return { label: 'Aprovado', cls: 'success' };
+      if (row.status === 'paid') return { label: 'Pago', cls: 'success' };
+      if (row.status === 'rejected') return { label: 'Rejeitado', cls: 'info' };
+      return { label: row.status, cls: 'info' };
+    }
+
+    async function loadData() {
+      const response = await ApiClient.getRequests({ doctor_id: DOCTOR_ID });
+      const rows = Array.isArray(response?.data) ? response.data : [];
+
+      const pending = rows.filter((r) => r.status === 'pending').length;
+      const signature = rows.filter((r) => r.contract_file_path === 'released' && !r.contract_signed_at).length;
+      const approved = rows.filter((r) => r.status === 'approved').length;
+      const paidTotal = rows
+        .filter((r) => r.status === 'paid')
+        .reduce((sum, r) => sum + Number(r.net_amount || 0), 0);
+
+      document.getElementById('kpiPending').textContent = pending;
+      document.getElementById('kpiSignature').textContent = signature;
+      document.getElementById('kpiApproved').textContent = approved;
+      document.getElementById('kpiPaid').textContent = formatCurrency(paidTotal);
+
+      const tbody = document.getElementById('tableRequests');
+      const recent = [...rows]
+        .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+        .slice(0, 8);
+
+      tbody.innerHTML = recent.length
+        ? recent.map((r) => {
+            const status = mapStatus(r);
+            return `
+              <tr>
+                <td>${protocol(r.id)}</td>
+                <td>${r.company_name || `Empresa #${r.company_id}`}</td>
+                <td>${formatCurrency(Number(r.net_amount || 0))}</td>
+                <td><span class="badge ${status.cls}">${status.label}</span></td>
+                <td><a class="btn" href="../../medico/detalhes-solicitacao.html?id=${r.id}">Ver</a></td>
+              </tr>
+            `;
+          }).join('')
+        : '<tr><td colspan="5">Nenhuma solicitação encontrada.</td></tr>';
+    }
+
+    loadData().catch((error) => {
+      console.error(error);
+      showToast(`Erro ao carregar dashboard modern: ${error.message || error}`, 'danger');
+    });
+  </script>
+</body>
+</html>

@@ -46,9 +46,13 @@
                 <i class="bi bi-clipboard-check"></i>
                 Aprovações
             </a>
+            <a class="nav-link" href="contratos.html">
+                <i class="bi bi-file-earmark-text"></i>
+                Contratos
+            </a>
             <a class="nav-link" href="pagamentos.html">
                 <i class="bi bi-cash-coin"></i>
-                Pagamentos
+                Histórico de Pagamentos
             </a>
             <a class="nav-link active" href="relatorios.html">
                 <i class="bi bi-graph-up"></i>
@@ -83,7 +87,7 @@
                         <input type="date" class="form-control" id="periodoFim" value="2025-12-27">
                     </div>
                     <div class="col-md-3">
-                        <button class="btn btn-primary w-100">
+                        <button class="btn btn-primary w-100" id="aplicarFiltroBtn">
                             <i class="bi bi-search me-2"></i>
                             Aplicar Filtro
                         </button>
@@ -106,8 +110,8 @@
                         <div class="d-flex justify-content-between align-items-start">
                             <div class="flex-grow-1">
                                 <div class="metric-label">Volume Total</div>
-                                <div class="metric-value">R$ 2.1M</div>
-                                <small class="text-success">+15% vs mês anterior</small>
+                                <div class="metric-value" id="kpiVolumeTotal">R$ 0,00</div>
+                                <small class="text-success">Período selecionado</small>
                             </div>
                             <div class="metric-icon">
                                 <i class="bi bi-currency-dollar"></i>
@@ -122,8 +126,8 @@
                         <div class="d-flex justify-content-between align-items-start">
                             <div class="flex-grow-1">
                                 <div class="metric-label">Solicitações</div>
-                                <div class="metric-value">156</div>
-                                <small class="text-success">+8% vs mês anterior</small>
+                                <div class="metric-value" id="kpiSolicitacoes">0</div>
+                                <small class="text-success">Total no período</small>
                             </div>
                             <div class="metric-icon">
                                 <i class="bi bi-file-text"></i>
@@ -138,8 +142,8 @@
                         <div class="d-flex justify-content-between align-items-start">
                             <div class="flex-grow-1">
                                 <div class="metric-label">Ticket Médio</div>
-                                <div class="metric-value">R$ 13.5k</div>
-                                <small class="text-success">+6% vs mês anterior</small>
+                                <div class="metric-value" id="kpiTicketMedio">R$ 0,00</div>
+                                <small class="text-success">Média por solicitação</small>
                             </div>
                             <div class="metric-icon">
                                 <i class="bi bi-calculator"></i>
@@ -154,8 +158,8 @@
                         <div class="d-flex justify-content-between align-items-start">
                             <div class="flex-grow-1">
                                 <div class="metric-label">Taxa Aprovação</div>
-                                <div class="metric-value">94.2%</div>
-                                <small class="text-success">+2% vs mês anterior</small>
+                                <div class="metric-value" id="kpiTaxaAprovacao">0%</div>
+                                <small class="text-success">Aprovadas + pagas</small>
                             </div>
                             <div class="metric-icon">
                                 <i class="bi bi-check-circle"></i>
@@ -204,39 +208,7 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td><span class="badge bg-warning text-dark">1º</span></td>
-                                        <td><strong>Dr. Fernando Silva</strong></td>
-                                        <td>12</td>
-                                        <td><strong>R$ 42.300,00</strong></td>
-                                        <td>R$ 3.525,00</td>
-                                    </tr>
-                                    <tr>
-                                        <td><span class="badge bg-secondary">2º</span></td>
-                                        <td><strong>Dra. Maria Santos</strong></td>
-                                        <td>10</td>
-                                        <td><strong>R$ 38.500,00</strong></td>
-                                        <td>R$ 3.850,00</td>
-                                    </tr>
-                                    <tr>
-                                        <td><span class="badge bg-secondary">3º</span></td>
-                                        <td><strong>Dr. Carlos Mendes</strong></td>
-                                        <td>11</td>
-                                        <td><strong>R$ 35.200,00</strong></td>
-                                        <td>R$ 3.200,00</td>
-                                    </tr>
-                                    <tr>
-                                        <td>4º</td>
-                                        <td>Dra. Ana Paula</td>
-                                        <td>9</td>
-                                        <td>R$ 32.800,00</td>
-                                        <td>R$ 3.644,44</td>
-                                    </tr>
-                                    <tr>
-                                        <td>5º</td>
-                                        <td>Dr. Roberto Lima</td>
-                                        <td>8</td>
-                                        <td>R$ 28.900,00</td>
-                                        <td>R$ 3.612,50</td>
+                                        <td colspan="5" class="text-center text-muted py-3">Carregando...</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -264,25 +236,7 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td><strong>MedPlus</strong></td>
-                                        <td>65</td>
-                                        <td><strong>R$ 890.000,00</strong></td>
-                                        <td class="text-success">R$ 8.900,00</td>
-                                        <td>3.2h</td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>Hospital Vida</strong></td>
-                                        <td>52</td>
-                                        <td><strong>R$ 720.000,00</strong></td>
-                                        <td class="text-success">R$ 7.200,00</td>
-                                        <td>4.1h</td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>Clínica Saúde</strong></td>
-                                        <td>39</td>
-                                        <td><strong>R$ 490.000,00</strong></td>
-                                        <td class="text-success">R$ 4.900,00</td>
-                                        <td>5.5h</td>
+                                        <td colspan="5" class="text-center text-muted py-3">Carregando...</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -303,25 +257,25 @@
                         <div class="mb-3">
                             <div class="d-flex justify-content-between mb-2">
                                 <span>Aprovadas</span>
-                                <strong class="text-success">147 (94.2%)</strong>
+                                <strong class="text-success" id="distAprovadasText">0 (0%)</strong>
                             </div>
                             <div class="progress mb-3" style="height: 10px;">
-                                <div class="progress-bar bg-success" style="width: 94.2%"></div>
+                                <div class="progress-bar bg-success" id="distAprovadasBar" style="width: 0%"></div>
                             </div>
                         </div>
                         <div class="mb-3">
                             <div class="d-flex justify-content-between mb-2">
                                 <span>Rejeitadas</span>
-                                <strong class="text-danger">9 (5.8%)</strong>
+                                <strong class="text-danger" id="distRejeitadasText">0 (0%)</strong>
                             </div>
                             <div class="progress mb-3" style="height: 10px;">
-                                <div class="progress-bar bg-danger" style="width: 5.8%"></div>
+                                <div class="progress-bar bg-danger" id="distRejeitadasBar" style="width: 0%"></div>
                             </div>
                         </div>
                         <hr>
                         <div class="d-flex justify-content-between">
                             <strong>Total</strong>
-                            <strong>156</strong>
+                            <strong id="distTotal">0</strong>
                         </div>
                     </div>
                 </div>
@@ -372,16 +326,16 @@
                         </h6>
                         <div class="mb-3">
                             <small class="text-muted d-block">Taxa Total (3.5%)</small>
-                            <h4 class="text-primary mb-0">R$ 73.500,00</h4>
+                            <h4 class="text-primary mb-0" id="receitaTaxaTotal">R$ 0,00</h4>
                         </div>
                         <div class="mb-3">
                             <small class="text-muted d-block">Cashback Pago (1%)</small>
-                            <h5 class="text-danger mb-0">R$ 21.000,00</h5>
+                            <h5 class="text-danger mb-0" id="receitaCashback">R$ 0,00</h5>
                         </div>
                         <hr>
                         <div>
                             <small class="text-muted d-block">Receita Líquida</small>
-                            <h4 class="text-success mb-0">R$ 52.500,00</h4>
+                            <h4 class="text-success mb-0" id="receitaLiquida">R$ 0,00</h4>
                         </div>
                     </div>
                 </div>
@@ -421,13 +375,142 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Custom JS -->
     <script src="../assets/js/app.js"></script>
+    <script src="../assets/js/api.js"></script>
 
     <script>
         checkAuth('admin');
 
-        function exportarRelatorio() {
-            alert('Relatório exportado para Excel com sucesso!');
+        const doctorsBody = document.querySelectorAll('table tbody')[0];
+        const companiesBody = document.querySelectorAll('table tbody')[1];
+
+        function inRange(dateValue, start, end) {
+            const d = new Date(dateValue);
+            const startDate = start ? new Date(`${start}T00:00:00`) : null;
+            const endDate = end ? new Date(`${end}T23:59:59`) : null;
+            if (startDate && d < startDate) return false;
+            if (endDate && d > endDate) return false;
+            return true;
         }
+
+        function updateKpis(rows) {
+            const total = rows.length;
+            const volume = rows.reduce((sum, r) => sum + Number(r.net_amount || 0), 0);
+            const ticket = total > 0 ? volume / total : 0;
+
+            const aprovadas = rows.filter(r => r.status === 'approved' || r.status === 'paid').length;
+            const rejeitadas = rows.filter(r => r.status === 'rejected').length;
+            const taxaAprovacao = total > 0 ? (aprovadas / total) * 100 : 0;
+            const taxaRejeicao = total > 0 ? (rejeitadas / total) * 100 : 0;
+
+            const taxaTotal = volume * 0.035;
+            const cashback = volume * 0.01;
+            const receitaLiquida = taxaTotal - cashback;
+
+            document.getElementById('kpiVolumeTotal').textContent = formatCurrency(volume);
+            document.getElementById('kpiSolicitacoes').textContent = total;
+            document.getElementById('kpiTicketMedio').textContent = formatCurrency(ticket);
+            document.getElementById('kpiTaxaAprovacao').textContent = `${taxaAprovacao.toFixed(1)}%`;
+
+            document.getElementById('distAprovadasText').textContent = `${aprovadas} (${taxaAprovacao.toFixed(1)}%)`;
+            document.getElementById('distRejeitadasText').textContent = `${rejeitadas} (${taxaRejeicao.toFixed(1)}%)`;
+            document.getElementById('distAprovadasBar').style.width = `${taxaAprovacao}%`;
+            document.getElementById('distRejeitadasBar').style.width = `${taxaRejeicao}%`;
+            document.getElementById('distTotal').textContent = total;
+
+            document.getElementById('receitaTaxaTotal').textContent = formatCurrency(taxaTotal);
+            document.getElementById('receitaCashback').textContent = formatCurrency(cashback);
+            document.getElementById('receitaLiquida').textContent = formatCurrency(receitaLiquida);
+        }
+
+        function updateTopDoctors(rows) {
+            const grouped = new Map();
+            for (const r of rows) {
+                const key = r.doctor_name || `Médico #${r.doctor_id}`;
+                const current = grouped.get(key) || { count: 0, volume: 0 };
+                current.count += 1;
+                current.volume += Number(r.net_amount || 0);
+                grouped.set(key, current);
+            }
+
+            const top = [...grouped.entries()]
+                .map(([name, data]) => ({ name, ...data, avg: data.count ? data.volume / data.count : 0 }))
+                .sort((a, b) => b.volume - a.volume)
+                .slice(0, 10);
+
+            if (top.length === 0) {
+                doctorsBody.innerHTML = '<tr><td colspan="5" class="text-center text-muted py-3">Sem dados no período</td></tr>';
+                return;
+            }
+
+            doctorsBody.innerHTML = top.map((item, index) => `
+                <tr>
+                    <td>${index === 0 ? '<span class="badge bg-warning text-dark">1º</span>' : `${index + 1}º`}</td>
+                    <td><strong>${item.name}</strong></td>
+                    <td>${item.count}</td>
+                    <td><strong>${formatCurrency(item.volume)}</strong></td>
+                    <td>${formatCurrency(item.avg)}</td>
+                </tr>
+            `).join('');
+        }
+
+        function updateTopCompanies(rows) {
+            const grouped = new Map();
+            for (const r of rows) {
+                const key = r.company_name || `Empresa #${r.company_id}`;
+                const current = grouped.get(key) || { count: 0, volume: 0 };
+                current.count += 1;
+                current.volume += Number(r.net_amount || 0);
+                grouped.set(key, current);
+            }
+
+            const top = [...grouped.entries()]
+                .map(([name, data]) => ({ name, ...data, cashback: data.volume * 0.01 }))
+                .sort((a, b) => b.volume - a.volume)
+                .slice(0, 10);
+
+            if (top.length === 0) {
+                companiesBody.innerHTML = '<tr><td colspan="5" class="text-center text-muted py-3">Sem dados no período</td></tr>';
+                return;
+            }
+
+            companiesBody.innerHTML = top.map((item) => `
+                <tr>
+                    <td><strong>${item.name}</strong></td>
+                    <td>${item.count}</td>
+                    <td><strong>${formatCurrency(item.volume)}</strong></td>
+                    <td class="text-success">${formatCurrency(item.cashback)}</td>
+                    <td>-</td>
+                </tr>
+            `).join('');
+        }
+
+        async function loadReport() {
+            const start = document.getElementById('periodoInicio').value;
+            const end = document.getElementById('periodoFim').value;
+
+            const response = await ApiClient.getRequests();
+            const all = Array.isArray(response?.data) ? response.data : [];
+            const filtered = all.filter(r => inRange(r.created_at, start, end));
+
+            updateKpis(filtered);
+            updateTopDoctors(filtered);
+            updateTopCompanies(filtered);
+        }
+
+        function exportarRelatorio() {
+            showToast('Relatório exportado para Excel com sucesso!', 'success');
+        }
+
+        document.getElementById('aplicarFiltroBtn').addEventListener('click', () => {
+            loadReport().catch((error) => {
+                console.error(error);
+                showToast('Erro ao atualizar relatório.', 'danger');
+            });
+        });
+
+        loadReport().catch((error) => {
+            console.error(error);
+        });
     </script>
 </body>
 

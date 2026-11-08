@@ -121,7 +121,7 @@
                                     <input type="text" class="form-control" id="valorSolicitado" placeholder="0,00"
                                         required>
                                 </div>
-                                <div class="form-text">Valor mínimo: R$ 2.000,00 | Valor máximo: R$ 20.000,00</div>
+                                <div class="form-text">Valor mínimo: R$ 2.000,00 | Valor máximo: R$ 1.000.000,00</div>
                             </div>
 
                             <div id="calculoPreview" class="card bg-light border-0 d-none">
@@ -344,28 +344,67 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Custom JS -->
     <script src="../assets/js/app.js"></script>
-    <script src="../assets/js/storage.js"></script>
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/storage-api.js"></script>
 
     <script>
         checkAuth('medico');
 
+        const DOCTOR_ID = 1;
         let plantoes = [];
         let empresaSelecionada = null;
         let taxaSelecionada = 0;
+        let companiesById = {};
+        let currentDoctor = null;
+        const LIMITE_TOTAL_MENSAL = 1000000;
 
-        // Carregar limite disponível
-        document.getElementById('limiteDisponivelInfo').textContent =
-            formatCurrency(mockData.medico.limiteDisponivel);
+        function getCompanyFeeRate(company) {
+            const candidate = Number(company?.cashback_rate);
+            if (Number.isFinite(candidate) && candidate > 0) return candidate;
+            return 3.5;
+        }
+
+        async function loadInitialData() {
+            const [doctorResponse, companiesResponse, requestsResponse] = await Promise.all([
+                ApiClient.getDoctor(DOCTOR_ID),
+                ApiClient.getCompanies(),
+                ApiClient.getRequests({ doctor_id: DOCTOR_ID }),
+            ]);
+
+            currentDoctor = doctorResponse?.data || null;
+
+            const companies = Array.isArray(companiesResponse) ? companiesResponse : [];
+            const requests = Array.isArray(requestsResponse?.data) ? requestsResponse.data : [];
+
+            companiesById = companies.reduce((acc, c) => {
+                acc[c.id] = c;
+                return acc;
+            }, {});
+
+            const empresaSelect = document.getElementById('empresa');
+            empresaSelect.innerHTML = '<option value="">Selecione a empresa...</option>';
+
+            companies.forEach((company) => {
+                const option = document.createElement('option');
+                const feeRate = getCompanyFeeRate(company);
+                option.value = String(company.id);
+                option.textContent = `${company.name} - Taxa ${feeRate.toFixed(1)}%`;
+                empresaSelect.appendChild(option);
+            });
+
+            const totalAprovadoPago = requests
+                .filter((s) => s.status === 'approved' || s.status === 'paid')
+                .reduce((sum, s) => sum + Number(s.net_amount || 0), 0);
+
+            const limiteDisponivel = Math.max(0, LIMITE_TOTAL_MENSAL - totalAprovadoPago);
+            document.getElementById('limiteDisponivelInfo').textContent = formatCurrency(limiteDisponivel);
+        }
 
         // Atualizar cálculo ao mudar empresa ou valor
         document.getElementById('empresa').addEventListener('change', function () {
-            const taxas = {
-                'medplus': 3.5,
-                'hospitalvida': 4.0,
-                'clinicasaude': 3.2
-            };
             empresaSelecionada = this.value;
-            taxaSelecionada = taxas[this.value] || 0;
+            const company = companiesById[Number(this.value)];
+            taxaSelecionada = company ? getCompanyFeeRate(company) : 0;
             atualizarCalculo();
         });
 
@@ -398,7 +437,7 @@
             const descricao = document.getElementById('plantaoDescricao').value;
 
             if (!data || !valorInput) {
-                alert('Preencha a data e o valor do plantão');
+                showToast('Preencha a data e o valor do plantão', 'warning');
                 return;
             }
 
@@ -461,19 +500,19 @@
             // Validações
             if (step === 2) {
                 if (!empresaSelecionada) {
-                    alert('Selecione uma empresa');
+                    showToast('Selecione uma empresa', 'warning');
                     return;
                 }
                 const valor = parseFloat(document.getElementById('valorSolicitado').value.replace(/\./g, '').replace(',', '.')) || 0;
-                if (valor < 2000 || valor > 20000) {
-                    alert('O valor deve estar entre R$ 2.000,00 e R$ 20.000,00');
+                if (valor < 2000 || valor > 1000000) {
+                    showToast('O valor deve estar entre R$ 2.000,00 e R$ 1.000.000,00', 'warning');
                     return;
                 }
             }
 
             if (step === 3) {
                 if (plantoes.length === 0) {
-                    alert('Adicione pelo menos um plantão');
+                    showToast('Adicione pelo menos um plantão', 'warning');
                     return;
                 }
                 preencherRevisao();
@@ -502,17 +541,13 @@
         }
 
         function preencherRevisao() {
-            const empresaNomes = {
-                'medplus': 'MedPlus',
-                'hospitalvida': 'Hospital Vida',
-                'clinicasaude': 'Clínica Saúde'
-            };
+            const company = companiesById[Number(empresaSelecionada)];
 
             const total = plantoes.reduce((sum, p) => sum + p.valor, 0);
             const taxa = total * (taxaSelecionada / 100);
             const liquido = total - taxa;
 
-            document.getElementById('reviewEmpresa').textContent = empresaNomes[empresaSelecionada];
+            document.getElementById('reviewEmpresa').textContent = company?.name || `Empresa #${empresaSelecionada}`;
             document.getElementById('reviewQtdPlantoes').textContent = plantoes.length + ' plantões';
             document.getElementById('reviewValorTotal').textContent = formatCurrency(total);
             document.getElementById('reviewValorBruto').textContent = formatCurrency(total);
@@ -530,42 +565,34 @@
             `).join('');
         }
 
-        function submitSolicitacao() {
+        async function submitSolicitacao() {
             const concordo = document.getElementById('concordoTermos').checked;
             if (!concordo) {
-                alert('Você precisa concordar com os termos e condições');
+                showToast('Você precisa concordar com os termos e condições', 'warning');
                 return;
             }
 
-            // Preparar dados da solicitação
-            const empresaNomes = {
-                'medplus': 'MedPlus',
-                'hospitalvida': 'Hospital Vida',
-                'clinicasaude': 'Clínica Saúde'
-            };
+            const submitButton = document.querySelector('#step3 .btn-success');
+            setButtonLoading(submitButton, true, 'Enviando...');
 
-            const empresaCNPJs = {
-                'medplus': '12.345.678/0001-00',
-                'hospitalvida': '98.765.432/0001-00',
-                'clinicasaude': '11.222.333/0001-00'
-            };
+            // Preparar dados da solicitação
+            const selectedCompany = companiesById[Number(empresaSelecionada)] || null;
 
             const total = plantoes.reduce((sum, p) => sum + p.valor, 0);
             const taxa = total * (taxaSelecionada / 100);
             const liquido = total - taxa;
             const cashback = total * 0.01; // 1% para empresa
 
-            // Dados do médico (mock)
             const medicoData = {
-                medicoId: 'medico1',
-                medicoNome: 'Dr. Fernando Silva',
-                medicoCRM: 'CRM-SP 123456',
-                medicoCPF: '123.456.789-00',
-                medicoEmail: 'fernando.silva@email.com',
-                medicoTelefone: '(11) 98765-4321',
+                medicoId: `medico${DOCTOR_ID}`,
+                medicoNome: currentDoctor?.full_name || `Médico #${DOCTOR_ID}`,
+                medicoCRM: currentDoctor?.crm || 'CRM não informado',
+                medicoCPF: currentDoctor?.cpf || '',
+                medicoEmail: currentDoctor?.email || '',
+                medicoTelefone: currentDoctor?.phone || '',
                 empresaId: empresaSelecionada,
-                empresaNome: empresaNomes[empresaSelecionada],
-                empresaCNPJ: empresaCNPJs[empresaSelecionada],
+                empresaNome: selectedCompany?.name || `Empresa #${empresaSelecionada}`,
+                empresaCNPJ: selectedCompany?.cnpj || '',
                 valorTotal: total,
                 taxa: taxa,
                 taxaPercentual: taxaSelecionada,
@@ -606,19 +633,31 @@
                 ]
             };
 
-            // Criar solicitação no storage
-            console.log('Criando solicitação com dados:', medicoData);
-            const novaSolicitacao = AppStorage.criarSolicitacao(medicoData);
-            console.log('Solicitação criada:', novaSolicitacao);
-            console.log('Todas solicitações após criar:', AppStorage.getSolicitacoes());
-            console.log('Solicitações do médico:', AppStorage.getSolicitacoesMedico('medico1'));
+            try {
+                const novaSolicitacao = await AppStorage.criarSolicitacao(medicoData);
 
-            // Mostrar protocolo gerado
-            document.getElementById('protocoloGerado').textContent = novaSolicitacao.numero;
+                document.getElementById('protocoloGerado').textContent = novaSolicitacao.numero;
+                showToast('Solicitação enviada com sucesso! Redirecionando para os detalhes...', 'success');
 
-            // Ir para step 4
-            nextStep(4);
+                const requestId = novaSolicitacao?.id;
+                if (requestId) {
+                    window.location.href = `detalhes-solicitacao.html?id=${requestId}`;
+                    return;
+                }
+
+                nextStep(4);
+            } catch (error) {
+                console.error(error);
+                showToast(`Erro ao enviar solicitação: ${error.message || error}`, 'danger');
+            } finally {
+                setButtonLoading(submitButton, false);
+            }
         }
+
+        loadInitialData().catch((error) => {
+            console.error(error);
+            showToast(`Erro ao carregar dados iniciais: ${error.message || error}`, 'danger');
+        });
     </script>
 </body>
 

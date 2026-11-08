@@ -50,9 +50,13 @@
                 <i class="bi bi-clipboard-check"></i>
                 Aprovações
             </a>
+                <a class="nav-link" href="contratos.html">
+                    <i class="bi bi-file-earmark-text"></i>
+                    Contratos
+                </a>
             <a class="nav-link" href="pagamentos.html">
                 <i class="bi bi-cash-coin"></i>
-                Pagamentos
+                Histórico de Pagamentos
             </a>
             <a class="nav-link" href="relatorios.html">
                 <i class="bi bi-graph-up"></i>
@@ -221,8 +225,8 @@
 
                         <div class="alert alert-info">
                             <i class="bi bi-info-circle me-2"></i>
-                            <strong>Atenção Charlene:</strong> Você pode aprovar esta solicitação diretamente
-                            ou encaminhá-la para validação da empresa MedPlus.
+                            <strong>Atenção Charlene:</strong> Nesta etapa você deve apenas triar a solicitação.
+                            A aprovação final é feita na etapa de Aprovações, que libera o contrato para assinatura do médico.
                         </div>
 
                         <div class="mb-4">
@@ -232,13 +236,9 @@
                         </div>
 
                         <div class="d-flex gap-2 flex-wrap">
-                            <button type="button" class="btn btn-success btn-lg" onclick="aprovarDireto()">
-                                <i class="bi bi-check-circle me-2"></i>
-                                Aprovar Diretamente
-                            </button>
                             <button type="button" class="btn btn-primary btn-lg" onclick="encaminharParaEmpresa()">
                                 <i class="bi bi-building me-2"></i>
-                                Encaminhar para MedPlus
+                                Encaminhar para Aprovações
                             </button>
                             <button type="button" class="btn btn-warning btn-lg" onclick="solicitarInformacoes()">
                                 <i class="bi bi-question-circle me-2"></i>
@@ -383,20 +383,26 @@
             carregarSolicitacao();
         });
 
-        function carregarSolicitacao() {
+        async function carregarSolicitacao() {
             const params = new URLSearchParams(window.location.search);
             const id = params.get('id');
 
             if (!id) {
-                alert('Solicitação não encontrada');
+                showToast('Solicitação não encontrada', 'warning');
                 window.location.href = 'dashboard.html';
                 return;
             }
 
-            solicitacaoAtual = AppStorage.getSolicitacao(id);
+            try {
+                solicitacaoAtual = await AppStorage.getSolicitacao(id);
+            } catch (error) {
+                showToast(`Erro ao carregar solicitação: ${error.message || error}`, 'danger');
+                window.location.href = 'dashboard.html';
+                return;
+            }
 
             if (!solicitacaoAtual) {
-                alert('Solicitação não encontrada');
+                showToast('Solicitação não encontrada', 'warning');
                 window.location.href = 'dashboard.html';
                 return;
             }
@@ -487,23 +493,21 @@
             return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '***.$2.***-**');
         }
 
-        function aprovarDireto() {
+        async function encaminharParaEmpresa() {
             const observacao = document.getElementById('observacoesTriagem').value;
+            const button = document.activeElement?.closest('button');
 
-            if (confirm('Confirma a aprovação direta desta solicitação? O pagamento será processado automaticamente.')) {
-                AppStorage.adminAprovarDireto(solicitacaoAtual.id, observacao);
-                alert('Solicitação aprovada com sucesso!');
-                window.location.href = 'dashboard.html';
-            }
-        }
-
-        function encaminharParaEmpresa() {
-            const observacao = document.getElementById('observacoesTriagem').value;
-
-            if (confirm(`Confirma o encaminhamento desta solicitação para ${solicitacaoAtual.empresaNome}?`)) {
-                AppStorage.adminEncaminharParaEmpresa(solicitacaoAtual.id, observacao);
-                alert(`Solicitação encaminhada para ${solicitacaoAtual.empresaNome} com sucesso!`);
-                window.location.href = 'dashboard.html';
+            if (confirm('Confirma o encaminhamento desta solicitação para a etapa de Aprovações?')) {
+                try {
+                    setButtonLoading(button, true, 'Encaminhando...');
+                    await AppStorage.adminEncaminharParaEmpresa(solicitacaoAtual.id, observacao);
+                    showToast('Solicitação encaminhada para a etapa de Aprovações.', 'success');
+                    window.location.href = 'dashboard.html';
+                } catch (error) {
+                    showToast(`Erro ao encaminhar: ${error.message || error}`, 'danger');
+                } finally {
+                    setButtonLoading(button, false);
+                }
             }
         }
 
@@ -511,38 +515,56 @@
             modalInformacoes.show();
         }
 
-        function confirmarSolicitacaoInformacoes() {
+        async function confirmarSolicitacaoInformacoes() {
             const mensagem = document.getElementById('mensagemInformacoes').value;
 
             if (!mensagem.trim()) {
-                alert('Por favor, descreva quais informações são necessárias.');
+                showToast('Por favor, descreva quais informações são necessárias.', 'warning');
                 return;
             }
 
-            AppStorage.adminSolicitarInformacoes(solicitacaoAtual.id, mensagem);
-            alert('Solicitação de informações enviada ao médico!');
-            modalInformacoes.hide();
-            window.location.href = 'dashboard.html';
+            const button = document.activeElement?.closest('button');
+
+            try {
+                setButtonLoading(button, true, 'Enviando...');
+                await AppStorage.adminSolicitarInformacoes(solicitacaoAtual.id, mensagem);
+                showToast('Solicitação de informações enviada ao médico!', 'success');
+                modalInformacoes.hide();
+                window.location.href = 'dashboard.html';
+            } catch (error) {
+                showToast(`Erro ao solicitar informações: ${error.message || error}`, 'danger');
+            } finally {
+                setButtonLoading(button, false);
+            }
         }
 
         function mostrarModalRejeicao() {
             modalRejeicao.show();
         }
 
-        function confirmarRejeicao() {
+        async function confirmarRejeicao() {
             const motivo = document.getElementById('motivoRejeicao').value;
             const detalhes = document.getElementById('detalhesRejeicao').value;
 
             if (!motivo || !detalhes.trim()) {
-                alert('Por favor, preencha todos os campos obrigatórios.');
+                showToast('Por favor, preencha todos os campos obrigatórios.', 'warning');
                 return;
             }
 
+            const button = document.activeElement?.closest('button');
+
             if (confirm('Confirma a rejeição definitiva desta solicitação?')) {
-                AppStorage.adminRejeitar(solicitacaoAtual.id, motivo, detalhes);
-                alert('Solicitação rejeitada. O médico foi notificado.');
-                modalRejeicao.hide();
-                window.location.href = 'dashboard.html';
+                try {
+                    setButtonLoading(button, true, 'Rejeitando...');
+                    await AppStorage.adminRejeitar(solicitacaoAtual.id, motivo, detalhes);
+                    showToast('Solicitação rejeitada. O médico foi notificado.', 'success');
+                    modalRejeicao.hide();
+                    window.location.href = 'dashboard.html';
+                } catch (error) {
+                    showToast(`Erro ao rejeitar: ${error.message || error}`, 'danger');
+                } finally {
+                    setButtonLoading(button, false);
+                }
             }
         }
     </script>

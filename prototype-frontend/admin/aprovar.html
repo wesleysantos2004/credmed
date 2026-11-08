@@ -46,9 +46,13 @@
                 <i class="bi bi-clipboard-check"></i>
                 Aprovações
             </a>
+            <a class="nav-link" href="contratos.html">
+                <i class="bi bi-file-earmark-text"></i>
+                Contratos
+            </a>
             <a class="nav-link" href="pagamentos.html">
                 <i class="bi bi-cash-coin"></i>
-                Pagamentos
+                Histórico de Pagamentos
             </a>
             <a class="nav-link" href="relatorios.html">
                 <i class="bi bi-graph-up"></i>
@@ -72,12 +76,12 @@
             </a>
             <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
                 <div>
-                    <h2 class="mb-1">Revisar e Aprovar Solicitação</h2>
+                    <h2 class="mb-1" id="pageTitle">Revisar e Aprovar Solicitação</h2>
                     <p class="text-muted mb-0">Protocolo: <strong id="protocolo">SOL-2025-00043</strong></p>
                 </div>
-                <span class="badge bg-warning text-dark fs-6 py-2 px-3">
+                <span class="badge bg-warning text-dark fs-6 py-2 px-3" id="statusBadgeHeader">
                     <i class="bi bi-clock-history me-2"></i>
-                    Aguardando Aprovação
+                    Carregando...
                 </span>
             </div>
         </div>
@@ -294,7 +298,7 @@
                     <div class="card-body">
                         <h5 class="card-title mb-4 text-warning">
                             <i class="bi bi-clipboard-check me-2"></i>
-                            Decisão de Aprovação
+                            <span id="workflowDecisionTitle">Decisão de Aprovação</span>
                         </h5>
                         <form id="formAprovacao">
                             <div class="mb-4">
@@ -303,16 +307,17 @@
                                     placeholder="Adicione observações sobre esta aprovação..."></textarea>
                             </div>
 
-                            <div class="alert alert-info">
+                            <div class="alert alert-info" id="workflowAlertText">
                                 <i class="bi bi-info-circle me-2"></i>
-                                <strong>Atenção:</strong> Ao aprovar, o pagamento será processado automaticamente via
-                                PIX.
+                                <strong>Atenção:</strong> Ao continuar, o contrato será gerado/liberado para assinatura do médico. A aprovação final da solicitação ocorre após o envio do contrato assinado.
                             </div>
 
+                            <div class="alert alert-secondary" id="workflowSecondaryInfo" style="display:none;"></div>
+
                             <div class="d-flex gap-2 flex-wrap">
-                                <button type="button" class="btn btn-success btn-lg" onclick="aprovar()">
+                                <button type="button" class="btn btn-success btn-lg" id="btnAprovarFluxo" onclick="aprovar()">
                                     <i class="bi bi-check-circle me-2"></i>
-                                    Aprovar e Processar Pagamento
+                                    <span id="btnAprovarFluxoLabel">Gerar Contrato e Enviar para Assinatura</span>
                                 </button>
                                 <button type="button" class="btn btn-danger btn-lg" onclick="mostrarModalRejeicao()">
                                     <i class="bi bi-x-circle me-2"></i>
@@ -446,20 +451,122 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Custom JS -->
     <script src="../assets/js/app.js"></script>
+    <script src="../assets/js/api.js"></script>
 
     <script>
         checkAuth('admin');
 
         let modalRejeicao;
+        let requestId;
+        let currentRequest;
+
+        function formatProtocol(id) {
+            return `SOL-2026-${String(id).padStart(5, '0')}`;
+        }
+
+        function applyWorkflowState(request) {
+            const pageTitle = document.getElementById('pageTitle');
+            const statusBadgeHeader = document.getElementById('statusBadgeHeader');
+            const workflowDecisionTitle = document.getElementById('workflowDecisionTitle');
+            const workflowAlertText = document.getElementById('workflowAlertText');
+            const workflowSecondaryInfo = document.getElementById('workflowSecondaryInfo');
+            const btnAprovarFluxo = document.getElementById('btnAprovarFluxo');
+            const btnAprovarFluxoLabel = document.getElementById('btnAprovarFluxoLabel');
+
+            const contract = request?.contract;
+            const contractWorkflow = contract?.file_path;
+            const waitingSignature = contractWorkflow === 'released' && !contract?.signed_at;
+            const signedContract = contractWorkflow === 'signed' || Boolean(contract?.signed_at);
+
+            if (waitingSignature) {
+                pageTitle.textContent = 'Acompanhar Fluxo de Contrato';
+                statusBadgeHeader.className = 'badge bg-info fs-6 py-2 px-3';
+                statusBadgeHeader.innerHTML = '<i class="bi bi-pen me-2"></i>Aguardando Assinatura do Médico';
+                workflowDecisionTitle.textContent = 'Acompanhamento do Contrato';
+                workflowAlertText.innerHTML = '<i class="bi bi-info-circle me-2"></i><strong>Status:</strong> Contrato já foi gerado e liberado. Aguarde o médico anexar o contrato assinado.';
+                btnAprovarFluxo.style.display = 'none';
+                workflowSecondaryInfo.style.display = '';
+                workflowSecondaryInfo.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>Nenhuma ação de aprovação é necessária neste momento.';
+                return;
+            }
+
+            if (signedContract || request?.status === 'approved' || request?.status === 'paid') {
+                pageTitle.textContent = 'Solicitação Aprovada';
+                statusBadgeHeader.className = 'badge bg-success fs-6 py-2 px-3';
+                statusBadgeHeader.innerHTML = '<i class="bi bi-check-circle me-2"></i>Aprovada';
+                workflowDecisionTitle.textContent = 'Fluxo Concluído';
+                workflowAlertText.innerHTML = '<i class="bi bi-info-circle me-2"></i><strong>Status:</strong> Solicitação aprovada após assinatura do contrato.';
+                btnAprovarFluxo.style.display = 'none';
+                workflowSecondaryInfo.style.display = '';
+                workflowSecondaryInfo.innerHTML = '<i class="bi bi-check2-circle me-2"></i>Fluxo de contrato concluído. Próxima etapa: pagamento.';
+                return;
+            }
+
+            pageTitle.textContent = 'Revisar e Aprovar Solicitação';
+            statusBadgeHeader.className = 'badge bg-warning text-dark fs-6 py-2 px-3';
+            statusBadgeHeader.innerHTML = '<i class="bi bi-clock-history me-2"></i>Aguardando Geração de Contrato';
+            workflowDecisionTitle.textContent = 'Decisão de Aprovação';
+            workflowAlertText.innerHTML = '<i class="bi bi-info-circle me-2"></i><strong>Atenção:</strong> Ao continuar, o contrato será gerado/liberado para assinatura do médico. A aprovação final da solicitação ocorre após o envio do contrato assinado.';
+            btnAprovarFluxo.style.display = '';
+            btnAprovarFluxoLabel.textContent = 'Gerar Contrato e Enviar para Assinatura';
+            workflowSecondaryInfo.style.display = 'none';
+            workflowSecondaryInfo.innerHTML = '';
+        }
+
+        async function loadRequest() {
+            const params = new URLSearchParams(window.location.search);
+            requestId = Number(params.get('id'));
+
+            if (!requestId) {
+                showToast('Solicitação não encontrada.', 'warning');
+                window.location.href = 'aprovacoes.html';
+                return;
+            }
+
+            const response = await ApiClient.getRequestById(requestId);
+            const request = response?.data;
+            if (!request) {
+                showToast('Solicitação não encontrada.', 'warning');
+                window.location.href = 'aprovacoes.html';
+                return;
+            }
+
+            currentRequest = request;
+
+            document.getElementById('protocolo').textContent = formatProtocol(request.id);
+            applyWorkflowState(request);
+        }
 
         document.addEventListener('DOMContentLoaded', function () {
             modalRejeicao = new bootstrap.Modal(document.getElementById('modalRejeicao'));
+
+            loadRequest().catch((error) => {
+                console.error(error);
+                showToast(`Erro ao carregar solicitação: ${error.message || error}`, 'danger');
+                window.location.href = 'aprovacoes.html';
+            });
         });
 
-        function aprovar() {
-            if (confirm('Confirma a aprovação desta solicitação? O pagamento será processado imediatamente.')) {
-                alert('Solicitação aprovada com sucesso! Pagamento em processamento.');
-                window.location.href = 'pagamentos.html';
+        async function aprovar() {
+            const button = document.activeElement?.closest('button');
+            if (currentRequest?.contract?.file_path === 'released' && !currentRequest?.contract?.signed_at) {
+                showToast('Contrato já enviado. Aguarde a assinatura do médico.', 'info');
+                return;
+            }
+
+            if (confirm('Confirma o envio do contrato para assinatura do médico? A aprovação final ocorrerá após o contrato assinado ser anexado.')) {
+                try {
+                    setButtonLoading(button, true, 'Enviando...');
+                    const notes = document.getElementById('observacoes').value;
+                    await ApiClient.approve(requestId, { notes: notes || 'Aprovada no portal admin' });
+                    await ApiClient.releaseContract(requestId, { notes: 'Contrato liberado para assinatura' });
+                    showToast('Contrato enviado para assinatura do médico. A solicitação será aprovada após o envio do contrato assinado.', 'success');
+                    await loadRequest();
+                } catch (error) {
+                    showToast(`Erro ao aprovar: ${error.message || error}`, 'danger');
+                } finally {
+                    setButtonLoading(button, false);
+                }
             }
         }
 
@@ -467,18 +574,28 @@
             modalRejeicao.show();
         }
 
-        function rejeitar() {
+        async function rejeitar() {
             const motivo = document.getElementById('motivoRejeicao').value;
             const detalhes = document.getElementById('detalhesRejeicao').value;
 
             if (!motivo || !detalhes) {
-                alert('Preencha o motivo e os detalhes da rejeição');
+                showToast('Preencha o motivo e os detalhes da rejeição', 'warning');
                 return;
             }
 
-            alert('Solicitação rejeitada. O médico será notificado.');
-            modalRejeicao.hide();
-            window.location.href = 'aprovacoes.html';
+            const button = document.activeElement?.closest('button');
+
+            try {
+                setButtonLoading(button, true, 'Rejeitando...');
+                await ApiClient.reject(requestId, { notes: `${motivo} - ${detalhes}` });
+                showToast('Solicitação rejeitada. O médico será notificado.', 'success');
+                modalRejeicao.hide();
+                window.location.href = 'aprovacoes.html';
+            } catch (error) {
+                showToast(`Erro ao rejeitar: ${error.message || error}`, 'danger');
+            } finally {
+                setButtonLoading(button, false);
+            }
         }
     </script>
 </body>

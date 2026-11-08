@@ -86,6 +86,8 @@
                             <option value="">Todos</option>
                             <option value="AGUARDANDO_VALIDACAO_EMPRESA">Aguardando Empresa</option>
                             <option value="EM_APROVACAO_ADMIN">Em Aprovação</option>
+                            <option value="CONTRATO_GERADO_AGUARDANDO_LIBERACAO">Contrato Gerado</option>
+                            <option value="AGUARDANDO_ASSINATURA_CONTRATO">Aguardando Sua Assinatura</option>
                             <option value="APROVADO">Aprovado</option>
                             <option value="PAGO">Pago</option>
                             <option value="REJEITADO">Rejeitado</option>
@@ -213,28 +215,57 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Custom JS -->
     <script src="../assets/js/app.js"></script>
-    <script src="../assets/js/storage.js"></script>
+    <script src="../assets/js/api.js"></script>
 
     <script>
         checkAuth('medico');
 
+        const DOCTOR_ID = 1;
         let todasSolicitacoes = [];
         let solicitacoesFiltradas = [];
 
-        // Carregar do storage
-        function loadFromStorage() {
-            console.log('Carregando solicitações do médico medico1...');
-            const solicitacoesStorage = AppStorage.getSolicitacoesMedico('medico1');
-            console.log('Solicitações encontradas:', solicitacoesStorage);
-            return solicitacoesStorage.map(s => ({
+        function protocol(id) {
+            return `SOL-2026-${String(id).padStart(5, '0')}`;
+        }
+
+        function mapStatusFromBackend(status, row) {
+            const contractFilePath = row?.contract_file_path;
+            const contractSignedAt = row?.contract_signed_at;
+
+            if (contractFilePath === 'released' && !contractSignedAt) {
+                return 'AGUARDANDO_ASSINATURA_CONTRATO';
+            }
+
+            if (contractFilePath === 'generated') {
+                return 'CONTRATO_GERADO_AGUARDANDO_LIBERACAO';
+            }
+
+            const map = {
+                draft: 'AGUARDANDO_TRIAGEM_ADMIN',
+                pending: 'AGUARDANDO_TRIAGEM_ADMIN',
+                in_review: 'AGUARDANDO_INFORMACOES_MEDICO',
+                approved: 'APROVADO_ADMIN',
+                paid: 'PAGO',
+                rejected: 'REJEITADO_ADMIN',
+                cancelled: 'REJEITADO_ADMIN',
+            };
+
+            return map[status] || 'AGUARDANDO_TRIAGEM_ADMIN';
+        }
+
+        async function loadFromApi() {
+            const response = await ApiClient.getRequests({ doctor_id: DOCTOR_ID });
+            const rows = Array.isArray(response?.data) ? response.data : [];
+
+            return rows.map((s) => ({
                 id: s.id,
-                numero: s.numero,
-                empresa: s.empresaNome,
-                valorTotal: s.valorTotal,
-                valorLiquido: s.valorLiquido,
-                status: s.status,
-                dataSolicitacao: s.dataCriacao,
-                plantoes: s.plantoes ? s.plantoes.length : 0
+                numero: protocol(s.id),
+                empresa: s.company_name || `Empresa #${s.company_id}`,
+                valorTotal: Number(s.total_amount || 0),
+                valorLiquido: Number(s.net_amount || 0),
+                status: mapStatusFromBackend(s.status, s),
+                dataSolicitacao: s.created_at,
+                plantoes: 0,
             }));
         }
 
@@ -275,6 +306,16 @@
                 badge: 'bg-warning text-dark',
                 icon: 'question-circle'
             },
+            'CONTRATO_GERADO_AGUARDANDO_LIBERACAO': {
+                label: 'Contrato Gerado',
+                badge: 'bg-info',
+                icon: 'file-earmark-text'
+            },
+            'AGUARDANDO_ASSINATURA_CONTRATO': {
+                label: 'Aguardando Sua Assinatura',
+                badge: 'bg-warning text-dark',
+                icon: 'pen'
+            },
             'PAGO': {
                 label: 'Pago',
                 badge: 'bg-success',
@@ -299,87 +340,11 @@
         };
 
         // Load solicitações
-        function loadSolicitacoes() {
-            console.log('=== Iniciando loadSolicitacoes ===');
-            // Tentar carregar do storage primeiro
-            const storageSolicitacoes = loadFromStorage();
-            console.log('Resultado de loadFromStorage:', storageSolicitacoes);
-
-            if (storageSolicitacoes.length > 0) {
-                console.log('Usando dados do storage');
-                todasSolicitacoes = storageSolicitacoes;
-            } else {
-                console.log('Storage vazio, usando mock data');
-                // Se não houver no storage, usar mock
-                todasSolicitacoes = [
-                    {
-                        id: 'SOL-2025-00042',
-                        numero: 'SOL-2025-00042',
-                        status: 'AGUARDANDO_VALIDACAO_EMPRESA',
-                        valorTotal: 3500.00,
-                        valorLiquido: 3377.50,
-                        dataSolicitacao: '2025-12-26T14:30:00',
-                        plantoes: 2,
-                        empresa: 'MedPlus'
-                    },
-                    {
-                        id: 'SOL-2025-00038',
-                        numero: 'SOL-2025-00038',
-                        status: 'PAGO',
-                        valorTotal: 5200.00,
-                        valorLiquido: 5018.00,
-                        dataSolicitacao: '2025-12-20T10:15:00',
-                        dataPagamento: '2025-12-23T16:30:00',
-                        plantoes: 3,
-                        empresa: 'MedPlus'
-                    },
-                    {
-                        id: 'SOL-2025-00035',
-                        numero: 'SOL-2025-00035',
-                        status: 'EM_APROVACAO_ADMIN',
-                        valorTotal: 4200.00,
-                        valorLiquido: 4053.00,
-                        dataSolicitacao: '2025-12-18T09:20:00',
-                        plantoes: 2,
-                        empresa: 'Hospital Vida'
-                    },
-                    {
-                        id: 'SOL-2025-00029',
-                        numero: 'SOL-2025-00029',
-                        status: 'APROVADO',
-                        valorTotal: 2800.00,
-                        valorLiquido: 2702.00,
-                        dataSolicitacao: '2025-12-15T11:45:00',
-                        plantoes: 2,
-                        empresa: 'Clínica Saúde'
-                    },
-                    {
-                        id: 'SOL-2025-00021',
-                        numero: 'SOL-2025-00021',
-                        status: 'PAGO',
-                        valorTotal: 6100.00,
-                        valorLiquido: 5886.50,
-                        dataSolicitacao: '2025-12-10T15:10:00',
-                        dataPagamento: '2025-12-14T10:20:00',
-                        plantoes: 4,
-                        empresa: 'MedPlus'
-                    },
-                    {
-                        id: 'SOL-2025-00015',
-                        numero: 'SOL-2025-00015',
-                        status: 'REJEITADO',
-                        valorTotal: 3000.00,
-                        valorLiquido: 2895.00,
-                        dataSolicitacao: '2025-12-05T08:30:00',
-                        plantoes: 2,
-                        empresa: 'Hospital Vida',
-                        motivoRejeicao: 'Documentação incompleta'
-                    }
-                ];
-            }
+        async function loadSolicitacoes() {
+            todasSolicitacoes = await loadFromApi();
 
             solicitacoesFiltradas = [...todasSolicitacoes];
-            renderizarSolicitacoes();
+            renderSolicitacoes(solicitacoesFiltradas);
             atualizarContadores();
         }
 
@@ -497,12 +462,14 @@
             const aguardando = todasSolicitacoes.filter(s =>
                 s.status === 'AGUARDANDO_TRIAGEM_ADMIN' ||
                 s.status === 'AGUARDANDO_VALIDACAO_EMPRESA' ||
-                s.status === 'AGUARDANDO_INFORMACOES_MEDICO'
+                s.status === 'AGUARDANDO_INFORMACOES_MEDICO' ||
+                s.status === 'AGUARDANDO_ASSINATURA_CONTRATO'
             ).length;
 
             const aprovacao = todasSolicitacoes.filter(s =>
                 s.status === 'VALIDADO_EMPRESA' ||
-                s.status === 'EM_APROVACAO_ADMIN'
+                s.status === 'EM_APROVACAO_ADMIN' ||
+                s.status === 'CONTRATO_GERADO_AGUARDANDO_LIBERACAO'
             ).length;
 
             const aprovado = todasSolicitacoes.filter(s =>
@@ -518,7 +485,10 @@
         }
 
         // Initialize
-        loadSolicitacoes();
+        loadSolicitacoes().catch((error) => {
+            console.error(error);
+            showToast(`Erro ao carregar solicitações: ${error.message || error}`, 'danger');
+        });
     </script>
 </body>
 

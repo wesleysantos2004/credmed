@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pagamentos - Portal Administrativo</title>
+    <title>Histórico de Pagamentos - Portal Administrativo</title>
 
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -46,9 +46,13 @@
                 <i class="bi bi-clipboard-check"></i>
                 Aprovações
             </a>
+            <a class="nav-link" href="contratos.html">
+                <i class="bi bi-file-earmark-text"></i>
+                Contratos
+            </a>
             <a class="nav-link active" href="pagamentos.html">
                 <i class="bi bi-cash-coin"></i>
-                Pagamentos
+                Histórico de Pagamentos
             </a>
             <a class="nav-link" href="relatorios.html">
                 <i class="bi bi-graph-up"></i>
@@ -66,8 +70,8 @@
     <div class="main-content">
         <!-- Header -->
         <div class="mb-4">
-            <h2 class="mb-1">Gerenciamento de Pagamentos</h2>
-            <p class="text-muted mb-0">Acompanhe e processe os pagamentos via PIX</p>
+            <h2 class="mb-1">Histórico de Pagamentos</h2>
+            <p class="text-muted mb-0">Acompanhe os pagamentos e pendências. Aprovações finais são feitas na tela de Aprovações.</p>
         </div>
 
         <!-- Summary Cards -->
@@ -78,7 +82,7 @@
                         <div class="d-flex justify-content-between align-items-start">
                             <div class="flex-grow-1">
                                 <div class="metric-label">Pagos Hoje</div>
-                                <div class="metric-value">R$ 45k</div>
+                                <div class="metric-value" id="pagosHojeValue">R$ 0,00</div>
                             </div>
                             <div class="metric-icon">
                                 <i class="bi bi-check-circle"></i>
@@ -92,8 +96,8 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-start">
                             <div class="flex-grow-1">
-                                <div class="metric-label">Em Processamento</div>
-                                <div class="metric-value">R$ 12k</div>
+                                <div class="metric-label">Aguard. Aprovação Final</div>
+                                <div class="metric-value" id="processandoValue">R$ 0,00</div>
                             </div>
                             <div class="metric-icon">
                                 <i class="bi bi-hourglass-split"></i>
@@ -108,7 +112,7 @@
                         <div class="d-flex justify-content-between align-items-start">
                             <div class="flex-grow-1">
                                 <div class="metric-label">Pagos Mês</div>
-                                <div class="metric-value">R$ 2.1M</div>
+                                <div class="metric-value" id="pagosMesValue">R$ 0,00</div>
                             </div>
                             <div class="metric-icon">
                                 <i class="bi bi-calendar-month"></i>
@@ -123,7 +127,7 @@
                         <div class="d-flex justify-content-between align-items-start">
                             <div class="flex-grow-1">
                                 <div class="metric-label">Total Transações</div>
-                                <div class="metric-value">156</div>
+                                <div class="metric-value" id="transacoesValue">0</div>
                             </div>
                             <div class="metric-icon">
                                 <i class="bi bi-list-ol"></i>
@@ -143,8 +147,8 @@
                         <select class="form-select" id="filtroStatus">
                             <option value="">Todos</option>
                             <option value="pago">Pago</option>
-                            <option value="processando">Processando</option>
-                            <option value="erro">Erro</option>
+                            <option value="aprovacao_final">Aguardando Aprovação Final</option>
+                            <option value="assinatura">Aguardando Assinatura</option>
                         </select>
                     </div>
                     <div class="col-md-3">
@@ -175,6 +179,10 @@
                         <i class="bi bi-printer me-2"></i>
                         Imprimir
                     </button>
+                                <a class="btn btn-sm btn-outline-info ms-2" href="aprovacoes.html">
+                                    <i class="bi bi-clipboard-check me-2"></i>
+                                    Ir para Aprovações
+                                </a>
                 </div>
 
                 <!-- Desktop Table -->
@@ -191,146 +199,17 @@
                                 <th>Ações</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="pagamentosTable">
                             <tr>
-                                <td><strong>SOL-2025-00038</strong></td>
-                                <td>Dr. Fernando Silva</td>
-                                <td>
-                                    <span class="badge bg-secondary">
-                                        <i class="bi bi-envelope me-1"></i>
-                                        E-mail
-                                    </span>
-                                </td>
-                                <td><strong class="text-success">R$ 5.018,00</strong></td>
-                                <td>27/12/2025 10:30</td>
-                                <td><span class="badge bg-success">Pago</span></td>
-                                <td>
-                                    <button class="btn btn-sm btn-outline-primary"
-                                        onclick="verComprovante('SOL-2025-00038')">
-                                        <i class="bi bi-receipt"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><strong>SOL-2025-00037</strong></td>
-                                <td>Dra. Ana Paula</td>
-                                <td>
-                                    <span class="badge bg-secondary">
-                                        <i class="bi bi-phone me-1"></i>
-                                        Telefone
-                                    </span>
-                                </td>
-                                <td><strong class="text-success">R$ 3.200,00</strong></td>
-                                <td>27/12/2025 09:15</td>
-                                <td><span class="badge bg-success">Pago</span></td>
-                                <td>
-                                    <button class="btn btn-sm btn-outline-primary"
-                                        onclick="verComprovante('SOL-2025-00037')">
-                                        <i class="bi bi-receipt"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><strong>SOL-2025-00036</strong></td>
-                                <td>Dr. Roberto Lima</td>
-                                <td>
-                                    <span class="badge bg-secondary">
-                                        <i class="bi bi-credit-card me-1"></i>
-                                        CPF
-                                    </span>
-                                </td>
-                                <td><strong class="text-success">R$ 4.500,00</strong></td>
-                                <td>27/12/2025 08:45</td>
-                                <td><span class="badge bg-success">Pago</span></td>
-                                <td>
-                                    <button class="btn btn-sm btn-outline-primary"
-                                        onclick="verComprovante('SOL-2025-00036')">
-                                        <i class="bi bi-receipt"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr class="table-info">
-                                <td><strong>SOL-2025-00035</strong></td>
-                                <td>Dra. Maria Santos</td>
-                                <td>
-                                    <span class="badge bg-secondary">
-                                        <i class="bi bi-envelope me-1"></i>
-                                        E-mail
-                                    </span>
-                                </td>
-                                <td><strong class="text-info">R$ 4.053,00</strong></td>
-                                <td>27/12/2025 11:00</td>
-                                <td>
-                                    <span class="badge bg-info">
-                                        <i class="bi bi-hourglass-split me-1"></i>
-                                        Processando
-                                    </span>
-                                </td>
-                                <td>
-                                    <button class="btn btn-sm btn-outline-secondary" disabled>
-                                        <i class="bi bi-hourglass-split"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><strong>SOL-2025-00034</strong></td>
-                                <td>Dr. Carlos Mendes</td>
-                                <td>
-                                    <span class="badge bg-secondary">
-                                        <i class="bi bi-phone me-1"></i>
-                                        Telefone
-                                    </span>
-                                </td>
-                                <td><strong class="text-success">R$ 2.895,00</strong></td>
-                                <td>26/12/2025 16:20</td>
-                                <td><span class="badge bg-success">Pago</span></td>
-                                <td>
-                                    <button class="btn btn-sm btn-outline-primary"
-                                        onclick="verComprovante('SOL-2025-00034')">
-                                        <i class="bi bi-receipt"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><strong>SOL-2025-00033</strong></td>
-                                <td>Dr. José Oliveira</td>
-                                <td>
-                                    <span class="badge bg-secondary">
-                                        <i class="bi bi-envelope me-1"></i>
-                                        E-mail
-                                    </span>
-                                </td>
-                                <td><strong class="text-success">R$ 6.200,00</strong></td>
-                                <td>26/12/2025 14:50</td>
-                                <td><span class="badge bg-success">Pago</span></td>
-                                <td>
-                                    <button class="btn btn-sm btn-outline-primary"
-                                        onclick="verComprovante('SOL-2025-00033')">
-                                        <i class="bi bi-receipt"></i>
-                                    </button>
-                                </td>
+                                <td colspan="7" class="text-center text-muted py-4">Carregando pagamentos...</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
 
                 <!-- Mobile Cards -->
-                <div class="d-md-none">
-                    <div class="card mb-3">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-start mb-2">
-                                <strong class="text-primary">SOL-2025-00038</strong>
-                                <span class="badge bg-success">Pago</span>
-                            </div>
-                            <div class="mb-2">
-                                <small class="text-muted">Dr. Fernando Silva</small>
-                            </div>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <strong class="text-success">R$ 5.018,00</strong>
-                                <small class="text-muted">27/12/2025 10:30</small>
-                            </div>
-                        </div>
-                    </div>
+                <div class="d-md-none" id="pagamentosMobileList">
+                    <div class="text-center text-muted py-4">Carregando pagamentos...</div>
                 </div>
             </div>
         </div>
@@ -407,23 +286,196 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Custom JS -->
     <script src="../assets/js/app.js"></script>
+    <script src="../assets/js/api.js"></script>
 
     <script>
         checkAuth('admin');
 
         let modalComprovante;
+        let allPayments = [];
+
+        function formatProtocol(id) {
+            return `SOL-2026-${String(id).padStart(5, '0')}`;
+        }
+
+        function parseProtocol(protocol) {
+            const id = String(protocol).split('-').pop();
+            return Number(id);
+        }
+
+        function getStatusLabel(status, contractSigned) {
+            if (status === 'paid') return { text: 'Pago', badge: 'bg-success' };
+            if (status === 'approved' && contractSigned) return { text: 'Aguardando aprovação final', badge: 'bg-info' };
+            if (status === 'approved') return { text: 'Aguardando assinatura', badge: 'bg-warning text-dark' };
+            return { text: status, badge: 'bg-secondary' };
+        }
+
+        function updateSummary(rows) {
+            const paid = rows.filter(r => r.status === 'paid');
+            const approvedWaitingFinalApproval = rows.filter(r => r.status === 'approved' && r.contract_signed);
+
+            const paidToday = paid
+                .filter(r => new Date(r.updated_at).toDateString() === new Date().toDateString())
+                .reduce((sum, r) => sum + Number(r.net_amount || 0), 0);
+
+            const paidMonth = paid
+                .filter(r => {
+                    const d = new Date(r.updated_at);
+                    const now = new Date();
+                    return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+                })
+                .reduce((sum, r) => sum + Number(r.net_amount || 0), 0);
+
+            const inProgress = approvedWaitingFinalApproval.reduce((sum, r) => sum + Number(r.net_amount || 0), 0);
+
+            document.getElementById('pagosHojeValue').textContent = formatCurrency(paidToday);
+            document.getElementById('processandoValue').textContent = formatCurrency(inProgress);
+            document.getElementById('pagosMesValue').textContent = formatCurrency(paidMonth);
+            document.getElementById('transacoesValue').textContent = rows.length;
+        }
+
+        function renderPayments(rows) {
+            const table = document.getElementById('pagamentosTable');
+            const mobile = document.getElementById('pagamentosMobileList');
+
+            if (rows.length === 0) {
+                table.innerHTML = '<tr><td colspan="7" class="text-center text-muted py-4">Nenhum pagamento encontrado</td></tr>';
+                mobile.innerHTML = '<div class="text-center text-muted py-4">Nenhum pagamento encontrado</div>';
+                return;
+            }
+
+            table.innerHTML = rows.map((r) => {
+                const status = getStatusLabel(r.status, r.contract_signed);
+                const amountClass = r.status === 'paid' ? 'text-success' : 'text-info';
+                const protocol = formatProtocol(r.id);
+
+                return `
+                    <tr class="${r.status === 'approved' && !r.contract_signed ? 'table-warning' : r.status === 'approved' ? 'table-info' : ''}">
+                        <td><strong>${protocol}</strong></td>
+                        <td>${r.doctor_name || `Médico #${r.doctor_id}`}</td>
+                        <td>
+                            <span class="badge bg-secondary">
+                                <i class="bi bi-envelope me-1"></i>
+                                E-mail
+                            </span>
+                        </td>
+                        <td><strong class="${amountClass}">${formatCurrency(Number(r.net_amount || 0))}</strong></td>
+                        <td>${formatDateTime(r.updated_at || r.created_at)}</td>
+                        <td><span class="badge ${status.badge}">${status.text}</span></td>
+                        <td>
+                            ${r.status === 'paid'
+                                ? `<button class="btn btn-sm btn-outline-primary" onclick="verComprovante('${protocol}')"><i class="bi bi-receipt"></i></button>`
+                                : `<a class="btn btn-sm btn-outline-primary" href="aprovacoes.html" title="Aprovação final é feita em Aprovações"><i class="bi bi-box-arrow-up-right"></i></a>`}
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            mobile.innerHTML = rows.map((r) => {
+                const status = getStatusLabel(r.status, r.contract_signed);
+                const protocol = formatProtocol(r.id);
+                return `
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <strong class="text-primary">${protocol}</strong>
+                                <span class="badge ${status.badge}">${status.text}</span>
+                            </div>
+                            <div class="mb-2"><small class="text-muted">${r.doctor_name || `Médico #${r.doctor_id}`}</small></div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <strong class="${r.status === 'paid' ? 'text-success' : 'text-info'}">${formatCurrency(Number(r.net_amount || 0))}</strong>
+                                ${r.status === 'paid'
+                                    ? `<button class="btn btn-sm btn-outline-primary" onclick="verComprovante('${protocol}')"><i class="bi bi-receipt"></i></button>`
+                                    : `<a class="btn btn-sm btn-outline-primary" href="aprovacoes.html">Ir para Aprovações</a>`}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function applyFilters() {
+            const status = document.getElementById('filtroStatus').value;
+            const start = document.getElementById('filtroDataInicio').value;
+            const end = document.getElementById('filtroDataFim').value;
+            const search = document.getElementById('filtroBusca').value.toLowerCase().trim();
+
+            let filtered = [...allPayments];
+
+            if (status === 'pago') filtered = filtered.filter(r => r.status === 'paid');
+            if (status === 'aprovacao_final') filtered = filtered.filter(r => r.status === 'approved' && r.contract_signed);
+            if (status === 'assinatura') filtered = filtered.filter(r => r.status === 'approved' && !r.contract_signed);
+
+            if (start) filtered = filtered.filter(r => new Date(r.updated_at || r.created_at) >= new Date(start));
+            if (end) filtered = filtered.filter(r => new Date(r.updated_at || r.created_at) <= new Date(`${end}T23:59:59`));
+            if (search) {
+                filtered = filtered.filter((r) => {
+                    const text = `${formatProtocol(r.id)} ${r.doctor_name || ''}`.toLowerCase();
+                    return text.includes(search);
+                });
+            }
+
+            renderPayments(filtered);
+            updateSummary(filtered);
+        }
+
+        async function loadPayments() {
+            const response = await ApiClient.getRequests();
+            const rows = Array.isArray(response?.data) ? response.data : [];
+            const baseRows = rows.filter((r) => r.status === 'paid' || r.status === 'approved');
+
+            const approvedRows = baseRows.filter((r) => r.status === 'approved');
+            const approvedDetails = await Promise.all(
+                approvedRows.map(async (r) => {
+                    try {
+                        const detail = await ApiClient.getRequestById(r.id);
+                        const contract = detail?.data?.contract;
+                        const contractSigned = Boolean(contract?.signed_at) || contract?.file_path === 'signed';
+                        return {
+                            id: Number(r.id),
+                            contract_signed: contractSigned,
+                        };
+                    } catch (_error) {
+                        return {
+                            id: Number(r.id),
+                            contract_signed: false,
+                        };
+                    }
+                })
+            );
+
+            const signedMap = new Map(approvedDetails.map((item) => [item.id, item.contract_signed]));
+
+            allPayments = baseRows.map((r) => ({
+                ...r,
+                contract_signed: r.status === 'approved' ? Boolean(signedMap.get(Number(r.id))) : true,
+            }));
+            applyFilters();
+        }
 
         document.addEventListener('DOMContentLoaded', function () {
             modalComprovante = new bootstrap.Modal(document.getElementById('modalComprovante'));
+
+            document.getElementById('filtroStatus').addEventListener('change', applyFilters);
+            document.getElementById('filtroDataInicio').addEventListener('change', applyFilters);
+            document.getElementById('filtroDataFim').addEventListener('change', applyFilters);
+            document.getElementById('filtroBusca').addEventListener('input', applyFilters);
+
+            loadPayments().catch((error) => {
+                console.error(error);
+                document.getElementById('pagamentosTable').innerHTML = '<tr><td colspan="7" class="text-center text-danger py-4">Erro ao carregar pagamentos</td></tr>';
+            });
         });
 
         function verComprovante(protocolo) {
-            // Mock data
+            const id = parseProtocol(protocolo);
+            const data = allPayments.find((r) => Number(r.id) === id);
+
             document.getElementById('comprovanteProtocolo').textContent = protocolo;
-            document.getElementById('comprovanteData').textContent = '27/12/2025 10:30';
-            document.getElementById('comprovanteBeneficiario').textContent = 'Dr. Fernando Silva';
-            document.getElementById('comprovanteChave').textContent = 'fernando.silva@email.com';
-            document.getElementById('comprovanteValor').textContent = 'R$ 5.018,00';
+            document.getElementById('comprovanteData').textContent = formatDateTime(data?.updated_at || data?.created_at || new Date().toISOString());
+            document.getElementById('comprovanteBeneficiario').textContent = data?.doctor_name || 'Médico';
+            document.getElementById('comprovanteChave').textContent = 'pix@credmed.local';
+            document.getElementById('comprovanteValor').textContent = formatCurrency(Number(data?.net_amount || 0));
 
             modalComprovante.show();
         }

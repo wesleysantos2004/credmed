@@ -199,6 +199,11 @@ body {
   background-color: var(--info);
 }
 
+.badge-em-aprovacao {
+  background-color: var(--info);
+  color: #fff;
+}
+
 .btn-primary {
   background-color: var(--primary);
   border-color: var(--primary);

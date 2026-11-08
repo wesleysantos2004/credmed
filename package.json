@@ -2,7 +2,8 @@
   "type": "module",
   "scripts": {
     "dev": "tsx --watch index.ts",
-    "start": "tsx index.ts"
+    "start": "tsx index.ts",
+    "test:smoke": "node tests/smoke-flow.mjs"
   },
   "dependencies": {
     "@types/node": "^25.0.10"
