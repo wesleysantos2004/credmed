@@ -123,13 +123,21 @@ export class UserQuery extends Query {
         `
         SELECT
           d.*,
-          u.email
+          u.email,
+          u.status AS user_status,
+          u.created_at AS user_created_at
         FROM doctors d
         INNER JOIN users u ON u.id = d.user_id
         WHERE d.id = ?
         LIMIT 1;
         `,
       )
-      .get(id) as (DoctorData & { email: string }) | undefined;
+      .get(id) as
+        | (DoctorData & {
+            email: string;
+            user_status: UserStatus;
+            user_created_at: string;
+          })
+        | undefined;
   }
 }
