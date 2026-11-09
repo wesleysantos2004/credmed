@@ -411,10 +411,8 @@
     <script>
         checkAuth('empresa');
 
-        // Load empresa data
-        if (mockData && mockData.empresa) {
-            document.getElementById('nomeEmpresa').textContent = mockData.empresa.nome;
-        }
+        const empresaNome = localStorage.getItem('empresaNome') || 'Empresa';
+        document.getElementById('nomeEmpresa').textContent = empresaNome;
     </script>
 </body>
 

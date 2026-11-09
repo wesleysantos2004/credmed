@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Modern - Dashboard</title>
+  <link rel="stylesheet" href="../assets/css/modern.css" />
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">CREDMED • Admin (Modern)</div>
+      <a class="nav-link active" href="dashboard.html">Dashboard</a>
+      <a class="nav-link" href="../../admin/aprovacoes.html">Aprovações (Atual)</a>
+      <a class="nav-link" href="../../admin/contratos.html">Contratos (Atual)</a>
+      <a class="nav-link" href="../../admin/pagamentos.html">Histórico (Atual)</a>
+      <a class="nav-link" href="../medico/dashboard.html">Visão Médico Modern</a>
+    </aside>
+
+    <main class="main">
+      <header class="header">
+        <h1>Dashboard Administrativo • Quick Win Visual</h1>
+        <p>Protótipo dark fintech enterprise, sem alterar as páginas atuais.</p>
+      </header>
+
+      <section class="grid grid-4 mt-6">
+        <article class="card"><div class="card-body"><div class="metric-label">Pendentes de Aprovação Inicial</div><div class="metric-value" id="kpiInitial">0</div></div></article>
+        <article class="card"><div class="card-body"><div class="metric-label">Pend. Aprovação Final</div><div class="metric-value" id="kpiFinal">0</div></div></article>
+        <article class="card"><div class="card-body"><div class="metric-label">Pagamentos Hoje</div><div class="metric-value" id="kpiPaidToday">R$ 0,00</div></div></article>
+        <article class="card"><div class="card-body"><div class="metric-label">Volume Total</div><div class="metric-value" id="kpiVolume">R$ 0,00</div></div></article>
+      </section>
+
+      <section class="card mt-6">
+        <div class="card-body">
+          <h3 class="section-title">Aprovação Inicial</h3>
+          <p class="section-sub">Solicitações aguardando análise e envio de contrato para assinatura.</p>
+          <div class="table-wrap mt-4">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Protocolo</th>
+                  <th>Médico</th>
+                  <th>Empresa</th>
+                  <th>Valor</th>
+                  <th>Status</th>
+                  <th>Ação</th>
+                </tr>
+              </thead>
+              <tbody id="tableInitial"><tr><td colspan="6">Carregando...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="card mt-6">
+        <div class="card-body">
+          <h3 class="section-title">Aprovação Final de Pagamento</h3>
+          <p class="section-sub">Solicitações com contrato assinado, prontas para decisão final do admin.</p>
+          <div class="table-wrap mt-4">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Protocolo</th>
+                  <th>Médico</th>
+                  <th>Empresa</th>
+                  <th>Valor</th>
+                  <th>Status</th>
+                  <th>Ação</th>
+                </tr>
+              </thead>
+              <tbody id="tableFinal"><tr><td colspan="6">Carregando...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="../../assets/js/app.js"></script>
+  <script src="../../assets/js/api.js"></script>
+  <script>
+    checkAuth('admin');
+
+    function protocol(id) {
+      return `SOL-2026-${String(id).padStart(5, '0')}`;
+    }
+
+    async function loadData() {
+      const response = await ApiClient.getRequests();
+      const rows = Array.isArray(response?.data) ? response.data : [];
+
+      const initial = rows.filter((r) => r.status === 'pending' || r.status === 'in_review');
+      const finalApproval = rows.filter((r) => r.status === 'approved');
+      const paid = rows.filter((r) => r.status === 'paid');
+
+      const today = new Date().toDateString();
+      const paidToday = paid
+        .filter((r) => new Date(r.updated_at || r.created_at).toDateString() === today)
+        .reduce((sum, r) => sum + Number(r.net_amount || 0), 0);
+      const volume = rows.reduce((sum, r) => sum + Number(r.net_amount || 0), 0);
+
+      document.getElementById('kpiInitial').textContent = initial.length;
+      document.getElementById('kpiFinal').textContent = finalApproval.length;
+      document.getElementById('kpiPaidToday').textContent = formatCurrency(paidToday);
+      document.getElementById('kpiVolume').textContent = formatCurrency(volume);
+
+      const initialTbody = document.getElementById('tableInitial');
+      initialTbody.innerHTML = initial.length
+        ? initial.slice(0, 8).map((r) => `
+          <tr>
+            <td>${protocol(r.id)}</td>
+            <td>${r.doctor_name || `Médico #${r.doctor_id}`}</td>
+            <td>${r.company_name || `Empresa #${r.company_id}`}</td>
+            <td>${formatCurrency(Number(r.net_amount || 0))}</td>
+            <td><span class="badge warning">Inicial</span></td>
+            <td><a class="btn" href="../../admin/aprovar.html?id=${r.id}">Analisar</a></td>
+          </tr>
+        `).join('')
+        : '<tr><td colspan="6">Sem pendências de aprovação inicial.</td></tr>';
+
+      const finalTbody = document.getElementById('tableFinal');
+      finalTbody.innerHTML = finalApproval.length
+        ? finalApproval.slice(0, 8).map((r) => `
+          <tr>
+            <td>${protocol(r.id)}</td>
+            <td>${r.doctor_name || `Médico #${r.doctor_id}`}</td>
+            <td>${r.company_name || `Empresa #${r.company_id}`}</td>
+            <td>${formatCurrency(Number(r.net_amount || 0))}</td>
+            <td><span class="badge info">Final</span></td>
+            <td><a class="btn btn-primary" href="../../admin/aprovacoes.html">Aprovar</a></td>
+          </tr>
+        `).join('')
+        : '<tr><td colspan="6">Sem pendências de aprovação final.</td></tr>';
+    }
+
+    loadData().catch((error) => {
+      console.error(error);
+      showToast(`Erro ao carregar dashboard modern: ${error.message || error}`, 'danger');
+    });
+  </script>
+</body>
+</html>

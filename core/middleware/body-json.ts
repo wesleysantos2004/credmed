@@ -1,10 +1,9 @@
 import type { Middleware } from '../router.ts';
+import { RouteError } from '../utils/route-error.ts';
 
 export const bodyJson: Middleware = async (req, res) => {
-  if (
-    req.headers['content-type'] !== 'application/json' &&
-    req.headers['content-type'] !== 'application/json; charset=utf-8'
-  ) {
+  const contentType = String(req.headers['content-type'] || '').toLowerCase();
+  if (!contentType.includes('application/json')) {
     return;
   }
 
@@ -17,5 +16,10 @@ export const bodyJson: Middleware = async (req, res) => {
     req.body = {};
     return;
   }
-  req.body = JSON.parse(body);
+
+  try {
+    req.body = JSON.parse(body);
+  } catch {
+    throw new RouteError(400, 'json inválido');
+  }
 };

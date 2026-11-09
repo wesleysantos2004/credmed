@@ -1,0 +1,29 @@
+name: Smoke Flow
+
+on:
+  push:
+    branches: ["main", "master"]
+  pull_request:
+
+jobs:
+  smoke-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Reset sqlite db
+        run: rm -f db_credmed.sqlite
+
+      - name: Run smoke flow
+        run: npm run test:smoke

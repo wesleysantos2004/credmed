@@ -164,6 +164,8 @@ CREATE TABLE IF NOT EXISTS contracts (
     "signed_at" TEXT,
     "signature_ip" TEXT,
     "file_path" TEXT,
+    "generated_pdf_path" TEXT,
+    "signed_pdf_path" TEXT,
     "created_at" TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (request_id) REFERENCES requests(id)
 ) STRICT;

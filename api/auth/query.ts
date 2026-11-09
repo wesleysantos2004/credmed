@@ -121,12 +121,23 @@ export class UserQuery extends Query {
       .query(
         /*sql*/
         `
-            SELECT d.*, u.email, u.status AS user_status, u.created_at AS user_created_at
-            FROM doctors d
-            JOIN users u ON d.user_id = u.id
-            WHERE d.id = ?;
-            `,
+        SELECT
+          d.*,
+          u.email,
+          u.status AS user_status,
+          u.created_at AS user_created_at
+        FROM doctors d
+        INNER JOIN users u ON u.id = d.user_id
+        WHERE d.id = ?
+        LIMIT 1;
+        `,
       )
-      .get(id);
+      .get(id) as
+        | (DoctorData & {
+            email: string;
+            user_status: UserStatus;
+            user_created_at: string;
+          })
+        | undefined;
   }
 }

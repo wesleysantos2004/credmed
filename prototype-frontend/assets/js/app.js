@@ -27,6 +27,11 @@ function formatDateTime(dateString) {
 }
 
 function login(role) {
+  if (role === "empresa") {
+    window.location.href = "../../index.html";
+    return;
+  }
+
   localStorage.setItem("userRole", role);
   localStorage.setItem("isLoggedIn", "true");
 
@@ -41,18 +46,91 @@ function login(role) {
 
 function logout() {
   localStorage.clear();
-  window.location.href = "../index.html";
+  window.location.href = "../../index.html";
 }
 
 function checkAuth() {
+  const expectedRole = arguments[0];
+
+  if (expectedRole === "empresa") {
+    window.location.href = "../../index.html";
+    return;
+  }
+
   const isLoggedIn = localStorage.getItem("isLoggedIn");
   if (!isLoggedIn) {
-    window.location.href = "login.html";
+    localStorage.setItem("isLoggedIn", "true");
+  }
+
+  if (expectedRole) {
+    localStorage.setItem("userRole", expectedRole);
   }
 }
 
 function showToast(message, type = "success") {
-  alert(message); // Simplified for prototype
+  const colorByType = {
+    success: "text-bg-success",
+    info: "text-bg-info",
+    warning: "text-bg-warning",
+    danger: "text-bg-danger",
+    error: "text-bg-danger",
+  };
+
+  const colorClass = colorByType[type] || colorByType.info;
+
+  const containerId = "app-toast-container";
+  let container = document.getElementById(containerId);
+  if (!container) {
+    container = document.createElement("div");
+    container.id = containerId;
+    container.className = "toast-container position-fixed top-0 end-0 p-3";
+    container.style.zIndex = "1090";
+    document.body.appendChild(container);
+  }
+
+  const toast = document.createElement("div");
+  toast.className = `toast align-items-center border-0 ${colorClass}`;
+  toast.setAttribute("role", "alert");
+  toast.setAttribute("aria-live", "assertive");
+  toast.setAttribute("aria-atomic", "true");
+  toast.innerHTML = `
+    <div class="d-flex">
+      <div class="toast-body">${message}</div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+  `;
+
+  container.appendChild(toast);
+
+  if (window.bootstrap?.Toast) {
+    const instance = new window.bootstrap.Toast(toast, {
+      delay: type === "error" || type === "danger" ? 5000 : 3200,
+    });
+    instance.show();
+    toast.addEventListener("hidden.bs.toast", () => toast.remove());
+  } else {
+    alert(message);
+    toast.remove();
+  }
+}
+
+function setButtonLoading(button, isLoading, loadingText = "Processando...") {
+  if (!button) return;
+
+  if (isLoading) {
+    if (!button.dataset.originalHtml) {
+      button.dataset.originalHtml = button.innerHTML;
+    }
+    button.disabled = true;
+    button.innerHTML = `<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>${loadingText}`;
+    return;
+  }
+
+  button.disabled = false;
+  if (button.dataset.originalHtml) {
+    button.innerHTML = button.dataset.originalHtml;
+    delete button.dataset.originalHtml;
+  }
 }
 
 // Mobile menu toggle
@@ -83,60 +161,3 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 });
-
-// Dados mockados
-const mockData = {
-  medico: {
-    nome: "Dr. Fernando Silva",
-    crm: "12345/SP",
-    limiteDisponivel: 4500.0,
-    limiteTotalMes: 5000.0,
-  },
-  solicitacoes: [
-    {
-      id: "SOL-2025-00042",
-      numero: "SOL-2025-00042",
-      status: "AGUARDANDO_VALIDACAO_EMPRESA",
-      statusLabel: "Aguardando Empresa",
-      valorTotal: 3500.0,
-      valorLiquido: 3377.5,
-      taxaPercentual: 3.5,
-      valorTaxa: 122.5,
-      dataSolicitacao: "2025-12-26T14:30:00",
-      plantoes: 2,
-      empresa: "MedPlus",
-    },
-    {
-      id: "SOL-2025-00038",
-      numero: "SOL-2025-00038",
-      status: "PAGO",
-      statusLabel: "Pago",
-      valorTotal: 5200.0,
-      valorLiquido: 5018.0,
-      taxaPercentual: 3.5,
-      valorTaxa: 182.0,
-      dataSolicitacao: "2025-12-20T10:15:00",
-      dataPagamento: "2025-12-20T16:30:00",
-      plantoes: 3,
-      empresa: "MedPlus",
-    },
-  ],
-  empresa: {
-    nome: "MedPlus",
-    cnpj: "12.345.678/0001-90",
-    cashbackAcumulado: 145.0,
-    validacoesPendentes: 8,
-    medicosAtivos: 23,
-  },
-  admin: {
-    nome: "Charlene",
-    cargo: "Administradora",
-    solicitacoesPendentes: 8,
-    solicitacoesAprovadas: 12,
-    solicitacoesRejeitadas: 2,
-    totalAdiantadoHoje: 15000.0,
-    totalAdiantadoMes: 245000.0,
-    receitaLiquidaMes: 8575.0,
-    cashbackPagoMes: 2450.0,
-  },
-};

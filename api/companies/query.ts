@@ -56,4 +56,17 @@ export class CompaniesQuery extends Query {
       )
       .all() as CompanyData[];
   }
+
+  getCompanyById(id: number) {
+    return this.db
+      .query(
+        /*sql*/
+        `
+            SELECT * FROM "companies"
+            WHERE id = ?
+            LIMIT 1;
+        `,
+      )
+      .get(id) as CompanyData | undefined;
+  }
 }

@@ -7,6 +7,14 @@ import { CREATE_TABLES_SQL } from "./tables.ts";
 export class AuthApi extends Api {
   query = new UserQuery(this.db);
 
+  private parseId(value: string | undefined) {
+    const id = Number(value);
+    if (!Number.isInteger(id) || id <= 0) {
+      throw new RouteError(400, "id inválido");
+    }
+    return id;
+  }
+
   handlers = {
     postUser: (req, res) => {
       const { email, password } = req.body;
@@ -72,14 +80,13 @@ export class AuthApi extends Api {
     },
 
     getDoctor: (req, res) => {
-      const { id } = req.params;
-      console.log("ID recebido:", id);
-      const doctor = this.query.getDoctorById(Number(id));
+      const id = this.parseId(req.params.id);
+      const doctor = this.query.getDoctorById(id);
       if (!doctor) {
-        throw new RouteError(404, "Doutor não encontrado");
+        throw new RouteError(404, "médico não encontrado");
       }
-      console.log("Doutor encontrado:", doctor);
-      res.status(200).json(doctor);
+
+      res.status(200).json({ data: doctor });
     },
   } satisfies Api["handlers"];
 

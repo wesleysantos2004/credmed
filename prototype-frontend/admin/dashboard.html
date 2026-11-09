@@ -46,9 +46,13 @@
                 <i class="bi bi-clipboard-check"></i>
                 Aprovações
             </a>
+            <a class="nav-link" href="contratos.html">
+                <i class="bi bi-file-earmark-text"></i>
+                Contratos
+            </a>
             <a class="nav-link" href="pagamentos.html">
                 <i class="bi bi-cash-coin"></i>
-                Pagamentos
+                Histórico de Pagamentos
             </a>
             <a class="nav-link" href="relatorios.html">
                 <i class="bi bi-graph-up"></i>
@@ -78,7 +82,7 @@
                         <div class="d-flex justify-content-between align-items-start">
                             <div class="flex-grow-1">
                                 <div class="metric-label">Pendente Aprovação</div>
-                                <div class="metric-value" id="pendentesAprovacao">8</div>
+                                <div class="metric-value" id="pendentesAprovacao">0</div>
                             </div>
                             <div class="metric-icon">
                                 <i class="bi bi-clock-history"></i>
@@ -92,8 +96,24 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-start">
                             <div class="flex-grow-1">
+                                <div class="metric-label">Pend. Aprovação Final</div>
+                                <div class="metric-value" id="prontasPagamentoCount">0</div>
+                                <div class="small text-muted" id="prontasPagamentoVolume">R$ 0,00</div>
+                            </div>
+                            <div class="metric-icon">
+                                <i class="bi bi-cash-stack"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="card card-metric card-metric-info">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="flex-grow-1">
                                 <div class="metric-label">Pagamentos Hoje</div>
-                                <div class="metric-value" id="pagamentosHoje">R$ 45k</div>
+                                <div class="metric-value" id="pagamentosHoje">R$ 0,00</div>
                             </div>
                             <div class="metric-icon">
                                 <i class="bi bi-cash-coin"></i>
@@ -108,7 +128,7 @@
                         <div class="d-flex justify-content-between align-items-start">
                             <div class="flex-grow-1">
                                 <div class="metric-label">Aprovadas Mês</div>
-                                <div class="metric-value" id="aprovadasMes">156</div>
+                                <div class="metric-value" id="aprovadasMes">0</div>
                             </div>
                             <div class="metric-icon">
                                 <i class="bi bi-check-circle"></i>
@@ -123,7 +143,7 @@
                         <div class="d-flex justify-content-between align-items-start">
                             <div class="flex-grow-1">
                                 <div class="metric-label">Volume Total</div>
-                                <div class="metric-value" id="volumeTotal">R$ 2.1M</div>
+                                <div class="metric-value" id="volumeTotal">R$ 0,00</div>
                             </div>
                             <div class="metric-icon">
                                 <i class="bi bi-currency-dollar"></i>
@@ -137,12 +157,12 @@
         <!-- Alerts -->
         <div class="row mb-4">
             <div class="col-md-12">
-                <div class="alert alert-warning d-flex align-items-center" role="alert">
+                <div class="alert alert-info d-flex align-items-center" role="alert" id="alertaPendencias">
                     <i class="bi bi-exclamation-triangle-fill fs-4 me-3"></i>
                     <div class="flex-grow-1">
-                        <strong>Atenção!</strong> Você tem 8 solicitações aguardando aprovação há mais de 24 horas.
+                        <strong>Sem pendências.</strong> Não há solicitações aguardando aprovação no momento.
                     </div>
-                    <button class="btn btn-sm btn-warning" onclick="window.location.href='aprovacoes.html'">
+                    <button class="btn btn-sm btn-outline-primary" onclick="window.location.href='aprovacoes.html'">
                         Ver Pendências
                     </button>
                 </div>
@@ -176,43 +196,72 @@
                                 </thead>
                                 <tbody id="pendentesTable">
                                     <tr>
-                                        <td><strong>SOL-2025-00043</strong></td>
-                                        <td>Dr. Fernando Silva</td>
-                                        <td>MedPlus</td>
-                                        <td><strong>R$ 3.377,50</strong></td>
-                                        <td><span class="badge bg-warning text-dark">2h</span></td>
-                                        <td>
-                                            <button class="btn btn-sm btn-success"
-                                                onclick="window.location.href='aprovar.html?id=SOL-2025-00043'">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
-                                        </td>
+                                        <td colspan="6" class="text-center text-muted py-4">Carregando solicitações...</td>
                                     </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card card-custom mb-4">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h5 class="card-title mb-0">
+                                <i class="bi bi-file-earmark-text me-2"></i>
+                                Solicitações no Fluxo de Contratos
+                            </h5>
+                            <a href="contratos.html" class="btn btn-sm btn-outline-primary">Ver Todas</a>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead>
                                     <tr>
-                                        <td><strong>SOL-2025-00041</strong></td>
-                                        <td>Dra. Maria Santos</td>
-                                        <td>Hospital Vida</td>
-                                        <td><strong>R$ 4.053,00</strong></td>
-                                        <td><span class="badge bg-warning text-dark">5h</span></td>
-                                        <td>
-                                            <button class="btn btn-sm btn-success"
-                                                onclick="window.location.href='aprovar.html?id=SOL-2025-00041'">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
-                                        </td>
+                                        <th>Protocolo</th>
+                                        <th>Médico</th>
+                                        <th>Empresa</th>
+                                        <th>Etapa</th>
+                                        <th>Valor</th>
+                                        <th>Aguardando</th>
+                                        <th>Ações</th>
                                     </tr>
+                                </thead>
+                                <tbody id="contratosFluxoTable">
                                     <tr>
-                                        <td><strong>SOL-2025-00040</strong></td>
-                                        <td>Dr. Carlos Mendes</td>
-                                        <td>Clínica Saúde</td>
-                                        <td><strong>R$ 2.702,00</strong></td>
-                                        <td><span class="badge bg-danger">26h</span></td>
-                                        <td>
-                                            <button class="btn btn-sm btn-success"
-                                                onclick="window.location.href='aprovar.html?id=SOL-2025-00040'">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
-                                        </td>
+                                        <td colspan="7" class="text-center text-muted py-4">Carregando solicitações...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card card-custom mb-4">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h5 class="card-title mb-0">
+                                <i class="bi bi-cash-coin me-2"></i>
+                                Solicitações para Aprovação Final de Pagamento
+                            </h5>
+                            <a href="aprovacoes.html" class="btn btn-sm btn-outline-primary">Ir para Aprovações</a>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Protocolo</th>
+                                        <th>Médico</th>
+                                        <th>Empresa</th>
+                                        <th>Valor</th>
+                                        <th>Aguardando</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="prontasPagamentoTable">
+                                    <tr>
+                                        <td colspan="6" class="text-center text-muted py-4">Carregando solicitações...</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -242,27 +291,9 @@
                                         <th>Status</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody id="pagamentosTable">
                                     <tr>
-                                        <td><strong>SOL-2025-00038</strong></td>
-                                        <td>Dr. Fernando Silva</td>
-                                        <td><strong class="text-success">R$ 5.018,00</strong></td>
-                                        <td>27/12/2025 10:30</td>
-                                        <td><span class="badge bg-success">Pago</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>SOL-2025-00037</strong></td>
-                                        <td>Dra. Ana Paula</td>
-                                        <td><strong class="text-success">R$ 3.200,00</strong></td>
-                                        <td>27/12/2025 09:15</td>
-                                        <td><span class="badge bg-success">Pago</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>SOL-2025-00036</strong></td>
-                                        <td>Dr. Roberto Lima</td>
-                                        <td><strong class="text-success">R$ 4.500,00</strong></td>
-                                        <td>27/12/2025 08:45</td>
-                                        <td><span class="badge bg-success">Pago</span></td>
+                                        <td colspan="5" class="text-center text-muted py-4">Carregando pagamentos...</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -277,13 +308,35 @@
                 <div class="card card-custom mb-4">
                     <div class="card-body">
                         <h6 class="card-title mb-3">
+                            <i class="bi bi-file-earmark-text me-2"></i>
+                            Fluxo de Contratos
+                        </h6>
+                        <div class="d-flex flex-column gap-2 mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="small text-muted">Falta gerar/liberar contrato</span>
+                                <span class="badge bg-warning text-dark" id="countFaltaContrato">0</span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="small text-muted">Falta assinatura do médico</span>
+                                <span class="badge bg-info" id="countFaltaAssinatura">0</span>
+                            </div>
+                        </div>
+                        <div id="contratosFluxoLista" class="small text-muted">
+                            Sem pendências no fluxo de contratos.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card card-custom mb-4">
+                    <div class="card-body">
+                        <h6 class="card-title mb-3">
                             <i class="bi bi-bar-chart me-2"></i>
                             Estatísticas Rápidas
                         </h6>
                         <div class="mb-3 pb-3 border-bottom">
                             <div class="d-flex justify-content-between align-items-center mb-2">
                                 <span class="text-muted small">Médicos Ativos</span>
-                                <strong>87</strong>
+                                <strong>-</strong>
                             </div>
                             <div class="progress" style="height: 6px;">
                                 <div class="progress-bar bg-primary" style="width: 87%"></div>
@@ -292,7 +345,7 @@
                         <div class="mb-3 pb-3 border-bottom">
                             <div class="d-flex justify-content-between align-items-center mb-2">
                                 <span class="text-muted small">Empresas Ativas</span>
-                                <strong>12</strong>
+                                <strong>-</strong>
                             </div>
                             <div class="progress" style="height: 6px;">
                                 <div class="progress-bar bg-success" style="width: 60%"></div>
@@ -301,7 +354,7 @@
                         <div class="mb-3 pb-3 border-bottom">
                             <div class="d-flex justify-content-between align-items-center mb-2">
                                 <span class="text-muted small">Taxa de Aprovação</span>
-                                <strong>94.2%</strong>
+                                <strong>-</strong>
                             </div>
                             <div class="progress" style="height: 6px;">
                                 <div class="progress-bar bg-success" style="width: 94%"></div>
@@ -310,7 +363,7 @@
                         <div>
                             <div class="d-flex justify-content-between align-items-center mb-2">
                                 <span class="text-muted small">Tempo Médio Aprovação</span>
-                                <strong>4.2h</strong>
+                                <strong>-</strong>
                             </div>
                             <div class="progress" style="height: 6px;">
                                 <div class="progress-bar bg-info" style="width: 70%"></div>
@@ -326,37 +379,12 @@
                             <i class="bi bi-activity me-2"></i>
                             Atividades Recentes
                         </h6>
-                        <div class="timeline">
+                        <div class="timeline" id="atividadesTimeline">
                             <div class="timeline-item">
-                                <div class="timeline-marker" style="background-color: var(--success);"></div>
+                                <div class="timeline-marker" style="background-color: var(--gray-300);"></div>
                                 <div class="timeline-content">
-                                    <strong>Pagamento Processado</strong>
-                                    <div class="small text-muted mt-1">Há 15 minutos</div>
-                                    <p class="small mb-0 mt-1">SOL-2025-00038 - R$ 5.018,00</p>
-                                </div>
-                            </div>
-                            <div class="timeline-item">
-                                <div class="timeline-marker" style="background-color: var(--success);"></div>
-                                <div class="timeline-content">
-                                    <strong>Solicitação Aprovada</strong>
-                                    <div class="small text-muted mt-1">Há 1 hora</div>
-                                    <p class="small mb-0 mt-1">SOL-2025-00039 por Charlene</p>
-                                </div>
-                            </div>
-                            <div class="timeline-item">
-                                <div class="timeline-marker" style="background-color: var(--info);"></div>
-                                <div class="timeline-content">
-                                    <strong>Nova Solicitação</strong>
-                                    <div class="small text-muted mt-1">Há 2 horas</div>
-                                    <p class="small mb-0 mt-1">SOL-2025-00043 - Validada</p>
-                                </div>
-                            </div>
-                            <div class="timeline-item">
-                                <div class="timeline-marker" style="background-color: var(--danger);"></div>
-                                <div class="timeline-content">
-                                    <strong>Solicitação Rejeitada</strong>
-                                    <div class="small text-muted mt-1">Há 3 horas</div>
-                                    <p class="small mb-0 mt-1">SOL-2025-00034 - Doc. incompleta</p>
+                                    <strong class="text-muted">Sem atividades recentes</strong>
+                                    <div class="small text-muted mt-1">Aguardando novas movimentações</div>
                                 </div>
                             </div>
                         </div>
@@ -370,13 +398,244 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Custom JS -->
     <script src="../assets/js/app.js"></script>
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/storage-api.js"></script>
 
     <script>
         checkAuth('admin');
 
-        // Load data
+        function formatProtocol(id) {
+            return `SOL-2026-${String(id).padStart(5, '0')}`;
+        }
+
+        function getElapsed(createdAt) {
+            const diffMs = Date.now() - new Date(createdAt).getTime();
+            const hours = Math.floor(diffMs / (1000 * 60 * 60));
+            return `${hours}h`;
+        }
+
+        function renderContractFlow(waitingGenerateOrRelease, waitingSignature) {
+            const listMissingContract = Array.isArray(waitingGenerateOrRelease) ? waitingGenerateOrRelease : [];
+            const listWaitingSignature = Array.isArray(waitingSignature) ? waitingSignature : [];
+
+            const countFaltaContrato = document.getElementById('countFaltaContrato');
+            const countFaltaAssinatura = document.getElementById('countFaltaAssinatura');
+            const contratosFluxoLista = document.getElementById('contratosFluxoLista');
+
+            if (countFaltaContrato) countFaltaContrato.textContent = listMissingContract.length;
+            if (countFaltaAssinatura) countFaltaAssinatura.textContent = listWaitingSignature.length;
+
+            if (!contratosFluxoLista) return;
+
+            const rows = [
+                ...listMissingContract.slice(0, 4).map((r) => ({
+                    requestId: r.id,
+                    label: `${formatProtocol(r.id)} • Gerar/liberar contrato`,
+                    badge: 'warning',
+                })),
+                ...listWaitingSignature.slice(0, 4).map((r) => ({
+                    requestId: r.id,
+                    label: `${formatProtocol(r.id)} • Aguardando assinatura`,
+                    badge: 'info',
+                })),
+            ].slice(0, 6);
+
+            if (rows.length === 0) {
+                contratosFluxoLista.innerHTML = 'Sem pendências no fluxo de contratos.';
+                return;
+            }
+
+            contratosFluxoLista.innerHTML = `
+                <div class="list-group list-group-flush">
+                    ${rows.map((row) => `
+                        <a href="aprovar.html?id=${row.requestId}" class="list-group-item list-group-item-action px-0 py-2 border-0 d-flex justify-content-between align-items-center">
+                            <span>${row.label}</span>
+                            <span class="badge bg-${row.badge}">${row.badge === 'warning' ? 'Contrato' : 'Assinatura'}</span>
+                        </a>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function renderContractFlowTable(rows) {
+            const tbody = document.getElementById('contratosFluxoTable');
+            if (!tbody) return;
+
+            if (!rows.length) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="text-center text-muted py-4">Nenhuma solicitação no fluxo de contratos</td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = rows.slice(0, 6).map((r) => {
+                const filePath = r.contract?.file_path || 'generated';
+                const etapa = filePath === 'released'
+                    ? '<span class="badge bg-info">Falta assinatura</span>'
+                    : '<span class="badge bg-warning text-dark">Falta gerar/liberar</span>';
+
+                return `
+                    <tr>
+                        <td><strong>${formatProtocol(r.id)}</strong></td>
+                        <td>${r.doctor_name || `Médico #${r.doctor_id}`}</td>
+                        <td>${r.company_name || `Empresa #${r.company_id}`}</td>
+                        <td>${etapa}</td>
+                        <td><strong>${formatCurrency(Number(r.net_amount || 0))}</strong></td>
+                        <td><span class="badge ${getElapsed(r.created_at).includes('24') ? 'bg-danger' : 'bg-warning text-dark'}">${getElapsed(r.created_at)}</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-primary"
+                                onclick="window.location.href='aprovar.html?id=${r.id}'">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        async function loadDashboardData() {
+            const requestsResponse = await ApiClient.getRequests();
+
+            const list = Array.isArray(requestsResponse?.data) ? requestsResponse.data : [];
+            const candidatos = list.filter(r => r.status === 'pending' || r.status === 'in_review');
+            const candidatosDetalhados = await Promise.all(
+                candidatos.map(async (r) => {
+                    try {
+                        const detail = await ApiClient.getRequestById(r.id);
+                        return {
+                            ...r,
+                            contract: detail?.data?.contract || null,
+                        };
+                    } catch (_error) {
+                        return {
+                            ...r,
+                            contract: null,
+                        };
+                    }
+                }),
+            );
+
+            const pendentes = candidatosDetalhados.filter(r => !r.contract);
+            const prontasPagamento = list.filter(r => r.status === 'approved');
+            const fluxoContratos = candidatosDetalhados.filter(r => {
+                const workflow = r.contract?.file_path;
+                return workflow === 'generated' || workflow === 'released' || workflow === null || workflow === undefined;
+            }).filter(r => Boolean(r.contract));
+            const faltaGerarOuLiberar = fluxoContratos.filter(r => r.contract?.file_path !== 'released');
+            const faltaAssinatura = fluxoContratos.filter(r => r.contract?.file_path === 'released' && !r.contract?.signed_at);
+
+            const pagas = list.filter(r => r.status === 'paid');
+            const aprovadas = list.filter(r => r.status === 'approved' || r.status === 'paid');
+
+            const pagamentosHoje = pagas
+                .filter(r => new Date(r.updated_at).toDateString() === new Date().toDateString())
+                .reduce((sum, r) => sum + Number(r.net_amount || 0), 0);
+            const volumeProntasPagamento = prontasPagamento
+                .reduce((sum, r) => sum + Number(r.net_amount || 0), 0);
+
+            const volumeTotal = list.reduce((sum, r) => sum + Number(r.net_amount || 0), 0);
+
+            document.getElementById('pendentesAprovacao').textContent = pendentes.length;
+            document.getElementById('prontasPagamentoCount').textContent = prontasPagamento.length;
+            document.getElementById('prontasPagamentoVolume').textContent = formatCurrency(volumeProntasPagamento);
+            document.getElementById('pagamentosHoje').textContent = formatCurrency(pagamentosHoje);
+            document.getElementById('aprovadasMes').textContent = aprovadas.length;
+            document.getElementById('volumeTotal').textContent = formatCurrency(volumeTotal);
+
+            const alerta = document.getElementById('alertaPendencias');
+            const totalPendenciasAdmin = pendentes.length + prontasPagamento.length;
+
+            if (totalPendenciasAdmin > 0) {
+                alerta.className = 'alert alert-warning d-flex align-items-center';
+                alerta.querySelector('.flex-grow-1').innerHTML = `<strong>Atenção!</strong> Você tem ${pendentes.length} solicitação(ões) aguardando aprovação inicial e ${prontasPagamento.length} aguardando aprovação final de pagamento.`;
+                alerta.querySelector('button').className = 'btn btn-sm btn-warning';
+            } else {
+                alerta.className = 'alert alert-info d-flex align-items-center';
+                alerta.querySelector('.flex-grow-1').innerHTML = '<strong>Sem pendências.</strong> Não há solicitações aguardando aprovação inicial ou final no momento.';
+                alerta.querySelector('button').className = 'btn btn-sm btn-outline-primary';
+            }
+
+            const tbodyPendentes = document.getElementById('pendentesTable');
+            if (pendentes.length === 0) {
+                tbodyPendentes.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-4">Nenhuma solicitação pendente</td>
+                    </tr>
+                `;
+            } else {
+                tbodyPendentes.innerHTML = pendentes.slice(0, 6).map(r => `
+                    <tr>
+                        <td><strong>${formatProtocol(r.id)}</strong></td>
+                        <td>${r.doctor_name || `Médico #${r.doctor_id}`}</td>
+                        <td>${r.company_name || `Empresa #${r.company_id}`}</td>
+                        <td><strong>${formatCurrency(Number(r.net_amount || 0))}</strong></td>
+                        <td><span class="badge ${getElapsed(r.created_at).includes('24') ? 'bg-danger' : 'bg-warning text-dark'}">${getElapsed(r.created_at)}</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-success"
+                                onclick="window.location.href='aprovar.html?id=${r.id}'">
+                                <i class="bi bi-check-circle"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            renderContractFlow(faltaGerarOuLiberar, faltaAssinatura);
+            renderContractFlowTable(fluxoContratos);
+
+            const prontasPagamentoTable = document.getElementById('prontasPagamentoTable');
+            if (prontasPagamentoTable) {
+                if (prontasPagamento.length === 0) {
+                    prontasPagamentoTable.innerHTML = `
+                        <tr>
+                            <td colspan="6" class="text-center text-muted py-4">Nenhuma solicitação pronta para pagamento</td>
+                        </tr>
+                    `;
+                } else {
+                    prontasPagamentoTable.innerHTML = prontasPagamento.slice(0, 6).map((r) => `
+                        <tr>
+                            <td><strong>${formatProtocol(r.id)}</strong></td>
+                            <td>${r.doctor_name || `Médico #${r.doctor_id}`}</td>
+                            <td>${r.company_name || `Empresa #${r.company_id}`}</td>
+                            <td><strong class="text-success">${formatCurrency(Number(r.net_amount || 0))}</strong></td>
+                            <td><span class="badge bg-info">Aprovação final pendente</span></td>
+                            <td>
+                                <button class="btn btn-sm btn-primary"
+                                    onclick="window.location.href='aprovacoes.html'">
+                                    <i class="bi bi-cash-coin"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `).join('');
+                }
+            }
+
+            const pagamentosTable = document.getElementById('pagamentosTable');
+            if (pagamentosTable) {
+                if (pagas.length === 0) {
+                    pagamentosTable.innerHTML = `
+                        <tr><td colspan="5" class="text-center text-muted py-4">Nenhum pagamento registrado</td></tr>
+                    `;
+                } else {
+                    pagamentosTable.innerHTML = pagas.slice(0, 6).map(r => `
+                        <tr>
+                            <td><strong>${formatProtocol(r.id)}</strong></td>
+                            <td>${r.doctor_name || `Médico #${r.doctor_id}`}</td>
+                            <td><strong class="text-success">${formatCurrency(Number(r.net_amount || 0))}</strong></td>
+                            <td>${formatDateTime(r.updated_at)}</td>
+                            <td><span class="badge bg-success">Pago</span></td>
+                        </tr>
+                    `).join('');
+                }
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', function () {
-            // Simular dados carregados
+            loadDashboardData().catch((error) => {
+                console.error(error);
+            });
         });
     </script>
 </body>

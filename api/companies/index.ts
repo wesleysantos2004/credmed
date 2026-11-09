@@ -6,6 +6,14 @@ import { CompaniesQuery } from "./query.ts";
 export class CompaniesApi extends Api {
   query = new CompaniesQuery(this.db);
 
+  private parseId(value: string | undefined) {
+    const id = Number(value);
+    if (!Number.isInteger(id) || id <= 0) {
+      throw new RouteError(400, "id inválido");
+    }
+    return id;
+  }
+
   handlers = {
     postCompany: (req, res) => {
       const {
@@ -44,7 +52,15 @@ export class CompaniesApi extends Api {
       res.status(200).json(companies);
     },
 
-    getCompanyById: (req, res) => {},
+    getCompanyById: (req, res) => {
+      const id = this.parseId(req.params.id);
+      const company = this.query.getCompanyById(id);
+      if (!company) {
+        throw new RouteError(404, "empresa não encontrada");
+      }
+
+      res.status(200).json(company);
+    },
   } satisfies Api["handlers"];
 
   tables(): void {}
